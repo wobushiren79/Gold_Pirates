@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -27,8 +28,8 @@ public class BaseMonoBehaviour : MonoBehaviour
     public GameObject Instantiate(GameObject objContent, GameObject objModel, Vector3 position)
     {
         GameObject objItem = Instantiate(objModel, objContent.transform);
-        objItem.SetActive(true);
         objItem.transform.position = position;
+        objItem.SetActive(true);
         return objItem;
     }
 
@@ -67,6 +68,20 @@ public class BaseMonoBehaviour : MonoBehaviour
             return objFind.GetComponent<T>();
         }
     }
+
+    public Component Find(string name,Type type)
+    {
+        GameObject objFind = GameObject.Find(name);
+        if (objFind == null)
+        {
+            return default;
+        }
+        else
+        {
+            return objFind.GetComponent(type);
+        }
+    }
+
     public T FindInChildren<T>(ImportantTypeEnum importantType)
     {
         return FindInChildren<T>(EnumUtil.GetEnumName(importantType));

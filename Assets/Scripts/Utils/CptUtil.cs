@@ -6,6 +6,22 @@ using System;
 public class CptUtil
 {
     /// <summary>
+    /// 添加物体
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="obj"></param>
+    /// <returns></returns>
+    public static T AddCpt<T>(GameObject obj) where T : Component
+    {
+        T t =  obj.GetComponent<T>();
+        if (t == null)
+        {
+            t = obj.AddComponent<T>();
+        }
+        return t;
+    }
+
+    /// <summary>
     /// 删除所有子物体
     /// </summary>
     /// <param name="tf"></param>

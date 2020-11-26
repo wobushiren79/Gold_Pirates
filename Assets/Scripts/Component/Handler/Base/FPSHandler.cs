@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FPSHandler : BaseHandler {
+public class FPSHandler : BaseHandler<BaseManager> {
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         //Screen.SetResolution(1280, 800, false);	
         SetData(GameCommonInfo.GameConfig.statusForFrames, GameCommonInfo.GameConfig.frames);
     }

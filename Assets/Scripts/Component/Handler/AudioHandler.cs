@@ -3,7 +3,7 @@ using UnityEditor;
 using System.Collections.Generic;
 using System.Collections;
 
-public class AudioHandler : BaseHandler
+public class AudioHandler : BaseHandler<AudioManager>
 {
     protected AudioListener audioListener;
     protected AudioSource audioSourceForMusic;
@@ -13,8 +13,9 @@ public class AudioHandler : BaseHandler
 
     protected int sourceNumber  = 0;
     protected int sourceMaxNumber = 5;
-    public virtual void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         audioListener = Find<AudioListener>(ImportantTypeEnum.MainCamera);
         audioManager = Find<AudioManager>(ImportantTypeEnum.AudioManager);
         audioSourceForMusic = CptUtil.GetCptInChildrenByName<AudioSource>(Camera.main.gameObject, "Music");
