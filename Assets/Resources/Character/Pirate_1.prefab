@@ -604,6 +604,7 @@ MonoBehaviour:
   tfHand: {fileID: 2588674308869715547}
   handler_Gold: {fileID: 0}
   handler_GameData: {fileID: 0}
+  handler_Game: {fileID: 0}
 --- !u!114 &6679162637756182409
 MonoBehaviour:
   m_ObjectHideFlags: 0

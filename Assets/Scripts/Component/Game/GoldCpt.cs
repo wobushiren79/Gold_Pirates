@@ -35,7 +35,8 @@ public class GoldCpt : BaseMonoBehaviour
         SetPhysic(false);
         goldStatus = GoldStatusEnum.Carry;
         transform.SetParent(tfHand);
-        transform.localPosition = Vector3.zero;
+        transform.DOLocalMove(Vector3.zero,0.5f);
+        //transform.localPosition = Vector3.zero;
     }
 
     public void SetRecycle()

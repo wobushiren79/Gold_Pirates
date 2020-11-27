@@ -18,7 +18,7 @@ public class GameHandler : BaseHandler<GameManager>
                 //打开UI
                 manager_UI.OpenUIAndCloseOther(UIEnum.GameStart);
                 //创建金币
-                handler_Gold.CreateGold(2, 1);
+                handler_Gold.CreateGold(500, 1);
                 break;
             case GameStatusEnum.GameIng:
                 //开启角色创建
