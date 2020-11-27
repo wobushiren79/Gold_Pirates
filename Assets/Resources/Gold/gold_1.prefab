@@ -11,10 +11,10 @@ GameObject:
   - component: {fileID: 2118106545035887044}
   - component: {fileID: 1833305156378194608}
   - component: {fileID: 2861270322192021089}
-  - component: {fileID: 6364740265839736260}
   - component: {fileID: 6457924424858749588}
-  - component: {fileID: 5340381940348191725}
-  m_Layer: 0
+  - component: {fileID: 7466572878183319109}
+  - component: {fileID: 7068656383491612099}
+  m_Layer: 10
   m_Name: gold_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -82,19 +82,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!65 &6364740265839736260
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3256160644996228659}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &6457924424858749588
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -107,7 +94,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07e710749b52f794dbe691935b665209, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!54 &5340381940348191725
+  goldData:
+    id: 0
+    valid: 0
+    model_name: 
+    gold_price: 0
+  objBox: {fileID: 0}
+  handler_Gold: {fileID: 0}
+  goldStatus: 0
+--- !u!54 &7466572878183319109
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -123,3 +118,16 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!65 &7068656383491612099
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3256160644996228659}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}

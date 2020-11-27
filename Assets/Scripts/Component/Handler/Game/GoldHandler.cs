@@ -7,16 +7,65 @@ using UnityEngine;
 public class GoldHandler : BaseHandler<GoldManager>, GoldManager.ICallBack
 {
     protected int goldNumber = 0;
+
     protected override void Awake()
     {
         base.Awake();
         manager.SetCallBack(this);
     }
 
+    /// <summary>
+    /// 获取闲置金币位置
+    /// </summary>
+    /// <returns></returns>
+    public Vector3 GetIdleGoldPosition()
+    {
+        GoldCpt goldCpt = GetIdleGold();
+        if (goldCpt != null)
+        {
+            return goldCpt.transform.position;
+        }
+        else
+        {
+            return Vector3.zero;
+        }
+    }
+
+    /// <summary>
+    /// 创建金币
+    /// </summary>
+    /// <param name="number"></param>
+    /// <param name="goldId"></param>
     public void CreateGold(int number, long goldId)
     {
         goldNumber = number;
         manager.GetGoldDataById(goldId);
+    }
+
+    /// <summary>
+    /// 获取没有分配的金币
+    /// </summary>
+    public GoldCpt GetIdleGold()
+    {
+        return manager.GetIdleGold();
+    }
+
+    /// <summary>
+    /// 获取金币数量
+    /// </summary>
+    /// <returns></returns>
+    public int GetGoldNumber()
+    {
+        return manager.GetGoldNumber();
+    }
+
+    /// <summary>
+    /// 回收金币
+    /// </summary>
+    /// <param name="goldCpt"></param>
+    public void RecycleGold(GoldCpt goldCpt)
+    {
+        manager.RemoveGold(goldCpt);
     }
 
     /// <summary>
@@ -59,13 +108,13 @@ public class GoldHandler : BaseHandler<GoldManager>, GoldManager.ICallBack
             listData.Add(new Vector3(offsetX, offsetY, offsetZ));
 
             layerNumber--;
-  
+
             if (layerNumber % layer == 0)
             {
                 offsetX += 1f;
             }
             offsetY += 0.5f;
-            if (offsetY > layer * 0.5f) 
+            if (offsetY > layer * 0.5f)
             {
                 offsetY = 0.25f;
             }
@@ -75,7 +124,7 @@ public class GoldHandler : BaseHandler<GoldManager>, GoldManager.ICallBack
                 layerNumber = layer * layer;
                 offsetZ += 1f;
                 offsetY = 0.25f;
-                offsetX = -0.5f * (layer-1);
+                offsetX = -0.5f * (layer - 1);
             }
         }
         return listData;

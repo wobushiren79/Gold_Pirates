@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-public class GoldManager : BaseManager,IGoldDataView
+public class GoldManager : BaseManager, IGoldDataView
 {
     protected GoldDataController goldDataController;
 
-    public List<GameObject> listGold;
+    public List<GoldCpt> listGold;
 
     protected ICallBack callBack;
     private void Awake()
     {
-        goldDataController = new GoldDataController(this,this);
+        goldDataController = new GoldDataController(this, this);
     }
 
     public void SetCallBack(ICallBack callBack)
@@ -33,16 +33,55 @@ public class GoldManager : BaseManager,IGoldDataView
     /// 创建金币
     /// </summary>
     /// <param name="goldData"></param>
-    public void CreateGold(GameObject objModel, GoldDataBean goldData,Vector3 position)
+    public void CreateGold(GameObject objModel, GoldDataBean goldData, Vector3 position)
     {
         GameObject itemObj = Instantiate(gameObject, objModel, position);
         GoldCpt goldCpt = itemObj.GetComponent<GoldCpt>();
         goldCpt.SetData(goldData);
         if (listGold == null)
-            listGold = new List<GameObject>();
-        listGold.Add(itemObj);
+            listGold = new List<GoldCpt>();
+        listGold.Add(goldCpt);
     }
 
+    /// <summary>
+    /// 移除金币
+    /// </summary>
+    /// <param name="goldCpt"></param>
+    public void RemoveGold(GoldCpt goldCpt)
+    {
+        if (goldCpt != null)
+            listGold.Remove(goldCpt);
+    }
+
+    /// <summary>
+    /// 获取闲置的金币
+    /// </summary>
+    /// <returns></returns>
+    public GoldCpt GetIdleGold()
+    {
+        if (CheckUtil.ListIsNull(listGold))
+        {
+            return null;
+        }
+        for (int i = 0; i < listGold.Count; i++)
+        {
+            GoldCpt itemGold = listGold[i];
+            if (itemGold.GetGoldStatus() == GoldStatusEnum.Idle)
+            {
+                return itemGold;
+            }
+        }
+        return null;
+    }
+
+    /// <summary>
+    /// 获取场景中的金币数量
+    /// </summary>
+    /// <returns></returns>
+    public int GetGoldNumber()
+    {
+        return listGold.Count;
+    }
 
 
     #region 金币数据回掉
@@ -54,14 +93,14 @@ public class GoldManager : BaseManager,IGoldDataView
 
     public void GetGoldDataFail(string failMsg)
     {
-        
+
     }
     #endregion
 
-    public interface ICallBack 
+    public interface ICallBack
     {
-         void GetGoldDataByIdSuccess(GoldDataBean goldData);
+        void GetGoldDataByIdSuccess(GoldDataBean goldData);
 
-         void CreateGoldSuccess();
+        void CreateGoldSuccess();
     }
 }

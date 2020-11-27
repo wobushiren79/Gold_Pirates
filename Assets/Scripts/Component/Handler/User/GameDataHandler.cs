@@ -9,8 +9,6 @@ public class GameDataHandler : BaseHandler<GameDataManager>
 
     }
 
-    protected UIManager manager_UI;
-
     private void Start()
     {
         manager.InitUserData();
@@ -20,6 +18,26 @@ public class GameDataHandler : BaseHandler<GameDataManager>
     {
 
     }
+
+    public void AddUserGold(long number)
+    {
+        UserDataBean userData = GetUserData();
+        userData.AddGold(number);
+    }
+
+    public void AddPirateNumber(int number)
+    {
+        UserDataBean userData = GetUserData();
+        userData.AddPirateNumber(number);
+    }
+
+    public void AddSpeed(float addSpeed)
+    {
+        UserDataBean userData = GetUserData();
+        userData.AddSpeed(addSpeed);
+    }
+
+
 
     /// <summary>
     /// 获取用户数据

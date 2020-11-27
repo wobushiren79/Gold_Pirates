@@ -6,6 +6,6 @@ using UnityEngine;
 public class GoldDataBean : BaseBean
 {
     public string model_name;
-    public long gold_price;
+    public long gold_price = 1;
 
 }

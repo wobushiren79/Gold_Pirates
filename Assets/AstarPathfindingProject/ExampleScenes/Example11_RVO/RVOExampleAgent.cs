@@ -22,14 +22,14 @@ namespace Pathfinding.Examples {
 		private float nextRepath = 0;
 
 		private Vector3 target;
-		private bool canSearchAgain = true;
+		protected bool canSearchAgain = true;
 
 		private RVOController controller;
 		public float maxSpeed = 10;
 
 		Path path = null;
 
-		List<Vector3> vectorPath;
+		public List<Vector3> vectorPath;
 		int wp;
 
 		public float moveNextDist = 1;
