@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-
 public class GoldManager : BaseManager, IGoldDataView
 {
     protected GoldDataController goldDataController;
@@ -87,13 +86,14 @@ public class GoldManager : BaseManager, IGoldDataView
     #region 金币数据回掉
     public void GetGoldDataSuccess(GoldDataBean goldData)
     {
+        Debug.LogError("GetGoldDataSuccess");
         if (callBack != null)
             callBack.GetGoldDataByIdSuccess(goldData);
     }
 
     public void GetGoldDataFail(string failMsg)
     {
-
+        Debug.LogError("GetGoldDataFail");
     }
     #endregion
 

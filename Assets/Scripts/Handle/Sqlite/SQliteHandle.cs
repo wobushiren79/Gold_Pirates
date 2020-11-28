@@ -3,14 +3,25 @@ using Mono.Data.Sqlite;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
+using UnityEngine.Networking;
 
 public class SQliteHandle 
 {
-    private readonly static string DB_PATH = "data source=" + Application.streamingAssetsPath + "/SQLiteDataBase/";
+    private static string DB_PATH = "";
 
     public static SQLiteHelper GetSQLiteHelper(string dbName)
     {
-        SQLiteHelper helper = new SQLiteHelper(DB_PATH + dbName);
+        if (Application.platform == RuntimePlatform.Android
+            || Application.platform == RuntimePlatform.IPhonePlayer)
+        {
+            DB_PATH = "data source=" + Application.persistentDataPath + "/" + dbName;
+        }
+        else
+        {
+            DB_PATH = "data source=" + Application.streamingAssetsPath + "/SQLiteDataBase/" + dbName;
+        }
+        SQLiteHelper helper = new SQLiteHelper(DB_PATH);
         return helper;
     }
 
