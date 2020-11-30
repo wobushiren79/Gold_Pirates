@@ -5,29 +5,34 @@ using UnityEngine;
 public enum CharacterIntentEnum
 {
     Idle,
+    GoToIsland,
     GoToGold,
     Search,
+    ExitIsland,
     Back,
 }
 
 public class CharacterCpt : BaseMonoBehaviour
 {
     //手
-    public Transform tfHand;
+    public Transform transform_Hand;
+    //船
+    public Transform transform_Boat;
 
     public GoldHandler handler_Gold;
+    public CharacterHandler handler_Character;
     public GameDataHandler handler_GameData;
+    public GameStartSceneHandler handler_Scene;
     public GameHandler handler_Game;
+    public ShipHandler handler_Ship;
 
     protected AIForCharacterPath aiForCharacterPath;
     protected CharacterAnimCpt characterAnim;
+    protected CharacterLifeCpt characterLife;
 
     protected CharacterDataBean characterData;
 
     protected CharacterIntentEnum characterIntent = CharacterIntentEnum.Idle;
-
-    protected Vector3 positionForStart = Vector3.zero;
-    protected Vector3 positionForGold = Vector3.zero;
 
     protected GoldCpt handGold;
 
@@ -35,15 +40,24 @@ public class CharacterCpt : BaseMonoBehaviour
     {
         aiForCharacterPath = CptUtil.AddCpt<AIForCharacterPath>(gameObject);
         characterAnim = GetComponent<CharacterAnimCpt>();
+        characterLife = GetComponent<CharacterLifeCpt>();
+
         AutoLinkHandler();
+        ReflexUtil.AutoLinkDataForChild(this, "transform_");
     }
 
     private void Update()
     {
         switch (characterIntent)
         {
+            case CharacterIntentEnum.GoToIsland:
+                HandleForGoToIsland();
+                break;
             case CharacterIntentEnum.GoToGold:
                 HandleForGoToGold();
+                break;
+            case CharacterIntentEnum.ExitIsland:
+                HandleForExitIsland();
                 break;
             case CharacterIntentEnum.Back:
                 HandleForBack();
@@ -63,7 +77,24 @@ public class CharacterCpt : BaseMonoBehaviour
         else
         {
 
-        } 
+        }
+        characterLife.SetData(characterData);
+    }
+
+    public void AddLife(int life)
+    {
+        int currentLife = characterData.AddLife(life);
+        RefreshCharacter();
+        if (currentLife <= 0)
+        {
+            //死亡
+            handler_Character.CleanCharacter(this);
+            //掉落金币
+            if (handGold)
+                handGold.SetDrop();
+            //删除角色
+            Destroy(gameObject);
+        }
     }
 
     /// <summary>
@@ -72,9 +103,8 @@ public class CharacterCpt : BaseMonoBehaviour
     /// <param name="characterData"></param>
     public void SetCharacterData(CharacterDataBean characterData)
     {
-        positionForStart = transform.position;
         this.characterData = characterData;
-        SetIntentForGoToGold();
+        SetIntentForGoToIsland();
         RefreshCharacter();
     }
 
@@ -91,16 +121,54 @@ public class CharacterCpt : BaseMonoBehaviour
     {
         this.characterIntent = CharacterIntentEnum.Idle;
     }
+
+    public void SetIntentForGoToIsland()
+    {
+        SetBoatStatus(true);
+        this.characterIntent = CharacterIntentEnum.GoToIsland;
+        Vector3 islandPosition = handler_Scene.GetIslandPosition(characterData.characterType);
+        aiForCharacterPath.SetDestination(islandPosition);
+    }
+
     public void SetIntentForGoToGold()
     {
+        SetBoatStatus(false);
         this.characterIntent = CharacterIntentEnum.GoToGold;
-        positionForGold = handler_Gold.GetIdleGoldPosition();
-        aiForCharacterPath.SetDestination(positionForGold);
+        Vector3  goldPosition = handler_Gold.GetIdleGoldPosition();
+        aiForCharacterPath.SetDestination(goldPosition);
     }
+
+    public void SetIntentForExitIsland()
+    {
+        SetBoatStatus(false);
+        this.characterIntent = CharacterIntentEnum.ExitIsland;
+        Vector3 islandPosition = handler_Scene.GetIslandPosition(characterData.characterType);
+        aiForCharacterPath.SetDestination(islandPosition);
+    }
+
     public void SetIntentForBack()
     {
+        SetBoatStatus(true);
         this.characterIntent = CharacterIntentEnum.Back;
-        aiForCharacterPath.SetDestination(positionForStart);
+        Vector3 startPosition = handler_Scene.GetStartPosition(characterData.characterType);
+        aiForCharacterPath.SetDestination(startPosition);
+    }
+
+    /// <summary>
+    /// 获取角色数据
+    /// </summary>
+    /// <returns></returns>
+    public CharacterDataBean GetCharacterData()
+    {
+        return characterData;
+    }
+
+    public void HandleForGoToIsland()
+    {
+        if (aiForCharacterPath.IsAutoMoveStop())
+        {
+            SetIntentForGoToGold();
+        }
     }
 
     public void HandleForGoToGold()
@@ -115,10 +183,18 @@ public class CharacterCpt : BaseMonoBehaviour
             }
             else
             {
-                handGold.SetCarry(tfHand);
-                SetIntentForBack();
+                handGold.SetCarry(transform_Hand);
+                SetIntentForExitIsland();
             }
         }
+    }
+
+    public void HandleForExitIsland()
+    {
+        if (aiForCharacterPath.IsAutoMoveStop())
+        {
+            SetIntentForBack();
+        }      
     }
 
     public void HandleForBack()
@@ -128,15 +204,31 @@ public class CharacterCpt : BaseMonoBehaviour
             //归还金币
             if (handGold != null)
             {
-                if (characterData.characterType == CharacterTypeEnum.Player)
-                {
-                    handler_GameData.AddUserGold(handGold.goldData.gold_price);
-                }
-                handGold.SetRecycle();
+                //增加金币
+                handler_Game.AddGold(characterData.characterType, handGold.goldData.gold_price);
+                //回收金币
+                ShipCpt shipCpt =  handler_Ship.GetShip(characterData.characterType);
+                handGold.SetRecycle(shipCpt.transform.position);
                 //检测游戏是否结束
                 handler_Game.CheckGameOver();
             }
-            SetIntentForGoToGold();
+            SetIntentForGoToIsland();
+        }
+    }
+
+    /// <summary>
+    /// 设置船的状态
+    /// </summary>
+    /// <param name="isShow"></param>
+    public void SetBoatStatus(bool isShow)
+    {
+        if (isShow)
+        {
+            transform_Boat.gameObject.SetActive(true);
+        }
+        else
+        {
+            transform_Boat.gameObject.SetActive(false);
         }
     }
 }

@@ -6,7 +6,7 @@ using System.Linq;
 using System.IO;
 using UnityEngine.Networking;
 
-public class SQliteHandle 
+public class SQLiteHandle 
 {
     private static string DB_PATH = "";
 

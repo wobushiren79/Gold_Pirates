@@ -37,8 +37,6 @@ public class GameDataHandler : BaseHandler<GameDataManager>
         userData.AddSpeed(addSpeed);
     }
 
-
-
     /// <summary>
     /// 获取用户数据
     /// </summary>

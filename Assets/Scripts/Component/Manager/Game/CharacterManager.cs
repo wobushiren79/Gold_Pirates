@@ -9,9 +9,11 @@ public class CharacterManager : BaseManager
     protected List<CharacterCpt> listEnemy = new List<CharacterCpt>();
 
     protected GameObject objCharacterModel;
-    public void InitCharacterData()
+
+    public IEnumerator InitCharacterData()
     {
-        StartCoroutine(CoroutineForLoadCharacterModel("Pirate_1"));
+        //加载模型
+        yield return CoroutineForLoadCharacterModel("Pirate_1");
     }
 
     public void CreateCharacter(Vector3 startPosition, CharacterDataBean characterData)
@@ -58,6 +60,23 @@ public class CharacterManager : BaseManager
         return listEnemy.Count;
     }
     
+    /// <summary>
+    /// 清除NPC
+    /// </summary>
+    /// <param name="characterCpt"></param>
+    public void CleanCharacter(CharacterCpt characterCpt)
+    {
+        CharacterDataBean characterData = characterCpt.GetCharacterData();
+        if (characterData.characterType== CharacterTypeEnum.Player)
+        {
+            listPlayer.Remove(characterCpt);
+        }
+        else if (characterData.characterType == CharacterTypeEnum.Enemy)
+        {
+            listEnemy.Remove(characterCpt);
+        }
+    }
+
     /// <summary>
     /// 清除所有NPC
     /// </summary>

@@ -4,7 +4,7 @@ using System.IO;
 using UnityEngine.Networking;
 using System;
 
-public class SQliteInit : BaseMonoBehaviour
+public class SQLiteInit : BaseMonoBehaviour
 {
     private void Awake()
     {

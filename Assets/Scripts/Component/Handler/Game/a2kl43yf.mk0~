@@ -1,0 +1,68 @@
+﻿using System;
+using System.Collections;
+using UnityEditor;
+using UnityEngine;
+
+public class ShipHandler : BaseHandler<ShipManager> , ShipManager.ICallBack
+{
+    public void CreateShip()
+    {
+
+    }
+
+    public void CreateShip(CharacterTypeEnum characterType,long shipId)
+    {
+        switch (characterType)
+        {
+            case CharacterTypeEnum.Player:
+                manager.GetShipDataById((shipData) =>
+                {
+                    shipData.characterType = CharacterTypeEnum.Player;
+                    StartCoroutine(CoroutineForCreateShip(shipData));
+                },shipId);
+                break;
+            case CharacterTypeEnum.Enemy:
+                manager.GetShipDataById((shipData) =>
+                {
+                    shipData.characterType = CharacterTypeEnum.Enemy;
+                    StartCoroutine(CoroutineForCreateShip(shipData));
+                }, shipId);
+                break;
+        }
+    }
+
+    protected IEnumerator CoroutineForCreateShip(ShipDataBean shipData)
+    {
+        ResourceRequest resourceRequest = Resources.LoadAsync("Ship/" + shipData.model_name);
+        yield return resourceRequest;
+        GameObject objModel = resourceRequest.asset as GameObject;
+
+        //计算每个金币的坐标
+        List<Vector3> listPosition = CalculatePostionForGold(goldNumber);
+        for (int i = 0; i < listPosition.Count; i++)
+        {
+            manager.CreateGold(objModel, goldData, listPosition[i]);
+            yield return new WaitForEndOfFrame();
+        }
+        Resources.UnloadUnusedAssets();
+    }
+
+    protected override void Awake()
+    {
+        base.Awake();
+        manager.SetCallBack(this);
+    }
+
+
+    #region 数据回调
+    public void CreateShipSuccess()
+    {
+
+    }
+
+    public void GetShipDataByIdSuccess(Action<ShipDataBean> action,ShipDataBean shipData)
+    {
+        action(shipData);
+    }
+    #endregion
+}

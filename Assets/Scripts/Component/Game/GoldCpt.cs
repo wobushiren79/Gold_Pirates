@@ -7,6 +7,7 @@ public class GoldCpt : BaseMonoBehaviour
 {
     public GoldDataBean goldData;
     public GoldHandler handler_Gold;
+    public ShipHandler handler_Ship;
 
     public GoldStatusEnum goldStatus = GoldStatusEnum.Idle;
 
@@ -35,27 +36,40 @@ public class GoldCpt : BaseMonoBehaviour
         SetPhysic(false);
         goldStatus = GoldStatusEnum.Carry;
         transform.SetParent(tfHand);
-        transform.DOLocalMove(Vector3.zero,0.5f);
+        transform.DOLocalMove(Vector3.zero, 0.5f);
         //transform.localPosition = Vector3.zero;
     }
 
-    public void SetRecycle()
+    public void SetDrop()
     {
-        handler_Gold.RecycleGold(this);
+        goldStatus = GoldStatusEnum.Drop;
         SetPhysic(true);
-        goldStatus = GoldStatusEnum.Recycle;
         transform.SetParent(handler_Gold.transform);
-        StartCoroutine(CoroutineForDestroyGold());
+
     }
 
-    /// <summary>
-    /// 延迟删除金币
-    /// </summary>
-    /// <returns></returns>
-    public IEnumerator CoroutineForDestroyGold()
+    public void SetRecycle(Vector3 recyclePosition)
     {
-        yield return new WaitForSeconds(2);
-        Destroy(gameObject);
+        goldStatus = GoldStatusEnum.Recycle;
+        handler_Gold.RecycleGold(this);
+        //SetPhysic(true);
+        transform.SetParent(handler_Gold.transform);
+        AnimForRecycle(recyclePosition);
+    }
+
+    public void AnimForRecycle(Vector3 targetPosition)
+    {
+        Vector3[] path = new Vector3[3];
+        path[0] = transform.position;
+        path[1] = Vector3.Lerp(targetPosition, transform.position, 0.5f) + Vector3.up * 2;
+        path[2] = targetPosition;
+        transform
+            .DOPath(path, 0.3f, PathType.CatmullRom)
+            .SetEase(Ease.Linear)
+            .OnComplete(() =>
+            {
+                Destroy(gameObject);
+            });
     }
 
     /// <summary>

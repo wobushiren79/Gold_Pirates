@@ -8,6 +8,8 @@ public class GoldHandler : BaseHandler<GoldManager>, GoldManager.ICallBack
 {
     protected int goldNumber = 0;
 
+    public GameStartSceneHandler handler_Scene;
+
     protected override void Awake()
     {
         base.Awake();
@@ -89,7 +91,6 @@ public class GoldHandler : BaseHandler<GoldManager>, GoldManager.ICallBack
         Resources.UnloadUnusedAssets();
     }
 
-
     /// <summary>
     /// 计算金币位置
     /// </summary>
@@ -98,11 +99,13 @@ public class GoldHandler : BaseHandler<GoldManager>, GoldManager.ICallBack
     public List<Vector3> CalculatePostionForGold(int goldNumber)
     {
         List<Vector3> listData = new List<Vector3>();
+        Vector3 goldStartPosition = handler_Scene.GetGoldPosition();
+
         int layer = 1;
         int layerNumber = 1;
-        float offsetX = 0;
-        float offsetY = 0.25f;
-        float offsetZ = 0;
+        float offsetX = 0 + goldStartPosition.x;
+        float offsetY = 0.25f + goldStartPosition.y;
+        float offsetZ = 0 + goldStartPosition.z;
         for (int i = 0; i < goldNumber; i++)
         {
             listData.Add(new Vector3(offsetX, offsetY, offsetZ));
@@ -116,15 +119,15 @@ public class GoldHandler : BaseHandler<GoldManager>, GoldManager.ICallBack
             offsetY += 0.5f;
             if (offsetY > layer * 0.5f)
             {
-                offsetY = 0.25f;
+                offsetY = 0.25f + goldStartPosition.y;
             }
             if (layerNumber <= 0)
             {
                 layer++;
                 layerNumber = layer * layer;
                 offsetZ += 1f;
-                offsetY = 0.25f;
-                offsetX = -0.5f * (layer - 1);
+                offsetY = 0.25f + goldStartPosition.y;
+                offsetX = -0.5f * (layer - 1) + goldStartPosition.x;
             }
         }
         return listData;

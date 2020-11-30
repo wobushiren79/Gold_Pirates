@@ -86,15 +86,15 @@ public class GoldManager : BaseManager, IGoldDataView
     #region 金币数据回掉
     public void GetGoldDataSuccess(GoldDataBean goldData)
     {
-        Debug.LogError("GetGoldDataSuccess");
         if (callBack != null)
             callBack.GetGoldDataByIdSuccess(goldData);
     }
 
     public void GetGoldDataFail(string failMsg)
     {
-        Debug.LogError("GetGoldDataFail");
+
     }
+
     #endregion
 
     public interface ICallBack

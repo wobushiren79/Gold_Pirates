@@ -106,7 +106,7 @@ public class BaseMonoBehaviour : MonoBehaviour
     }
 
     /// <summary>
-    /// 通过反射链接UI控件
+    /// 通过反射链接控件
     /// </summary>
     public void AutoLinkHandler()
     {
@@ -117,4 +117,6 @@ public class BaseMonoBehaviour : MonoBehaviour
     {
         ReflexUtil.AutoLinkData(this, "manager_");
     }
+    
+  
 }

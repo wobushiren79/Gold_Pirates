@@ -4,27 +4,44 @@ using System.Collections;
 
 public class CharacterHandler : BaseHandler<CharacterManager>
 {
-    public Transform tfPlayerStartPosition;
-    public Transform tfEnemyStartPosition;
-    protected bool isStartCreate = false;
-    protected int numberForEnemy = 2;
+    protected int numberForEnemy = 5;
 
     public GameDataHandler handler_GameData;
+    public GameHandler handler_Game;
+    public GameStartSceneHandler handler_Scene;
 
-    private void Start()
+    /// <summary>
+    /// 初始化创建角色 用于游戏刚开始
+    /// </summary>
+    public IEnumerator InitCreateCharacter()
     {
-        manager.InitCharacterData();
+        yield return manager.InitCharacterData();
+        //创建一个友方海盗
+        CreateCharacter(CharacterTypeEnum.Player);
+        //延迟创建敌方海盗
+        StartCoroutine(CoroutineForCreateEnmeyCharacter());
     }
 
-    public void StartCreateCharacter()
+    public void CreateCharacter(CharacterTypeEnum characterType)
     {
-        isStartCreate = true;
-        StartCoroutine(CoroutineForCreateCharacter());
+        UserDataBean userData = handler_GameData.GetUserData();
+        if (characterType == CharacterTypeEnum.Player && manager.GetPlayerCharacterNumber() >= userData.pirateNumber)
+        {
+            //如果超过上线则不创建
+            return;
+        }
+        if (characterType == CharacterTypeEnum.Enemy && manager.GetEnemyCharacterNumber() >= numberForEnemy)
+        {
+            //如果超过上线则不创建
+            return;
+        }
+        CharacterDataBean characterDataForPlayer = new CharacterDataBean(characterType);
+        Vector3 startPosition = handler_Scene.GetStartPosition(characterType);
+        manager.CreateCharacter(startPosition, characterDataForPlayer);
     }
 
     public void StopCreateCharacter()
     {
-        isStartCreate = false;
         StopAllCoroutines();
     }
 
@@ -33,28 +50,23 @@ public class CharacterHandler : BaseHandler<CharacterManager>
         manager.RefreshPlayerCharacter();
     }
 
+    public void CleanCharacter(CharacterCpt characterCpt)
+    {
+        manager.CleanCharacter(characterCpt);
+    }
+
     public void CleanAllCharacter()
     {
         manager.CleanAllCharacter();
     }
 
-    public IEnumerator CoroutineForCreateCharacter()
+    public IEnumerator CoroutineForCreateEnmeyCharacter()
     {
-        while (isStartCreate)
+        for (int i = 0; i < numberForEnemy; i++)
         {
-         
             UserDataBean userData = handler_GameData.GetUserData();
-            if (manager.GetPlayerCharacterNumber() < userData.pirateNumber)
-            {
-                CharacterDataBean characterDataForPlayer = new CharacterDataBean(CharacterTypeEnum.Player);
-                manager.CreateCharacter(tfPlayerStartPosition.position, characterDataForPlayer);
-            }
-            if (manager.GetEnemyCharacterNumber() < numberForEnemy)
-            {
-                CharacterDataBean characterDataForPlayer = new CharacterDataBean(CharacterTypeEnum.Enemy);
-                manager.CreateCharacter(tfEnemyStartPosition.position, characterDataForPlayer);
-            }
-            yield return new WaitForSeconds(1);
+            CreateCharacter(CharacterTypeEnum.Enemy);
+            yield return new WaitForSeconds(3);
         }
     }
 

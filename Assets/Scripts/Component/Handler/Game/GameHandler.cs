@@ -5,10 +5,26 @@ public class GameHandler : BaseHandler<GameManager>
 {
     public UIManager manager_UI;
     public GoldHandler handler_Gold;
+    public ShipHandler handler_Ship;
+    public GameDataHandler handler_GameData;
     public CharacterHandler handler_Character;
 
     protected GameBean gameData;
- 
+
+    public void AddGold(CharacterTypeEnum characterType,long gold)
+    {
+        switch (characterType)
+        {
+            case CharacterTypeEnum.Player:
+                gameData.AddPlayerGold(gold);
+                handler_GameData.AddUserGold(gold);
+                break;
+            case CharacterTypeEnum.Enemy:
+                gameData.AddEnemyGold(gold);
+                break;
+        }
+    }
+
     public void ChangeGameStatus(GameStatusEnum gameStatus)
     {
         switch (gameStatus)
@@ -19,10 +35,13 @@ public class GameHandler : BaseHandler<GameManager>
                 manager_UI.OpenUIAndCloseOther(UIEnum.GameStart);
                 //创建金币
                 handler_Gold.CreateGold(500, 1);
+                //创建船
+                handler_Ship.CreateShip(CharacterTypeEnum.Player, 1);
+                handler_Ship.CreateShip(CharacterTypeEnum.Enemy, 1);
                 break;
             case GameStatusEnum.GameIng:
                 //开启角色创建
-                handler_Character.StartCreateCharacter();
+                StartCoroutine(handler_Character.InitCreateCharacter());
                 break;
             case GameStatusEnum.GameEnd:
                 //打开UI
@@ -36,10 +55,21 @@ public class GameHandler : BaseHandler<GameManager>
 
     public void CheckGameOver()
     {
-        int goldNumber =  handler_Gold.GetGoldNumber();
+        int goldNumber = handler_Gold.GetGoldNumber();
         if (goldNumber == 0)
         {
             ChangeGameStatus(GameStatusEnum.GameEnd);
+        }
+    }
+
+    public void GetScore(out long playerGold,out long enemyGold)
+    {
+        playerGold = 0;
+        enemyGold = 0;
+        if (gameData != null)
+        {
+            playerGold = gameData.playerGold;
+            enemyGold = gameData.enemyGold;
         }
     }
 

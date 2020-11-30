@@ -23,7 +23,6 @@ public class GoldDataController : BaseMVCController<GoldDataModel, IGoldDataView
         else
         {
             GetView().GetGoldDataSuccess(goldData);
-        }
-        
+        } 
     }
 }

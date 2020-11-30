@@ -7,8 +7,8 @@ public class UserDataBean
 {
     //金币数量
     public long gold;
-    //海盗数量
-    public int pirateNumber = 1;
+    //海盗数量上限
+    public int pirateNumber = 10;
     //速度加成
     public float speed = 0;
     public void AddGold(long addGold)

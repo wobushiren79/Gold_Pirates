@@ -18,7 +18,6 @@ public class CharacterAnimCpt : BaseMonoBehaviour
     public void SetCharacterWalk()
     {
         characterAnim.Play("walk");
-
     }
 
     public void SetCharacterThrow()
