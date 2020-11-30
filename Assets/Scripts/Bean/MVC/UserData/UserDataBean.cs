@@ -11,6 +11,9 @@ public class UserDataBean
     public int pirateNumber = 10;
     //速度加成
     public float speed = 0;
+    //生命值加成
+    public int life = 1;
+
     public void AddGold(long addGold)
     {
         gold += addGold;
@@ -25,10 +28,19 @@ public class UserDataBean
             pirateNumber = 1;
     }
 
-    public void AddSpeed(float addSpeed)
+    public float  AddSpeed(float addSpeed)
     {
         speed += addSpeed;
         if (speed < 0)
             speed = 0;
+        return speed;
+    }
+
+    public int AddLife(int addLife)
+    {
+        life += addLife;
+        if (life < 0)
+            life = 0;
+        return life;
     }
 }

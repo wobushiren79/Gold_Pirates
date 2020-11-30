@@ -83,6 +83,8 @@ public class UIGameStart : BaseUIComponent, IBaseObserver
 
     public void OnClickForAddLife()
     {
+        int life = handler_GameData.AddLife(1);
+        handler_Character.SetPlayerCharacterLife(life);
         handler_Character.RefreshCharacter();
     }
 

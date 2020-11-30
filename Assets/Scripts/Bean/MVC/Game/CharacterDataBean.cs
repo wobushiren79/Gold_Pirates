@@ -8,12 +8,18 @@ public class CharacterDataBean
     public CharacterTypeEnum characterType;
     public float moveSpeed = 1;
     public bool hasGold = false;
-    public int life = 10;
-    public int maxLife = 10;
+    public int life = 1;
+    public int maxLife = 1;
 
     public CharacterDataBean(CharacterTypeEnum characterType)
     {
         this.characterType = characterType;
+    }
+
+    public void SetLife(int maxLife)
+    {
+        this.maxLife = maxLife;
+        life = maxLife;
     }
 
     public int AddLife(int addLife)

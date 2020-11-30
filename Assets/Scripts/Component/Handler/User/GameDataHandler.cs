@@ -31,10 +31,16 @@ public class GameDataHandler : BaseHandler<GameDataManager>
         userData.AddPirateNumber(number);
     }
 
-    public void AddSpeed(float addSpeed)
+    public float AddSpeed(float addSpeed)
     {
         UserDataBean userData = GetUserData();
-        userData.AddSpeed(addSpeed);
+        return userData.AddSpeed(addSpeed);
+    }
+
+    public int AddLife(int addLife)
+    {
+        UserDataBean userData = GetUserData();
+        return userData.AddLife(addLife);
     }
 
     /// <summary>

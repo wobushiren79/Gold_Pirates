@@ -70,15 +70,17 @@ public class CharacterCpt : BaseMonoBehaviour
     /// </summary>
     public void RefreshCharacter()
     {
+        UserDataBean userData = handler_GameData.GetUserData();
         if (characterData.characterType == CharacterTypeEnum.Player)
         {
-            SetCharacterSpeed(handler_GameData.GetUserData().speed + characterData.moveSpeed);
+            SetCharacterSpeed(userData.speed + characterData.moveSpeed);
+
         }
         else
         {
 
         }
-        characterLife.SetData(characterData);
+        characterLife.SetLife(characterData.maxLife, characterData.life);
     }
 
     public void AddLife(int life)
@@ -95,6 +97,11 @@ public class CharacterCpt : BaseMonoBehaviour
             //删除角色
             Destroy(gameObject);
         }
+    }
+
+    public void SetLife(int maxLife)
+    {
+         characterData.SetLife(maxLife);
     }
 
     /// <summary>

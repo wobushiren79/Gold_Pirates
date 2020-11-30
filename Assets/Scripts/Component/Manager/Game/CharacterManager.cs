@@ -42,6 +42,15 @@ public class CharacterManager : BaseManager
         }
     }
 
+    public List<CharacterCpt> GetAllPlayerCharacter()
+    {
+        return listPlayer;
+    }
+    public List<CharacterCpt> GetAllEnemyCharacter()
+    {
+        return listEnemy;
+    }
+
     /// <summary>
     /// 获取玩家海盗数量
     /// </summary>

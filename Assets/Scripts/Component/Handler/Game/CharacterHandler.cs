@@ -1,6 +1,7 @@
 ﻿using UnityEditor;
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class CharacterHandler : BaseHandler<CharacterManager>
 {
@@ -49,6 +50,17 @@ public class CharacterHandler : BaseHandler<CharacterManager>
     {
         manager.RefreshPlayerCharacter();
     }
+
+    public void SetPlayerCharacterLife(int maxLife)
+    {
+        List<CharacterCpt> listCharacter = manager.GetAllPlayerCharacter();
+        for (int i = 0; i < listCharacter.Count; i++)
+        {
+            CharacterCpt itemCharacter = listCharacter[i];
+            itemCharacter.SetLife(maxLife);
+        }
+    }
+
 
     public void CleanCharacter(CharacterCpt characterCpt)
     {
