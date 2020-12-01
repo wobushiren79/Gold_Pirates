@@ -17,23 +17,6 @@ public class GoldHandler : BaseHandler<GoldManager>, GoldManager.ICallBack
     }
 
     /// <summary>
-    /// 获取闲置金币位置
-    /// </summary>
-    /// <returns></returns>
-    public Vector3 GetIdleGoldPosition()
-    {
-        GoldCpt goldCpt = GetIdleGold();
-        if (goldCpt != null)
-        {
-            return goldCpt.transform.position;
-        }
-        else
-        {
-            return Vector3.zero;
-        }
-    }
-
-    /// <summary>
     /// 创建金币
     /// </summary>
     /// <param name="number"></param>
@@ -49,7 +32,32 @@ public class GoldHandler : BaseHandler<GoldManager>, GoldManager.ICallBack
     /// </summary>
     public GoldCpt GetIdleGold()
     {
-        return manager.GetIdleGold();
+        return manager.GetGoldByStatus(GoldStatusEnum.Idle);
+    }
+
+    /// <summary>
+    /// 获取丢弃的金币
+    /// </summary>
+    public GoldCpt GetDropGold()
+    {
+        return manager.GetGoldByStatus(GoldStatusEnum.Drop);
+    }
+
+    /// <summary>
+    /// 获取目标金币
+    /// </summary>
+    /// <returns></returns>
+    public GoldCpt GetTargetGold()
+    {
+        GoldCpt dropGold = GetDropGold();
+        if (dropGold == null)
+        {
+            return GetIdleGold();
+        }
+        else
+        {
+            return dropGold;
+        }
     }
 
     /// <summary>

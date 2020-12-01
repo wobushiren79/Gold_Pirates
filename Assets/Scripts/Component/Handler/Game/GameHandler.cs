@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using System;
+using UnityEditor;
 using UnityEngine;
 
 public class GameHandler : BaseHandler<GameManager>
@@ -34,14 +35,19 @@ public class GameHandler : BaseHandler<GameManager>
                 //打开UI
                 manager_UI.OpenUIAndCloseOther(UIEnum.GameStart);
                 //创建金币
-                handler_Gold.CreateGold(500, 1);
-                //创建船
-                handler_Ship.CreateShip(CharacterTypeEnum.Player, 1);
-                handler_Ship.CreateShip(CharacterTypeEnum.Enemy, 1);
+                handler_Gold.CreateGold(1000, 1);
                 break;
             case GameStatusEnum.GameIng:
                 //开启角色创建
                 StartCoroutine(handler_Character.InitCreateCharacter());
+                //创建船
+                Action enemyShipCallBack = () =>
+                {
+                    //开启敌舰自动攻击
+                    //handler_Ship.OpenShipFireAutoForEnemy();
+                };
+                handler_Ship.CreateShip(CharacterTypeEnum.Player, 1, null);
+                handler_Ship.CreateShip(CharacterTypeEnum.Enemy, 1, enemyShipCallBack);
                 break;
             case GameStatusEnum.GameEnd:
                 //打开UI

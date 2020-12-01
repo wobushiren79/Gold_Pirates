@@ -133,7 +133,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8353347617775084169}
   m_Layer: 11
-  m_Name: Wiggle
+  m_Name: Pirate_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -380,7 +380,7 @@ SkinnedMeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2694126538136904386, guid: c4a30a02e68ca7b4b81d61cd7bd9e4d4, type: 3}
-  - {fileID: 1363625234876079806, guid: c4a30a02e68ca7b4b81d61cd7bd9e4d4, type: 3}
+  - {fileID: 2100000, guid: b71b71b0a1f9a48768a27ca6eefcfbdf, type: 2}
   - {fileID: 1363625234876079806, guid: c4a30a02e68ca7b4b81d61cd7bd9e4d4, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0

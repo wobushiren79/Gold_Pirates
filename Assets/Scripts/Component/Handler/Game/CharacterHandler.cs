@@ -10,6 +10,7 @@ public class CharacterHandler : BaseHandler<CharacterManager>
     public GameDataHandler handler_GameData;
     public GameHandler handler_Game;
     public GameStartSceneHandler handler_Scene;
+    public GoldHandler handler_Gold;
 
     /// <summary>
     /// 初始化创建角色 用于游戏刚开始
@@ -25,20 +26,34 @@ public class CharacterHandler : BaseHandler<CharacterManager>
 
     public void CreateCharacter(CharacterTypeEnum characterType)
     {
+        if (!handler_Gold.GetTargetGold())
+        {
+            //没有金币了也不创建角色
+            return;
+        }
+        CharacterDataBean characterData = new CharacterDataBean(characterType);
         UserDataBean userData = handler_GameData.GetUserData();
-        if (characterType == CharacterTypeEnum.Player && manager.GetPlayerCharacterNumber() >= userData.pirateNumber)
+        if (characterType == CharacterTypeEnum.Player)
         {
             //如果超过上线则不创建
-            return;
+            if (manager.GetPlayerCharacterNumber() >= userData.pirateNumber)
+            {          
+                return;
+            }
         }
-        if (characterType == CharacterTypeEnum.Enemy && manager.GetEnemyCharacterNumber() >= numberForEnemy)
+        if (characterType == CharacterTypeEnum.Enemy)
         {
             //如果超过上线则不创建
-            return;
+            if (manager.GetEnemyCharacterNumber() >= numberForEnemy)
+            {
+                return;
+            }
+            characterData.life = 5;
+            characterData.maxLife = 5;
         }
-        CharacterDataBean characterDataForPlayer = new CharacterDataBean(characterType);
+        
         Vector3 startPosition = handler_Scene.GetStartPosition(characterType);
-        manager.CreateCharacter(startPosition, characterDataForPlayer);
+        manager.CreateCharacter(startPosition, characterData);
     }
 
     public void StopCreateCharacter()
@@ -76,7 +91,6 @@ public class CharacterHandler : BaseHandler<CharacterManager>
     {
         for (int i = 0; i < numberForEnemy; i++)
         {
-            UserDataBean userData = handler_GameData.GetUserData();
             CreateCharacter(CharacterTypeEnum.Enemy);
             yield return new WaitForSeconds(3);
         }

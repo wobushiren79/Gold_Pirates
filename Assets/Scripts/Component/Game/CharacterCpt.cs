@@ -12,7 +12,7 @@ public enum CharacterIntentEnum
     Back,
 }
 
-public class CharacterCpt : BaseMonoBehaviour
+public class CharacterCpt : BaseMonoBehaviour, IBaseObserver
 {
     //手
     public Transform transform_Hand;
@@ -35,6 +35,7 @@ public class CharacterCpt : BaseMonoBehaviour
     protected CharacterIntentEnum characterIntent = CharacterIntentEnum.Idle;
 
     protected GoldCpt handGold;
+    protected GoldCpt targetGold;
 
     private void Awake()
     {
@@ -101,7 +102,7 @@ public class CharacterCpt : BaseMonoBehaviour
 
     public void SetLife(int maxLife)
     {
-         characterData.SetLife(maxLife);
+        characterData.SetLife(maxLife);
     }
 
     /// <summary>
@@ -134,15 +135,35 @@ public class CharacterCpt : BaseMonoBehaviour
         SetBoatStatus(true);
         this.characterIntent = CharacterIntentEnum.GoToIsland;
         Vector3 islandPosition = handler_Scene.GetIslandPosition(characterData.characterType);
-        aiForCharacterPath.SetDestination(islandPosition);
+        aiForCharacterPath.SetDestination(islandPosition + new Vector3(1f, 0, 0));
     }
 
-    public void SetIntentForGoToGold()
+    public void SetIntentForGoToGold(Vector3 goldPosition)
     {
         SetBoatStatus(false);
         this.characterIntent = CharacterIntentEnum.GoToGold;
-        Vector3  goldPosition = handler_Gold.GetIdleGoldPosition();
         aiForCharacterPath.SetDestination(goldPosition);
+    }
+
+    public void SetIntentForSearch()
+    {
+        if (targetGold != null)
+        {
+            targetGold = null;
+        }
+        SetBoatStatus(false);
+        this.characterIntent = CharacterIntentEnum.Search;
+        targetGold = handler_Gold.GetTargetGold();
+        if (targetGold)
+        {
+            targetGold.AddObserver(this);
+            SetIntentForGoToGold(targetGold.transform.position);
+        }
+        else
+        {
+            //没有金币就离开
+            SetIntentForExitIsland();
+        }
     }
 
     public void SetIntentForExitIsland()
@@ -150,7 +171,7 @@ public class CharacterCpt : BaseMonoBehaviour
         SetBoatStatus(false);
         this.characterIntent = CharacterIntentEnum.ExitIsland;
         Vector3 islandPosition = handler_Scene.GetIslandPosition(characterData.characterType);
-        aiForCharacterPath.SetDestination(islandPosition);
+        aiForCharacterPath.SetDestination(islandPosition + new Vector3(-1f, 0, 0));
     }
 
     public void SetIntentForBack()
@@ -174,24 +195,34 @@ public class CharacterCpt : BaseMonoBehaviour
     {
         if (aiForCharacterPath.IsAutoMoveStop())
         {
-            SetIntentForGoToGold();
+            SetIntentForSearch();
         }
     }
 
     public void HandleForGoToGold()
-    {   
+    {
         if (aiForCharacterPath.IsAutoMoveStop())
         {
             //获取金币
-            handGold = handler_Gold.GetIdleGold();
-            if (handGold == null)
+            if (targetGold.GetGoldStatus() != GoldStatusEnum.Idle && targetGold.GetGoldStatus() != GoldStatusEnum.Drop)
             {
-                SetIntentForIdle();
+                //另外搜寻目标
+                SetIntentForSearch();
             }
             else
             {
-                handGold.SetCarry(transform_Hand);
-                SetIntentForExitIsland();
+                //拿起目标 
+                handGold = targetGold;
+                targetGold = null;
+                if (handGold == null)
+                {
+                    SetIntentForIdle();
+                }
+                else
+                {
+                    handGold.SetCarry(characterData.characterType, transform_Hand);
+                    SetIntentForExitIsland();
+                }
             }
         }
     }
@@ -201,25 +232,35 @@ public class CharacterCpt : BaseMonoBehaviour
         if (aiForCharacterPath.IsAutoMoveStop())
         {
             SetIntentForBack();
-        }      
+        }
     }
 
     public void HandleForBack()
     {
         if (aiForCharacterPath.IsAutoMoveStop())
         {
-            //归还金币
             if (handGold != null)
             {
+                //归还金币
                 //增加金币
                 handler_Game.AddGold(characterData.characterType, handGold.goldData.gold_price);
                 //回收金币
-                ShipCpt shipCpt =  handler_Ship.GetShip(characterData.characterType);
+                ShipCpt shipCpt = handler_Ship.GetShip(characterData.characterType);
                 handGold.SetRecycle(shipCpt.transform.position);
                 //检测游戏是否结束
                 handler_Game.CheckGameOver();
             }
-            SetIntentForGoToIsland();
+            if (handler_Gold.GetTargetGold()==null)
+            {
+                //如果没有金币。说明已经搬完 回收
+                SetIntentForIdle();
+                handler_Character.CleanCharacter(this);
+                Destroy(gameObject);
+            }
+            else
+            {
+                SetIntentForGoToIsland();
+            }
         }
     }
 
@@ -238,4 +279,17 @@ public class CharacterCpt : BaseMonoBehaviour
             transform_Boat.gameObject.SetActive(false);
         }
     }
+
+    #region 通知回调
+    public void ObserbableUpdate<T>(T observable, int type, params object[] obj) where T : Object
+    {
+        if (observable as GoldCpt)
+        {
+            if (type == (int)GoldCpt.NotifyTypeEnum.HasCarry && handGold == null)
+            {
+                SetIntentForSearch();
+            }
+        }
+    }
+    #endregion
 }

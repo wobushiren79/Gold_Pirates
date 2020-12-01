@@ -7,6 +7,6 @@ public class ShipDataBean : BaseBean
 {
     public string model_name;
 
-    public int bulletDamage = 5;
+    public int bulletDamage = 1;
     public CharacterTypeEnum characterType;
 }

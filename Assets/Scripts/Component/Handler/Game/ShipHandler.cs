@@ -13,22 +13,23 @@ public class ShipHandler : BaseHandler<ShipManager>, ShipManager.ICallBack
         manager.SetCallBack(this);
     }
 
-    public void CreateShip(CharacterTypeEnum characterType, long shipId)
+    public void CreateShip(CharacterTypeEnum characterType, long shipId, Action callBack)
     {
+        CptUtil.RemoveChild(transform);
         switch (characterType)
         {
             case CharacterTypeEnum.Player:
                 manager.GetShipDataById((shipData) =>
                 {
                     shipData.characterType = CharacterTypeEnum.Player;
-                    StartCoroutine(CoroutineForCreateShip(shipData));
+                    StartCoroutine(CoroutineForCreateShip(shipData, callBack));
                 }, shipId);
                 break;
             case CharacterTypeEnum.Enemy:
                 manager.GetShipDataById((shipData) =>
                 {
                     shipData.characterType = CharacterTypeEnum.Enemy;
-                    StartCoroutine(CoroutineForCreateShip(shipData));
+                    StartCoroutine(CoroutineForCreateShip(shipData, callBack));
                 }, shipId);
                 break;
         }
@@ -55,8 +56,36 @@ public class ShipHandler : BaseHandler<ShipManager>, ShipManager.ICallBack
         shipCpt.OpenFire(firePosition);
     }
 
+    /// <summary>
+    /// 敌人自动开火启动
+    /// </summary>
+    public void OpenShipFireAutoForEnemy()
+    {
+        ShipCpt shipCpt = manager.GetShip(CharacterTypeEnum.Enemy);
+        Vector3 firePosition = handler_Scene.GetFirePosition(CharacterTypeEnum.Enemy);
+        StartCoroutine(shipCpt.CoroutineForAutoFire(firePosition));
+    }
 
-    protected IEnumerator CoroutineForCreateShip(ShipDataBean shipData)
+    /// <summary>
+    /// 关闭敌人自动开火
+    /// </summary>
+    public void CloseShipFireAutoForEnemy()
+    {
+        ShipCpt shipCpt = manager.GetShip(CharacterTypeEnum.Enemy);
+        shipCpt.CloseFire();
+    }
+
+    /// <summary>
+    /// 改变玩家舰队攻击力
+    /// </summary>
+    public void ChangePlayerShipDamage(int damage)
+    {
+        ShipCpt shipCpt = manager.GetShip(CharacterTypeEnum.Player);
+        shipCpt.SetDamage(damage);
+    }
+
+
+    protected IEnumerator CoroutineForCreateShip(ShipDataBean shipData, Action callBack)
     {
         ResourceRequest resourceRequest = Resources.LoadAsync("Ship/" + shipData.model_name);
         yield return resourceRequest;
@@ -65,6 +94,7 @@ public class ShipHandler : BaseHandler<ShipManager>, ShipManager.ICallBack
         GameObject objShipBulletModel = handler_Scene.GetShipBulletModel();
         manager.CreateShip(objModel, objShipBulletModel, shipData, startPosition + new Vector3(0, 0, -1));
         Resources.UnloadUnusedAssets();
+        callBack?.Invoke();
     }
 
 

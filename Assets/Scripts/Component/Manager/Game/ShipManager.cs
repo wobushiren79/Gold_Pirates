@@ -52,12 +52,14 @@ public class ShipManager : BaseManager, IShipDataView
 
     public ShipCpt GetShip(CharacterTypeEnum characterType)
     {
-        switch(characterType)
+        switch (characterType)
         {
             case CharacterTypeEnum.Player:
                 return shipForPlayer;
             case CharacterTypeEnum.Enemy:
                 return shipForEnemy;
+            default:
+                break;
         }
         return null;
     }

@@ -5,9 +5,11 @@ using UnityEngine;
 public class ShipBulletCpt : BaseMonoBehaviour
 {
     protected int bulletDamage;
-    public void SetData(int damage)
+    protected CharacterTypeEnum characterType;
+    public void SetData(CharacterTypeEnum characterType,int damage)
     {
-        bulletDamage = damage;
+        this.bulletDamage = damage;
+        this.characterType = characterType;
     }
 
     public void MoveParabola(Vector3 targetPosition, float parabolaH)
@@ -30,7 +32,11 @@ public class ShipBulletCpt : BaseMonoBehaviour
         CharacterCpt characterCpt = other.GetComponent<CharacterCpt>();
         if (characterCpt)
         {
-            characterCpt.AddLife(-bulletDamage);
+            //不可以攻击自己人
+            if (characterCpt.GetCharacterData().characterType!=this.characterType)
+            {
+                characterCpt.AddLife(-bulletDamage);
+            }
         }
     }
 }

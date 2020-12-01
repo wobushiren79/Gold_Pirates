@@ -43,6 +43,12 @@ public class GameDataHandler : BaseHandler<GameDataManager>
         return userData.AddLife(addLife);
     }
 
+    public int AddDamage(int addDamage)
+    {
+        UserDataBean userData = GetUserData();
+        return userData.AddDamage(addDamage);
+    }
+
     /// <summary>
     /// 获取用户数据
     /// </summary>

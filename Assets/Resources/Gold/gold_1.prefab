@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 7466572878183319109}
   - component: {fileID: 7068656383491612099}
   m_Layer: 10
-  m_Name: gold_1
+  m_Name: Gold_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -61,7 +61,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 0b4c00bf1af5b45db943a3866a5a954d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -99,8 +99,8 @@ MonoBehaviour:
     valid: 0
     model_name: 
     gold_price: 0
-  objBox: {fileID: 0}
   handler_Gold: {fileID: 0}
+  handler_Ship: {fileID: 0}
   goldStatus: 0
 --- !u!54 &7466572878183319109
 Rigidbody:

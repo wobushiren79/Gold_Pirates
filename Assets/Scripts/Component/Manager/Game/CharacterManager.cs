@@ -8,21 +8,31 @@ public class CharacterManager : BaseManager
     protected List<CharacterCpt> listPlayer = new List<CharacterCpt>();
     protected List<CharacterCpt> listEnemy = new List<CharacterCpt>();
 
-    protected GameObject objCharacterModel;
+    protected GameObject objCharacterPlayerModel;
+    protected GameObject objCharacterEnemyModel;
 
     public IEnumerator InitCharacterData()
     {
+        CptUtil.RemoveChild(transform);
         //加载模型
-        yield return CoroutineForLoadCharacterModel("Pirate_1");
+        yield return CoroutineForLoadCharacterModel("Pirate_1", "Pirate_2");
     }
 
     public void CreateCharacter(Vector3 startPosition, CharacterDataBean characterData)
     {
-        if (objCharacterModel == null)
-            return;
-        GameObject objCharacter = Instantiate(gameObject, objCharacterModel, startPosition);
+        GameObject objModel = null;
+        if (characterData.characterType == CharacterTypeEnum.Player)
+        {
+            objModel = objCharacterPlayerModel;
+        }
+        else if (characterData.characterType == CharacterTypeEnum.Enemy)
+        {
+            objModel = objCharacterEnemyModel;
+        }
+        GameObject objCharacter = Instantiate(gameObject, objModel, startPosition);
         CharacterCpt characterCpt = objCharacter.GetComponent<CharacterCpt>();
         characterCpt.SetCharacterData(characterData);
+
         if (characterData.characterType == CharacterTypeEnum.Player)
         {
             listPlayer.Add(characterCpt);
@@ -104,10 +114,29 @@ public class CharacterManager : BaseManager
         listPlayer.Clear();
         listEnemy.Clear();
     }
-    protected IEnumerator CoroutineForLoadCharacterModel(string modelName)
+    protected IEnumerator CoroutineForLoadCharacterModel(string playerModelName,string enemyModelName)
     {
-        ResourceRequest resourceRequest = Resources.LoadAsync("Character/" + modelName);
+        ResourceRequest resourceRequest = Resources.LoadAsync("Character/Pirate_Base");
         yield return resourceRequest;
-        objCharacterModel = resourceRequest.asset as GameObject;
+        GameObject objCharacterModel = resourceRequest.asset as GameObject;
+        //初始化友方模型
+        objCharacterPlayerModel = Instantiate(gameObject, objCharacterModel);
+        ResourceRequest playerRequest = Resources.LoadAsync("Character/"+ playerModelName);
+        yield return playerRequest;
+        GameObject objPlayer = playerRequest.asset as GameObject;
+        Instantiate(objCharacterPlayerModel, objPlayer);
+        CharacterAnimCpt playerAnim = objCharacterPlayerModel.GetComponent<CharacterAnimCpt>();
+        playerAnim.InitAnim();
+        objCharacterPlayerModel.SetActive(false);
+        //初始化敌方模型
+        objCharacterEnemyModel = Instantiate(gameObject, objCharacterModel);
+        ResourceRequest EnemyRequest = Resources.LoadAsync("Character/"+ enemyModelName);
+        yield return EnemyRequest;
+        GameObject objEnemy = EnemyRequest.asset as GameObject;
+        Instantiate(objCharacterEnemyModel, objEnemy);
+        CharacterAnimCpt EnemyAnim = objCharacterEnemyModel.GetComponent<CharacterAnimCpt>();
+        EnemyAnim.InitAnim();
+        objCharacterEnemyModel.SetActive(false);
+        Resources.UnloadUnusedAssets();
     }
 }

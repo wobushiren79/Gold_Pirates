@@ -9,6 +9,7 @@ public class GoldManager : BaseManager, IGoldDataView
     public List<GoldCpt> listGold;
 
     protected ICallBack callBack;
+
     private void Awake()
     {
         goldDataController = new GoldDataController(this, this);
@@ -56,21 +57,22 @@ public class GoldManager : BaseManager, IGoldDataView
     /// 获取闲置的金币
     /// </summary>
     /// <returns></returns>
-    public GoldCpt GetIdleGold()
+    public GoldCpt GetGoldByStatus( GoldStatusEnum goldStatus)
     {
         if (CheckUtil.ListIsNull(listGold))
         {
             return null;
         }
+        List<GoldCpt> listTemp = new List<GoldCpt>();
         for (int i = 0; i < listGold.Count; i++)
         {
             GoldCpt itemGold = listGold[i];
-            if (itemGold.GetGoldStatus() == GoldStatusEnum.Idle)
+            if (itemGold.GetGoldStatus() == goldStatus)
             {
-                return itemGold;
+                listTemp.Add(itemGold);
             }
         }
-        return null;
+        return RandomUtil.GetRandomDataByList(listTemp);
     }
 
     /// <summary>

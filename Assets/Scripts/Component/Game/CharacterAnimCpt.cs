@@ -5,6 +5,11 @@ public class CharacterAnimCpt : BaseMonoBehaviour
 {
     public Animator characterAnim;
 
+    public void InitAnim()
+    {
+        characterAnim = GetComponentInChildren<Animator>();
+    }
+
     public void SetCharacterStand()
     {
         characterAnim.Play("stand");

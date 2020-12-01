@@ -8,6 +8,11 @@ public class UIGameStart : BaseUIComponent, IBaseObserver
     public Button ui_BtLifeAdd;
     public Button ui_BtDamageAdd;
 
+    public Text ui_TvSpeedAdd;
+    public Text ui_TvNumberAdd;
+    public Text ui_TvLifeAdd;
+    public Text ui_TvDamageAdd;
+
     public Button ui_BtFire;
 
     public Text ui_TvGold;
@@ -30,8 +35,8 @@ public class UIGameStart : BaseUIComponent, IBaseObserver
             ui_BtNumberAdd.onClick.AddListener(OnClickForAddNumber);
         if (ui_BtLifeAdd)
             ui_BtLifeAdd.onClick.AddListener(OnClickForAddLife);
-        if (ui_BtLifeAdd)
-            ui_BtLifeAdd.onClick.AddListener(OnClickForAddDamage);
+        if (ui_BtDamageAdd)
+            ui_BtDamageAdd.onClick.AddListener(OnClickForAddDamage);
 
         if (ui_BtFire)
             ui_BtFire.onClick.AddListener(OnClickForFire);
@@ -50,6 +55,10 @@ public class UIGameStart : BaseUIComponent, IBaseObserver
             SetGold(userData.gold);
         handler_Game.GetScore(out long playerGold, out long enmeyGold);
         SetScore(playerGold, enmeyGold);
+
+        ui_TvSpeedAdd.text = "速度:" + userData.speed;
+        ui_TvLifeAdd.text = "生命:"+ userData.life ;
+        ui_TvDamageAdd.text = "伤害:"+ userData.damage;
     }
 
     public void SetGold(long gold)
@@ -90,7 +99,8 @@ public class UIGameStart : BaseUIComponent, IBaseObserver
 
     public void OnClickForAddDamage()
     {
-
+        int damage = handler_GameData.AddDamage(1);
+        handler_Ship.ChangePlayerShipDamage(damage);
     }
 
     public void OnClickForFire()
