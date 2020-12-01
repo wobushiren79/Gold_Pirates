@@ -45,7 +45,6 @@ public class UIGameStart : BaseUIComponent, IBaseObserver
     public override void RefreshUI()
     {
         base.RefreshUI();
-
     }
 
     private void Update()
@@ -77,6 +76,11 @@ public class UIGameStart : BaseUIComponent, IBaseObserver
         {
             ui_TvEnemyGold.text = enemyScore + "";
         }
+    }
+
+    public void SetFireCD(int time)
+    {
+        LogUtil.Log("Fire CD："+time);
     }
 
     public void OnClickForAddSpeed()

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 public class CharacterHandler : BaseHandler<CharacterManager>
 {
-    protected int numberForEnemy = 5;
+    protected int numberForEnemy = 100;
 
     public GameDataHandler handler_GameData;
     public GameHandler handler_Game;

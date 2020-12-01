@@ -35,7 +35,7 @@ public class GameHandler : BaseHandler<GameManager>
                 //打开UI
                 manager_UI.OpenUIAndCloseOther(UIEnum.GameStart);
                 //创建金币
-                handler_Gold.CreateGold(1000, 1);
+                handler_Gold.CreateGold(5000, 1);
                 break;
             case GameStatusEnum.GameIng:
                 //开启角色创建
@@ -44,7 +44,7 @@ public class GameHandler : BaseHandler<GameManager>
                 Action enemyShipCallBack = () =>
                 {
                     //开启敌舰自动攻击
-                    //handler_Ship.OpenShipFireAutoForEnemy();
+                    handler_Ship.OpenShipFireAutoForEnemy();
                 };
                 handler_Ship.CreateShip(CharacterTypeEnum.Player, 1, null);
                 handler_Ship.CreateShip(CharacterTypeEnum.Enemy, 1, enemyShipCallBack);

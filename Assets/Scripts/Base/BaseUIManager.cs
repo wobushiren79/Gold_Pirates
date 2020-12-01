@@ -54,12 +54,22 @@ public class BaseUIManager : BaseMonoBehaviour
         for (int i = 0; i < uiList.Count; i++)
         {
             BaseUIComponent itemUI = uiList[i];
-            if (itemUI.name.Equals(uiName))
+            if (itemUI.name.Contains(uiName))
             {
                 return itemUI;
             }
         }
         return null;
+    }
+
+    /// <summary>
+    /// 获取UI
+    /// </summary>
+    /// <param name="uiEnum"></param>
+    /// <returns></returns>
+    public BaseUIComponent GetUI(UIEnum uiEnum)
+    {
+        return GetUIByName(EnumUtil.GetEnumName(uiEnum));
     }
 
     /// <summary>
@@ -75,7 +85,7 @@ public class BaseUIManager : BaseMonoBehaviour
         for (int i = 0; i < uiList.Count; i++)
         {
             BaseUIComponent itemUI = uiList[i];
-            if (itemUI.name.Equals(uiName))
+            if (itemUI.name.Contains(uiName))
             {
                 tempUIList.Add(itemUI);
             }
@@ -96,7 +106,7 @@ public class BaseUIManager : BaseMonoBehaviour
         for (int i = 0; i < uiList.Count; i++)
         {
             BaseUIComponent itemUI = uiList[i];
-            if (itemUI.name.Equals(uiName))
+            if (itemUI.name.Contains(uiName))
             {
                 itemUI.OpenUI();
                 hasData = true;
@@ -141,7 +151,7 @@ public class BaseUIManager : BaseMonoBehaviour
         for (int i = 0; i < uiList.Count; i++)
         {
             BaseUIComponent itemUI = uiList[i];
-            if (itemUI.name.Equals(uiName))
+            if (itemUI.name.Contains(uiName))
             {
                 itemUI.CloseUI();
             }
@@ -173,7 +183,7 @@ public class BaseUIManager : BaseMonoBehaviour
         for (int i = 0; i < uiList.Count; i++)
         {
             BaseUIComponent itemUI = uiList[i];
-            if (!itemUI.name.Equals(uiName))
+            if (!itemUI.name.Contains(uiName))
             {
                 if (itemUI.gameObject.activeSelf)
                     itemUI.CloseUI();
@@ -238,7 +248,7 @@ public class BaseUIManager : BaseMonoBehaviour
         for (int i = 0; i < uiList.Count; i++)
         {
             BaseUIComponent itemUI = uiList[i];
-            if (itemUI.name.Equals(uiName))
+            if (itemUI.name.Contains(uiName))
             {
                 itemUI.RefreshUI();
             }
