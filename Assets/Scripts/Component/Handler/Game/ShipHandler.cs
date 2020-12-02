@@ -63,7 +63,8 @@ public class ShipHandler : BaseHandler<ShipManager>, ShipManager.ICallBack
     {
         ShipCpt shipCpt = manager.GetShip(CharacterTypeEnum.Enemy);
         Vector3 firePosition = handler_Scene.GetFirePosition(CharacterTypeEnum.Enemy);
-        StartCoroutine(shipCpt.CoroutineForAutoFire(firePosition));
+        shipCpt.StartAutoOpenFire(firePosition);
+
     }
 
     /// <summary>

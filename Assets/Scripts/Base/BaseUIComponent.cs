@@ -73,12 +73,4 @@ public class BaseUIComponent : BaseMonoBehaviour
         return uiManager as T;
     }
 
-    /// <summary>
-    /// 通过反射链接UI控件
-    /// </summary>
-    public void AutoLinkUI()
-    {
-        ReflexUtil.AutoLinkDataForChild(this, "ui_");
-    }
-
 }

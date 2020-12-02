@@ -52,6 +52,15 @@ public class CharacterManager : BaseManager
         }
     }
 
+    public void RefreshEnemyCharacter()
+    {
+        for (int i = 0; i < listEnemy.Count; i++)
+        {
+            CharacterCpt characterItem = listEnemy[i];
+            characterItem.RefreshCharacter();
+        }
+    }
+
     public List<CharacterCpt> GetAllPlayerCharacter()
     {
         return listPlayer;

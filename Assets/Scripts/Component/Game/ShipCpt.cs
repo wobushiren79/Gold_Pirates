@@ -39,6 +39,11 @@ public class ShipCpt : BaseObservable<IBaseObserver>
         }
     }
 
+    public void StartAutoOpenFire(Vector3 targetPosition)
+    {
+        StartCoroutine(CoroutineForAutoFire(targetPosition));
+    }
+
     public void CloseFire()
     {
         isAutoFire = false;
@@ -69,7 +74,8 @@ public class ShipCpt : BaseObservable<IBaseObserver>
             yield return new WaitForSeconds(1);
             //修改UI
             UIGameStart uiGameStart = (UIGameStart)manager_UI.GetUI(UIEnum.GameStart);
-            uiGameStart.SetFireCD(time);
+            if (uiGameStart != null)
+                uiGameStart.SetFireCD(time);
 
             time -= 1;
         }

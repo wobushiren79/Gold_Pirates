@@ -6,7 +6,7 @@ public class GoldManager : BaseManager, IGoldDataView
 {
     protected GoldDataController goldDataController;
 
-    public List<GoldCpt> listGold;
+    public List<GoldCpt> listGold = new List<GoldCpt>();
 
     protected ICallBack callBack;
 

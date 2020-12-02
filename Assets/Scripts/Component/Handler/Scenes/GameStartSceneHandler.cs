@@ -3,17 +3,9 @@ using UnityEngine;
 
 public class GameStartSceneHandler : BaseHandler<GameStartSceneManager>
 {
-
-    public GameDataHandler handler_GameData;
-
     public GameHandler handler_Game;
 
-    private void Start()
-    {
-        handler_Game.ChangeGameStatus(GameStatusEnum.GamePre);
-
-        handler_Game.ChangeGameStatus(GameStatusEnum.GameIng);
-    }
+    public GameDataHandler handler_GameData;
 
     /// <summary>
     /// 获取着陆位置

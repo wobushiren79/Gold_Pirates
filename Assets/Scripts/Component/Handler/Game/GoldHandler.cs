@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class GoldHandler : BaseHandler<GoldManager>, GoldManager.ICallBack
 {
     protected int goldNumber = 0;
+    
 
     public GameStartSceneHandler handler_Scene;
 
@@ -70,6 +71,15 @@ public class GoldHandler : BaseHandler<GoldManager>, GoldManager.ICallBack
     }
 
     /// <summary>
+    /// 获取场景中总体金币数量
+    /// </summary>
+    /// <returns></returns>
+    public int GetGoldMaxNumber()
+    {
+        return goldNumber;
+    }
+
+    /// <summary>
     /// 回收金币
     /// </summary>
     /// <param name="goldCpt"></param>
@@ -90,7 +100,8 @@ public class GoldHandler : BaseHandler<GoldManager>, GoldManager.ICallBack
         GameObject objModel = resourceRequest.asset as GameObject;
 
         //计算每个金币的坐标
-        List<Vector3> listPosition = CalculatePostionForGold(goldNumber);
+        // List<Vector3> listPosition = CalculatePostionForGold(goldNumber);
+        List<Vector3> listPosition = CalculatePostionForGold(10, 10, goldNumber);
         for (int i = 0; i < listPosition.Count; i++)
         {
             manager.CreateGold(objModel, goldData, listPosition[i]);
@@ -136,6 +147,35 @@ public class GoldHandler : BaseHandler<GoldManager>, GoldManager.ICallBack
                 offsetZ += 1f;
                 offsetY = 0.25f + goldStartPosition.y;
                 offsetX = -0.5f * (layer - 1) + goldStartPosition.x;
+            }
+        }
+        return listData;
+    }
+
+    public List<Vector3> CalculatePostionForGold(int hNumber,int vNumber, int goldNumber)
+    {
+        List<Vector3> listData = new List<Vector3>();
+        Vector3 goldStartPosition = handler_Scene.GetGoldPosition();
+        float offsetX =  goldStartPosition.x + hNumber / 2;
+        float offsetY = 0.25f + goldStartPosition.y;
+        float offsetZ =  goldStartPosition.z + vNumber;
+        int layer = 0;
+        int hTempNumber = 0;
+        int vTempNumber = 0;
+        for (int i = 0; i < goldNumber; i++)
+        {
+            listData.Add(new Vector3(offsetX- hTempNumber * 1f, offsetY + layer * 0.5f, offsetZ - vTempNumber * 1f));
+            hTempNumber ++ ;
+            if(hTempNumber>= hNumber)
+            {
+                hTempNumber = 0;
+                vTempNumber ++;
+                if(vTempNumber>= vNumber)
+                {
+                    hTempNumber = 0;
+                    vTempNumber = 0;
+                    layer++;
+                }
             }
         }
         return listData;

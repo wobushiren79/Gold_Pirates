@@ -75,11 +75,10 @@ public class CharacterCpt : BaseMonoBehaviour, IBaseObserver
         if (characterData.characterType == CharacterTypeEnum.Player)
         {
             SetCharacterSpeed(userData.speed + characterData.moveSpeed);
-
         }
         else
         {
-
+            SetCharacterSpeed(characterData.moveSpeed);
         }
         characterLife.SetLife(characterData.maxLife, characterData.life);
     }

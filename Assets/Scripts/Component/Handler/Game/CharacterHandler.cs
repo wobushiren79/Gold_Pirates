@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 public class CharacterHandler : BaseHandler<CharacterManager>
 {
-    protected int numberForEnemy = 100;
+    protected int numberForEnemy = 1;
 
     public GameDataHandler handler_GameData;
     public GameHandler handler_Game;
@@ -15,25 +15,29 @@ public class CharacterHandler : BaseHandler<CharacterManager>
     /// <summary>
     /// 初始化创建角色 用于游戏刚开始
     /// </summary>
-    public IEnumerator InitCreateCharacter()
+    public IEnumerator InitCreateCharacter(CharacterDataBean playerCharacterData, CharacterDataBean enemyCharacterData,int numberForEnemy)
     {
+        this.numberForEnemy = numberForEnemy;
         yield return manager.InitCharacterData();
         //创建一个友方海盗
-        CreateCharacter(CharacterTypeEnum.Player);
+        CreateCharacter(playerCharacterData);
         //延迟创建敌方海盗
-        StartCoroutine(CoroutineForCreateEnmeyCharacter());
+        StartCoroutine(CoroutineForCreateEnmeyCharacter(enemyCharacterData));
     }
 
-    public void CreateCharacter(CharacterTypeEnum characterType)
+    /// <summary>
+    /// 创建角色
+    /// </summary>
+    /// <param name="characterData"></param>
+    public void CreateCharacter(CharacterDataBean characterData)
     {
         if (!handler_Gold.GetTargetGold())
         {
             //没有金币了也不创建角色
             return;
         }
-        CharacterDataBean characterData = new CharacterDataBean(characterType);
         UserDataBean userData = handler_GameData.GetUserData();
-        if (characterType == CharacterTypeEnum.Player)
+        if (characterData.characterType == CharacterTypeEnum.Player)
         {
             //如果超过上线则不创建
             if (manager.GetPlayerCharacterNumber() >= userData.pirateNumber)
@@ -41,31 +45,46 @@ public class CharacterHandler : BaseHandler<CharacterManager>
                 return;
             }
         }
-        if (characterType == CharacterTypeEnum.Enemy)
+        if (characterData.characterType == CharacterTypeEnum.Enemy)
         {
             //如果超过上线则不创建
             if (manager.GetEnemyCharacterNumber() >= numberForEnemy)
             {
                 return;
             }
-            characterData.life = 5;
-            characterData.maxLife = 5;
         }
         
-        Vector3 startPosition = handler_Scene.GetStartPosition(characterType);
+        Vector3 startPosition = handler_Scene.GetStartPosition(characterData.characterType);
         manager.CreateCharacter(startPosition, characterData);
     }
 
+    /// <summary>
+    /// 停止持续创建角色
+    /// </summary>
     public void StopCreateCharacter()
     {
         StopAllCoroutines();
     }
 
-    public void RefreshCharacter()
+    /// <summary>
+    /// 刷新角色
+    /// </summary>
+    public void RefreshCharacter(CharacterTypeEnum characterType)
     {
-        manager.RefreshPlayerCharacter();
+        if (characterType == CharacterTypeEnum.Player)
+        {
+            manager.RefreshPlayerCharacter();
+        }
+        else if (characterType == CharacterTypeEnum.Enemy)
+        {
+            manager.RefreshEnemyCharacter();
+        }
     }
 
+    /// <summary>
+    /// 设置玩家角色生命值
+    /// </summary>
+    /// <param name="maxLife"></param>
     public void SetPlayerCharacterLife(int maxLife)
     {
         List<CharacterCpt> listCharacter = manager.GetAllPlayerCharacter();
@@ -75,7 +94,6 @@ public class CharacterHandler : BaseHandler<CharacterManager>
             itemCharacter.SetLife(maxLife);
         }
     }
-
 
     public void CleanCharacter(CharacterCpt characterCpt)
     {
@@ -87,12 +105,12 @@ public class CharacterHandler : BaseHandler<CharacterManager>
         manager.CleanAllCharacter();
     }
 
-    public IEnumerator CoroutineForCreateEnmeyCharacter()
+    public IEnumerator CoroutineForCreateEnmeyCharacter(CharacterDataBean enemyCharacterData)
     {
         for (int i = 0; i < numberForEnemy; i++)
         {
-            CreateCharacter(CharacterTypeEnum.Enemy);
-            yield return new WaitForSeconds(3);
+            CreateCharacter(enemyCharacterData);
+            yield return new WaitForSeconds(1);
         }
     }
 
