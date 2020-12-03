@@ -6,7 +6,7 @@ public class ShipBulletCpt : BaseMonoBehaviour
 {
     protected int bulletDamage;
     protected CharacterTypeEnum characterType;
-    public void SetData(CharacterTypeEnum characterType,int damage)
+    public void SetData(CharacterTypeEnum characterType, int damage)
     {
         this.bulletDamage = damage;
         this.characterType = characterType;
@@ -27,13 +27,13 @@ public class ShipBulletCpt : BaseMonoBehaviour
             });
     }
 
-    private void OnTriggerEnter(Collider other)
+    public void OnTriggerEnter(Collider other)
     {
         CharacterCpt characterCpt = other.GetComponent<CharacterCpt>();
         if (characterCpt)
         {
             //不可以攻击自己人
-            if (characterCpt.GetCharacterData().characterType!=this.characterType)
+            if (characterCpt.GetCharacterData().characterType != this.characterType)
             {
                 characterCpt.AddLife(-bulletDamage);
             }

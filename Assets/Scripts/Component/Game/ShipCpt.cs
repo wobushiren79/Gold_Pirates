@@ -61,12 +61,17 @@ public class ShipCpt : BaseObservable<IBaseObserver>
         isAutoFire = true;
         while (isAutoFire)
         {
-            yield return new WaitForSeconds(Random.Range(10, 20));
+            //容错处理
+            if (shipData.intervalForFire <= 0)
+            {
+                shipData.intervalForFire = 1;
+            }
+            yield return new WaitForSeconds(shipData.intervalForFire);
             OpenFire(targetPosition);
         }
     }
 
-    public IEnumerator CoroutineForFireCD(int time)
+    public IEnumerator CoroutineForFireCD(float time)
     {
         canFire = false;
         while (time > 0)

@@ -1,24 +1,52 @@
 ﻿using UnityEditor;
 using UnityEngine;
 using Pathfinding.Examples;
-public class AIForCharacterPathAuto : RVOExampleAgent
+using Pathfinding;
+
+public class AIForCharacterPathAuto : BaseMonoBehaviour
 {
+    public RichAI aiPath;
+    protected CharacterAnimCpt characterAnim;
+
+    public Transform tfTarget;
+
+    private void Awake()
+    {
+        aiPath = GetComponent<RichAI>();
+        characterAnim = GetComponent<CharacterAnimCpt>(); 
+    }
+
     /// <summary>
     /// 设置移动速度
     /// </summary>
     /// <param name="moveSpeed"></param>
     public void SetMoveSpeed(float moveSpeed)
     {
-        maxSpeed = moveSpeed;
+        aiPath.maxSpeed = moveSpeed;
     }
 
     /// <summary>
     /// 自动移动
     /// </summary>
     /// <param name="position">目的地</param>
-    public void SetDestination(Vector3 position)
+    public void SetDestination(Vector3 targetPosition)
     {
-        SetTarget(position);
+        aiPath.acceleration = float.MaxValue;
+        aiPath.destination = targetPosition;
+        aiPath.SearchPath();
+        aiPath.onSearchPath = () =>
+        {
+            aiPath.canMove = true;
+        };
+        characterAnim.SetCharacterWalk();
+    }
+    
+    /// <summary>
+    /// 停止寻路
+    /// </summary>
+    public void StopMove()
+    {
+        aiPath.canMove = false;
     }
 
     /// <summary>
@@ -27,14 +55,14 @@ public class AIForCharacterPathAuto : RVOExampleAgent
     /// <returns></returns>
     public bool IsAutoMoveStop()
     {
-        if (vectorPath != null || vectorPath.Count == 0|| canSearchAgain)
-        {
-            return false;
-        }
-        else
+        //有路径，到达目的地或者与最终目的地相隔
+        if (aiPath.hasPath && aiPath.reachedDestination)
         {
             return true;
         }
-
+        else
+        {
+            return false;
+        }
     }
 }

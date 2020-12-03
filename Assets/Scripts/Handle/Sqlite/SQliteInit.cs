@@ -24,8 +24,8 @@ public class SQLiteInit : BaseMonoBehaviour
 		//original path
 		string sourcePath = System.IO.Path.Combine(Application.streamingAssetsPath, "SQLiteDataBase/" + dbName);
 		//if DB does not exist in persistent data folder (folder "Documents" on iOS) or source DB is newer then copy it
-		if (!System.IO.File.Exists(pathDB) || (System.IO.File.GetLastWriteTimeUtc(sourcePath) > System.IO.File.GetLastWriteTimeUtc(pathDB)))
-		{
+		//if (!System.IO.File.Exists(pathDB) || (System.IO.File.GetLastWriteTimeUtc(sourcePath) > System.IO.File.GetLastWriteTimeUtc(pathDB)))
+		//{
 			if (sourcePath.Contains("://"))
 			{
 				// Android	
@@ -59,7 +59,7 @@ public class SQLiteInit : BaseMonoBehaviour
 					Debug.Log("ERROR: the file DB named " + dbName + " doesn't exist in the StreamingAssets Folder, please copy it there.");
 				}
 			}
-		}
+		//}
 	}
 
 	public void InitSQliteSef()

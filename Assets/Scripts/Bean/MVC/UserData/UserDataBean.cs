@@ -10,7 +10,7 @@ public class UserDataBean
     //海盗数量上限
     public int pirateNumber = 1000;
     //速度加成
-    public float speed = 0;
+    public float speed = 1;
     //生命值加成
     public int life = 1;
     //伤害
@@ -33,8 +33,8 @@ public class UserDataBean
     public float AddSpeed(float addSpeed)
     {
         speed += addSpeed;
-        if (speed < 0)
-            speed = 0;
+        if (speed < 1)
+            speed = 1;
         return speed;
     }
 

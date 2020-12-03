@@ -6,6 +6,7 @@ using UnityEngine;
 public class ShipHandler : BaseHandler<ShipManager>, ShipManager.ICallBack
 {
     public GameStartSceneHandler handler_Scene;
+    public GameHandler handler_Game;
 
     protected override void Awake()
     {
@@ -15,6 +16,7 @@ public class ShipHandler : BaseHandler<ShipManager>, ShipManager.ICallBack
 
     public void CreateShip(CharacterTypeEnum characterType, long shipId, Action callBack)
     {
+        GameLevelBean gameLevelData= handler_Game.GetGameLevelData();
         CptUtil.RemoveChild(transform);
         switch (characterType)
         {
@@ -28,6 +30,7 @@ public class ShipHandler : BaseHandler<ShipManager>, ShipManager.ICallBack
             case CharacterTypeEnum.Enemy:
                 manager.GetShipDataById((shipData) =>
                 {
+                    shipData.intervalForFire = gameLevelData.enemy_fire_interval;
                     shipData.characterType = CharacterTypeEnum.Enemy;
                     StartCoroutine(CoroutineForCreateShip(shipData, callBack));
                 }, shipId);

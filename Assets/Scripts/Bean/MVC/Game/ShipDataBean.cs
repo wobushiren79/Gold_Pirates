@@ -9,6 +9,6 @@ public class ShipDataBean : BaseBean
     public int ship_damage;
 
     public int bulletDamage = 1;
-    public int intervalForFire = 10;
+    public float intervalForFire = 10;
     public CharacterTypeEnum characterType;
 }

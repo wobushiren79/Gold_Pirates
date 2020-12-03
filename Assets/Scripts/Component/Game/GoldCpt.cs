@@ -55,8 +55,8 @@ public class GoldCpt : BaseObservable<CharacterCpt>
     {
         goldStatus = GoldStatusEnum.Drop;
         SetPhysic(true);
-        transform.SetParent(handler_Gold.transform);
-
+        if(handler_Gold)
+            transform.SetParent(handler_Gold.transform);
     }
 
     public void SetRecycle(Vector3 recyclePosition)
@@ -91,16 +91,17 @@ public class GoldCpt : BaseObservable<CharacterCpt>
     {
         if (isOpen)
         {
-            Rigidbody rigidbody = CptUtil.AddCpt<Rigidbody>(gameObject);
+            Rigidbody rigidbody = GetComponent<Rigidbody>();
+            rigidbody.isKinematic = false;
             BoxCollider collider = GetComponent<BoxCollider>();
             collider.isTrigger = false;
         }
         else
         {
             Rigidbody rigidbody = GetComponent<Rigidbody>();
-            DestroyImmediate(rigidbody);
+            rigidbody.isKinematic = true;
             BoxCollider collider = GetComponent<BoxCollider>();
-            collider.isTrigger = true;
+            collider.isTrigger = true; 
         }
     }
 

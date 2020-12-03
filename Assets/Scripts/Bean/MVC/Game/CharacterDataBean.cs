@@ -22,6 +22,27 @@ public class CharacterDataBean
         life = maxLife;
     }
 
+    public void AddMaxLife(int addMaxLife)
+    {
+        SetLife(maxLife + addMaxLife);
+    }
+
+    public float SetSpeed(float speed)
+    {
+        this.moveSpeed = speed;
+        return this.moveSpeed;
+    }
+
+    public float AddSpeed(float addSpeed)
+    {
+        moveSpeed += addSpeed;
+        if (moveSpeed < 0)
+        {
+            moveSpeed = 0;
+        }
+        return moveSpeed;
+    }
+
     public int AddLife(int addLife)
     {
         life += addLife;

@@ -26,7 +26,8 @@ public class CharacterCpt : BaseMonoBehaviour, IBaseObserver
     public GameHandler handler_Game;
     public ShipHandler handler_Ship;
 
-    protected AIForCharacterPath aiForCharacterPath;
+    //protected AIForCharacterPath aiForCharacterPath;
+    protected AIForCharacterPathAuto aiForCharacterPath;
     protected CharacterAnimCpt characterAnim;
     protected CharacterLifeCpt characterLife;
 
@@ -39,7 +40,7 @@ public class CharacterCpt : BaseMonoBehaviour, IBaseObserver
 
     private void Awake()
     {
-        aiForCharacterPath = CptUtil.AddCpt<AIForCharacterPath>(gameObject);
+        aiForCharacterPath = CptUtil.AddCpt<AIForCharacterPathAuto>(gameObject);
         characterAnim = GetComponent<CharacterAnimCpt>();
         characterLife = GetComponent<CharacterLifeCpt>();
 
@@ -66,20 +67,32 @@ public class CharacterCpt : BaseMonoBehaviour, IBaseObserver
         }
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (characterIntent != CharacterIntentEnum.GoToGold)
+        {
+            return;
+        }
+        GoldCpt goldCpt = other.gameObject.GetComponent<GoldCpt>();
+        if (goldCpt != null && (goldCpt.GetGoldStatus() == GoldStatusEnum.Idle || goldCpt.GetGoldStatus() == GoldStatusEnum.Drop))
+        {
+            aiForCharacterPath.StopMove();
+            SetHandGold(goldCpt);
+        }
+    }
+    private void OnDestroy()
+    {
+        //掉落金币
+        if (handGold)
+            handGold.SetDrop();
+    }
+
     /// <summary>
     /// 刷新角色数据
     /// </summary>
     public void RefreshCharacter()
     {
-        UserDataBean userData = handler_GameData.GetUserData();
-        if (characterData.characterType == CharacterTypeEnum.Player)
-        {
-            SetCharacterSpeed(userData.speed + characterData.moveSpeed);
-        }
-        else
-        {
-            SetCharacterSpeed(characterData.moveSpeed);
-        }
+        aiForCharacterPath.SetMoveSpeed(characterData.moveSpeed);
         characterLife.SetLife(characterData.maxLife, characterData.life);
     }
 
@@ -91,9 +104,6 @@ public class CharacterCpt : BaseMonoBehaviour, IBaseObserver
         {
             //死亡
             handler_Character.CleanCharacter(this);
-            //掉落金币
-            if (handGold)
-                handGold.SetDrop();
             //删除角色
             Destroy(gameObject);
         }
@@ -102,6 +112,13 @@ public class CharacterCpt : BaseMonoBehaviour, IBaseObserver
     public void SetLife(int maxLife)
     {
         characterData.SetLife(maxLife);
+        RefreshCharacter();
+    }
+
+    public void AddMaxLife(int addLife)
+    {
+        characterData.SetLife(characterData.maxLife + addLife);
+        RefreshCharacter();
     }
 
     /// <summary>
@@ -116,13 +133,15 @@ public class CharacterCpt : BaseMonoBehaviour, IBaseObserver
     }
 
     /// <summary>
-    /// 设置角色速度
+    /// 增加角色速度
     /// </summary>
     /// <param name="speed"></param>
     public void SetCharacterSpeed(float speed)
     {
-        aiForCharacterPath.SetMoveSpeed(speed);
+        float moveSpeed = characterData.SetSpeed(speed);
+        aiForCharacterPath.SetMoveSpeed(moveSpeed);
     }
+
 
     public void SetIntentForIdle()
     {
@@ -134,7 +153,8 @@ public class CharacterCpt : BaseMonoBehaviour, IBaseObserver
         SetBoatStatus(true);
         this.characterIntent = CharacterIntentEnum.GoToIsland;
         Vector3 islandPosition = handler_Scene.GetIslandPosition(characterData.characterType);
-        aiForCharacterPath.SetDestination(islandPosition + new Vector3(1f, 0, 0));
+        islandPosition += new Vector3(Random.Range(-3f, 3f), 0, 0);
+        aiForCharacterPath.SetDestination(islandPosition);
     }
 
     public void SetIntentForGoToGold(Vector3 goldPosition)
@@ -170,7 +190,8 @@ public class CharacterCpt : BaseMonoBehaviour, IBaseObserver
         SetBoatStatus(false);
         this.characterIntent = CharacterIntentEnum.ExitIsland;
         Vector3 islandPosition = handler_Scene.GetIslandPosition(characterData.characterType);
-        aiForCharacterPath.SetDestination(islandPosition + new Vector3(-1f, 0, 0));
+        islandPosition += new Vector3(Random.Range(-3f, 3f), 0, 0);
+        aiForCharacterPath.SetDestination(islandPosition);
     }
 
     public void SetIntentForBack()
@@ -198,6 +219,25 @@ public class CharacterCpt : BaseMonoBehaviour, IBaseObserver
         }
     }
 
+    /// <summary>
+    /// 拿起目标
+    /// </summary>
+    /// <param name="goldCpt"></param>
+    public void SetHandGold(GoldCpt goldCpt)
+    {
+        handGold = goldCpt;
+        targetGold = null;
+        if (handGold == null)
+        {
+            SetIntentForIdle();
+        }
+        else
+        {
+            handGold.SetCarry(characterData.characterType, transform_Hand);
+            SetIntentForExitIsland();
+        }
+    }
+
     public void HandleForGoToGold()
     {
         if (aiForCharacterPath.IsAutoMoveStop())
@@ -210,18 +250,7 @@ public class CharacterCpt : BaseMonoBehaviour, IBaseObserver
             }
             else
             {
-                //拿起目标 
-                handGold = targetGold;
-                targetGold = null;
-                if (handGold == null)
-                {
-                    SetIntentForIdle();
-                }
-                else
-                {
-                    handGold.SetCarry(characterData.characterType, transform_Hand);
-                    SetIntentForExitIsland();
-                }
+                SetHandGold(targetGold);
             }
         }
     }
@@ -249,7 +278,7 @@ public class CharacterCpt : BaseMonoBehaviour, IBaseObserver
                 //检测游戏是否结束
                 handler_Game.CheckGameOver();
             }
-            if (handler_Gold.GetTargetGold()==null)
+            if (handler_Gold.GetTargetGold() == null)
             {
                 //如果没有金币。说明已经搬完 回收
                 SetIntentForIdle();

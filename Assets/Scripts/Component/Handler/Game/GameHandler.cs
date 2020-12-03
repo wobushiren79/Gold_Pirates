@@ -2,7 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 
-public class GameHandler : BaseHandler<GameManager>,GameManager.ICallBack
+public class GameHandler : BaseHandler<GameManager>, GameManager.ICallBack
 {
     public UIManager manager_UI;
     public GoldHandler handler_Gold;
@@ -17,7 +17,6 @@ public class GameHandler : BaseHandler<GameManager>,GameManager.ICallBack
     {
         base.Awake();
         manager.SetCallBack(this);
-
     }
 
     private void Start()
@@ -30,7 +29,7 @@ public class GameHandler : BaseHandler<GameManager>,GameManager.ICallBack
         InitGameLevelData(1, callBack);
     }
 
-    public void AddGold(CharacterTypeEnum characterType,long gold)
+    public void AddGold(CharacterTypeEnum characterType, long gold)
     {
         switch (characterType)
         {
@@ -44,7 +43,7 @@ public class GameHandler : BaseHandler<GameManager>,GameManager.ICallBack
         }
     }
 
-    public void InitGameLevelData(int level,Action<GameLevelBean> action)
+    public void InitGameLevelData(int level, Action<GameLevelBean> action)
     {
         manager.GetGameLevelDataByLevel(level, action);
     }
@@ -62,14 +61,20 @@ public class GameHandler : BaseHandler<GameManager>,GameManager.ICallBack
                 break;
             case GameStatusEnum.GameIng:
                 //开启角色创建
-                CharacterDataBean playerCharacterData = new CharacterDataBean( CharacterTypeEnum.Player);
+                UserDataBean userData= handler_GameData.GetUserData();
+                CharacterDataBean playerCharacterData = new CharacterDataBean(CharacterTypeEnum.Player)
+                {
+                    life = userData.life,
+                    maxLife = userData.life,
+                    moveSpeed = userData.speed
+                };
                 CharacterDataBean enemyCharacterData = new CharacterDataBean(CharacterTypeEnum.Enemy)
                 {
                     life = gameLevelData.enemy_life,
                     maxLife = gameLevelData.enemy_life,
                     moveSpeed = gameLevelData.enemy_speed
                 };
-                StartCoroutine(handler_Character.InitCreateCharacter(playerCharacterData, enemyCharacterData,gameLevelData.enemy_number));
+                StartCoroutine(handler_Character.InitCreateCharacter(playerCharacterData, enemyCharacterData, gameLevelData.enemy_number));
                 //创建船
                 Action enemyShipCallBack = () =>
                 {
@@ -105,7 +110,7 @@ public class GameHandler : BaseHandler<GameManager>,GameManager.ICallBack
         }
     }
 
-    public void GetScore(out long playerGold,out long enemyGold)
+    public void GetScore(out long playerGold, out long enemyGold)
     {
         playerGold = 0;
         enemyGold = 0;
@@ -114,6 +119,11 @@ public class GameHandler : BaseHandler<GameManager>,GameManager.ICallBack
             playerGold = gameData.playerGold;
             enemyGold = gameData.enemyGold;
         }
+    }
+
+    public GameLevelBean GetGameLevelData()
+    {
+        return gameLevelData;
     }
 
     public void CleanGameData()

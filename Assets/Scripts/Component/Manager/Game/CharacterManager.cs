@@ -61,13 +61,18 @@ public class CharacterManager : BaseManager
         }
     }
 
-    public List<CharacterCpt> GetAllPlayerCharacter()
+    public List<CharacterCpt> GetCharacterByType(CharacterTypeEnum characterType)
     {
-        return listPlayer;
-    }
-    public List<CharacterCpt> GetAllEnemyCharacter()
-    {
-        return listEnemy;
+        List<CharacterCpt> listCharacter = new List<CharacterCpt>();
+        if (characterType == CharacterTypeEnum.Player)
+        {
+            listCharacter = listPlayer;
+        }
+        else if (characterType == CharacterTypeEnum.Enemy)
+        {
+            listCharacter = listEnemy;
+        }
+        return listCharacter;
     }
 
     /// <summary>
@@ -125,7 +130,7 @@ public class CharacterManager : BaseManager
     }
     protected IEnumerator CoroutineForLoadCharacterModel(string playerModelName,string enemyModelName)
     {
-        ResourceRequest resourceRequest = Resources.LoadAsync("Character/Pirate_Base");
+        ResourceRequest resourceRequest = Resources.LoadAsync("Character/Pirate_Base_2");
         yield return resourceRequest;
         GameObject objCharacterModel = resourceRequest.asset as GameObject;
         //初始化友方模型

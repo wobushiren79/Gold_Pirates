@@ -62,7 +62,7 @@ public class UIGameStart : BaseUIComponent, IBaseObserver
         ui_GoldProgress.SetData(maxGold, currentGold);
     }
 
-    public void SetFireCD(int time)
+    public void SetFireCD(float time)
     {
         LogUtil.Log("Fire CD：" + time);
     }

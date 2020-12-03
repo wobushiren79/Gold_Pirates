@@ -6,11 +6,13 @@ using System.Collections.Generic;
 public class CharacterHandler : BaseHandler<CharacterManager>
 {
     protected int numberForEnemy = 1;
+    protected bool isBuildEnemy = false;
 
     public GameDataHandler handler_GameData;
     public GameHandler handler_Game;
     public GameStartSceneHandler handler_Scene;
     public GoldHandler handler_Gold;
+
 
     /// <summary>
     /// 初始化创建角色 用于游戏刚开始
@@ -21,8 +23,12 @@ public class CharacterHandler : BaseHandler<CharacterManager>
         yield return manager.InitCharacterData();
         //创建一个友方海盗
         CreateCharacter(playerCharacterData);
+
+
         //延迟创建敌方海盗
         StartCoroutine(CoroutineForCreateEnmeyCharacter(enemyCharacterData));
+        StartCoroutine(CoroutineForEnemySpeedChange(enemyCharacterData));
+        StartCoroutine(CoroutineForEnemyLifeChange(enemyCharacterData));
     }
 
     /// <summary>
@@ -63,6 +69,7 @@ public class CharacterHandler : BaseHandler<CharacterManager>
     /// </summary>
     public void StopCreateCharacter()
     {
+        isBuildEnemy = false;
         StopAllCoroutines();
     }
 
@@ -82,16 +89,29 @@ public class CharacterHandler : BaseHandler<CharacterManager>
     }
 
     /// <summary>
-    /// 设置玩家角色生命值
+    ///  设置角色生命值
     /// </summary>
+    /// <param name="characterType"></param>
     /// <param name="maxLife"></param>
-    public void SetPlayerCharacterLife(int maxLife)
+    public void SetCharacterLife(CharacterTypeEnum characterType, int maxLife)
     {
-        List<CharacterCpt> listCharacter = manager.GetAllPlayerCharacter();
+        List<CharacterCpt> listCharacter = manager.GetCharacterByType(characterType);
+
         for (int i = 0; i < listCharacter.Count; i++)
         {
             CharacterCpt itemCharacter = listCharacter[i];
             itemCharacter.SetLife(maxLife);
+        }
+    }
+
+    public void SetCharacterSpeed(CharacterTypeEnum characterType,float speed)
+    {
+        List<CharacterCpt> listCharacter = manager.GetCharacterByType(characterType);
+
+        for (int i = 0; i < listCharacter.Count; i++)
+        {
+            CharacterCpt itemCharacter = listCharacter[i];
+            itemCharacter.SetCharacterSpeed(speed);
         }
     }
 
@@ -107,11 +127,40 @@ public class CharacterHandler : BaseHandler<CharacterManager>
 
     public IEnumerator CoroutineForCreateEnmeyCharacter(CharacterDataBean enemyCharacterData)
     {
-        for (int i = 0; i < numberForEnemy; i++)
+        isBuildEnemy = true;
+        GameLevelBean gameLevelData = handler_Game.GetGameLevelData();
+        while (isBuildEnemy)
         {
             CreateCharacter(enemyCharacterData);
-            yield return new WaitForSeconds(1);
+            if (gameLevelData.enemy_build_interval <= 0)
+            {
+                gameLevelData.enemy_build_interval = 1;
+            }
+            yield return new WaitForSeconds(gameLevelData.enemy_build_interval);
         }
     }
 
+    public IEnumerator CoroutineForEnemySpeedChange(CharacterDataBean enemyCharacterData)
+    {
+        isBuildEnemy = true;
+        GameLevelBean gameLevelData = handler_Game.GetGameLevelData();
+        while (isBuildEnemy)
+        {
+            yield return new WaitForSeconds(gameLevelData.enemy_speed_interval);
+            float speed = enemyCharacterData.AddSpeed(gameLevelData.enemy_speed_incremental);
+            SetCharacterSpeed(CharacterTypeEnum.Enemy, speed);
+        }
+    }
+
+    public IEnumerator CoroutineForEnemyLifeChange(CharacterDataBean enemyCharacterData)
+    {
+        isBuildEnemy = true;
+        GameLevelBean gameLevelData = handler_Game.GetGameLevelData();
+        while (isBuildEnemy)
+        {
+            yield return new WaitForSeconds(gameLevelData.enemy_life_interval);
+            enemyCharacterData.AddMaxLife(gameLevelData.enemy_life_incremental);
+            SetCharacterLife(CharacterTypeEnum.Enemy, enemyCharacterData.maxLife);
+        }
+    }
 }
