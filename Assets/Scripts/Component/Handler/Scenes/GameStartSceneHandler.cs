@@ -55,5 +55,5 @@ public class GameStartSceneHandler : BaseHandler<GameStartSceneManager>
         return manager.GetShipBulletModel();
     }
 
-
+    
 }
