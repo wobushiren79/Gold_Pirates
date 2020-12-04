@@ -10,11 +10,11 @@ public class UserDataBean
     //海盗数量上限
     public int pirateNumber = 1000;
     //速度加成
-    public float speed = 1;
+    public float speed = 0;
     //生命值加成
-    public int life = 1;
+    public int life = 0;
     //伤害
-    public int damage = 1;
+    public int damage = 0;
 
     public void AddGold(long addGold)
     {

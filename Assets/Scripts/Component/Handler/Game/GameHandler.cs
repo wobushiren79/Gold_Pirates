@@ -64,9 +64,9 @@ public class GameHandler : BaseHandler<GameManager>, GameManager.ICallBack
                 UserDataBean userData= handler_GameData.GetUserData();
                 CharacterDataBean playerCharacterData = new CharacterDataBean(CharacterTypeEnum.Player)
                 {
-                    life = userData.life,
-                    maxLife = userData.life,
-                    moveSpeed = userData.speed
+                    life = userData.life + gameData.player_life,
+                    maxLife = userData.life + gameData.player_life,
+                    moveSpeed = userData.speed + gameData.player_speed
                 };
                 CharacterDataBean enemyCharacterData = new CharacterDataBean(CharacterTypeEnum.Enemy)
                 {
@@ -119,6 +119,11 @@ public class GameHandler : BaseHandler<GameManager>, GameManager.ICallBack
             playerGold = gameData.playerGold;
             enemyGold = gameData.enemyGold;
         }
+    }
+
+    public GameBean GetGameData()
+    {
+        return gameData;
     }
 
     public GameLevelBean GetGameLevelData()

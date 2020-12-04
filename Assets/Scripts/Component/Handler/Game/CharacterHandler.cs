@@ -13,7 +13,6 @@ public class CharacterHandler : BaseHandler<CharacterManager>
     public GameStartSceneHandler handler_Scene;
     public GoldHandler handler_Gold;
 
-
     /// <summary>
     /// 初始化创建角色 用于游戏刚开始
     /// </summary>
@@ -23,7 +22,6 @@ public class CharacterHandler : BaseHandler<CharacterManager>
         yield return manager.InitCharacterData();
         //创建一个友方海盗
         CreateCharacter(playerCharacterData);
-
 
         //延迟创建敌方海盗
         StartCoroutine(CoroutineForCreateEnmeyCharacter(enemyCharacterData));

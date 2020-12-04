@@ -1,7 +1,8 @@
 ﻿using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
-public class UIGameStart : BaseUIComponent, IBaseObserver
+using DG.Tweening;
+public class UIGameStart : BaseUIComponent, IBaseObserver, UIViewForFireButton.ICallBack
 {
     public Button ui_BtSetting;
     public Button ui_BtFire;
@@ -11,6 +12,7 @@ public class UIGameStart : BaseUIComponent, IBaseObserver
 
     public UIChildForAttributeAdd ui_ChildAttributeAdd;
     public UIViewForGoldProgress ui_GoldProgress;
+    public UIViewForFireButton ui_FireButton;
 
     public GameDataHandler handler_GameData;
     public CharacterHandler handler_Character;
@@ -29,6 +31,8 @@ public class UIGameStart : BaseUIComponent, IBaseObserver
             ui_BtSetting.onClick.AddListener(OnClickForSetting);
         if (ui_BtAdvertisement)
             ui_BtAdvertisement.onClick.AddListener(OnClickForAdvertisement);
+        if (ui_FireButton)
+            ui_FireButton.SetCallBack(this);
     }
 
     public override void RefreshUI()
@@ -62,14 +66,25 @@ public class UIGameStart : BaseUIComponent, IBaseObserver
         ui_GoldProgress.SetData(maxGold, currentGold);
     }
 
-    public void SetFireCD(float time)
+    public void SetFireCD(float maxTime, float time)
     {
-        LogUtil.Log("Fire CD：" + time);
+        if (time == 0)
+        {
+            ui_FireButton.ChangeStatus(false);
+        }
+        else
+        {
+            ui_FireButton.ChangeStatus(true);
+        }
+        ui_FireButton.SetTime(maxTime, time);
     }
 
     public void OnClickForFire()
     {
         handler_Ship.ShipFire(CharacterTypeEnum.Player);
+        //屏幕抖动
+        RectTransform rtf = (RectTransform)transform;
+        rtf.DOShakeAnchorPos(0.3f,50,30,90,false,true);
     }
 
     public void OnClickForSetting()

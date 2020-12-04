@@ -74,16 +74,18 @@ public class ShipCpt : BaseObservable<IBaseObserver>
     public IEnumerator CoroutineForFireCD(float time)
     {
         canFire = false;
+        float maxTime = time;
+        //修改UI
+        UIGameStart uiGameStart = (UIGameStart)manager_UI.GetUI(UIEnum.GameStart);
         while (time > 0)
-        {
-            yield return new WaitForSeconds(1);
-            //修改UI
-            UIGameStart uiGameStart = (UIGameStart)manager_UI.GetUI(UIEnum.GameStart);
+        {   
             if (uiGameStart != null)
-                uiGameStart.SetFireCD(time);
-
+                uiGameStart.SetFireCD(maxTime, time);
+            yield return new WaitForSeconds(1);
             time -= 1;
         }
+        if (uiGameStart != null)
+            uiGameStart.SetFireCD(0, 0);
         canFire = true;
     }
 

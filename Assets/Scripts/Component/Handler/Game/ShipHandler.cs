@@ -16,13 +16,17 @@ public class ShipHandler : BaseHandler<ShipManager>, ShipManager.ICallBack
 
     public void CreateShip(CharacterTypeEnum characterType, long shipId, Action callBack)
     {
-        GameLevelBean gameLevelData= handler_Game.GetGameLevelData();
         CptUtil.RemoveChild(transform);
+
+        GameLevelBean gameLevelData= handler_Game.GetGameLevelData();
+        GameBean gameData =  handler_Game.GetGameData();
+
         switch (characterType)
         {
             case CharacterTypeEnum.Player:
                 manager.GetShipDataById((shipData) =>
                 {
+                    shipData.ship_damage = gameData.player_damage;
                     shipData.characterType = CharacterTypeEnum.Player;
                     StartCoroutine(CoroutineForCreateShip(shipData, callBack));
                 }, shipId);

@@ -33,31 +33,32 @@ public class UIChildForAttributeAdd : BaseUIChildComponent<UIGameStart>
     public void OnClickForAddNumber()
     {
         UserDataBean userData = uiComponent.handler_GameData.GetUserData();
+        GameBean gameData= uiComponent.handler_Game.GetGameData();
         CharacterDataBean playerCharacterData = new CharacterDataBean(CharacterTypeEnum.Player)
         {
-            life = userData.life,
-            maxLife = userData.life,
-            moveSpeed = userData.speed
+            life = userData.life+ gameData.player_life,
+            maxLife = userData.life + gameData.player_life,
+            moveSpeed = userData.speed + gameData.player_speed
         };
         uiComponent.handler_Character.CreateCharacter(playerCharacterData);
     }
 
     public void OnClickForAddLife()
     {
-        int life = uiComponent.handler_GameData.AddLife(1);
+        int life = uiComponent.handler_Game.GetGameData().AddPlayerLife(1);
         uiComponent.handler_Character.SetCharacterLife(CharacterTypeEnum.Player, life);
         uiComponent.handler_Character.RefreshCharacter(CharacterTypeEnum.Player);
     }
 
     public void OnClickForAddDamage()
     {
-        int damage = uiComponent.handler_GameData.AddDamage(1);
+        int damage = uiComponent.handler_Game.GetGameData().AddPlayerDamage(1);
         uiComponent.handler_Ship.ChangePlayerShipDamage(damage);
     }
 
     public void OnClickForAddSpeed()
     {
-        float speed = uiComponent.handler_GameData.AddSpeed(0.5f);
+        float speed = uiComponent.handler_Game.GetGameData().AddPlayerSpeed(0.5f);
         uiComponent.handler_Character.SetCharacterSpeed(CharacterTypeEnum.Player, speed);
         uiComponent.handler_Character.RefreshCharacter(CharacterTypeEnum.Player);
     }

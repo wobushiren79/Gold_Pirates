@@ -9,8 +9,35 @@ public class GameBean
     public GameStatusEnum gameStatus;
     public long playerGold;
     public long enemyGold;
+
+    //玩家初始速度
+    public float player_speed = 1;
+    //玩家初始生命值
+    public int player_life = 1;
+    //玩家初始伤害
+    public int player_damage = 1;
+
     //初始海盗数量
     public int initPirateNumber = 1;
+
+    public float AddPlayerSpeed(float speed)
+    {
+        player_speed += speed;
+        return player_speed;
+    }
+
+    public int AddPlayerLife(int life)
+    {
+        player_life += life;
+        return player_life;
+    }
+
+    public int AddPlayerDamage(int damage)
+    {
+        player_damage += damage;
+        return player_damage;
+    }
+
     public void AddPlayerGold(long gold)
     {
         playerGold += gold;
