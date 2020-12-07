@@ -35,11 +35,6 @@ public class UIGameStart : BaseUIComponent, IBaseObserver, UIViewForFireButton.I
             ui_FireButton.SetCallBack(this);
     }
 
-    public override void RefreshUI()
-    {
-        base.RefreshUI();
-    }
-
     private void Update()
     {
         UserDataBean userData = handler_GameData.GetUserData();
@@ -48,6 +43,12 @@ public class UIGameStart : BaseUIComponent, IBaseObserver, UIViewForFireButton.I
         handler_Game.GetScore(out long playerGold, out long enmeyGold);
         SetScore(playerGold, enmeyGold);
         SetGoldProgress(handler_Gold.GetGoldMaxNumber(), handler_Gold.GetGoldNumber());
+    }
+
+    public override void OpenUI()
+    {
+        base.OpenUI();
+        SetFireCD(0f,0f);
     }
 
     public void SetGold(long gold)

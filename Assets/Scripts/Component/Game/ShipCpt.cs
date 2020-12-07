@@ -81,8 +81,8 @@ public class ShipCpt : BaseObservable<IBaseObserver>
         {   
             if (uiGameStart != null)
                 uiGameStart.SetFireCD(maxTime, time);
-            yield return new WaitForSeconds(1);
-            time -= 1;
+            yield return new WaitForSeconds(0.02f);
+            time -= 0.02f;
         }
         if (uiGameStart != null)
             uiGameStart.SetFireCD(0, 0);

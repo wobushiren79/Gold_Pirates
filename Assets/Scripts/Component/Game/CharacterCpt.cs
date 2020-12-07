@@ -271,7 +271,7 @@ public class CharacterCpt : BaseMonoBehaviour, IBaseObserver
             {
                 //归还金币
                 //增加金币
-                handler_Game.AddGold(characterData.characterType, handGold.goldData.gold_price);
+                handler_Game.AddGold(characterData.characterType, handGold.goldData.gold_price, 1);
                 //回收金币
                 ShipCpt shipCpt = handler_Ship.GetShip(characterData.characterType);
                 handGold.SetRecycle(shipCpt.transform.position);

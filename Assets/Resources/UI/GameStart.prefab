@@ -1159,9 +1159,9 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 528345123675381247}
   - {fileID: 4613654738495425516}
   - {fileID: 8018341835657244384}
+  - {fileID: 528345123675381247}
   m_Father: {fileID: 5666438370929092788}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1396,7 +1396,7 @@ GameObject:
   - component: {fileID: 5957261827838855783}
   - component: {fileID: 9081782542329691205}
   m_Layer: 5
-  m_Name: BtLifeAdd
+  m_Name: BtGoldPriceAdd
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1594,11 +1594,11 @@ MonoBehaviour:
   uiComponent: {fileID: 1922986238254489425}
   ui_BtSpeedAdd: {fileID: 0}
   ui_BtNumberAdd: {fileID: 0}
-  ui_BtLifeAdd: {fileID: 0}
+  ui_BtGoldPriceAdd: {fileID: 0}
   ui_BtDamageAdd: {fileID: 0}
   ui_TvSpeed: {fileID: 0}
   ui_TvNumber: {fileID: 0}
-  ui_TvLife: {fileID: 0}
+  ui_TvGoldPrice: {fileID: 0}
   ui_TvDamage: {fileID: 0}
 --- !u!1 &3830654946293298660
 GameObject:
@@ -2362,7 +2362,7 @@ GameObject:
   - component: {fileID: 6721092166694082634}
   - component: {fileID: 2641151820096858224}
   m_Layer: 5
-  m_Name: TvLife
+  m_Name: TvGoldPrice
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2671,7 +2671,7 @@ RectTransform:
   - {fileID: 2549527563333993049}
   - {fileID: 3405731058509059767}
   m_Father: {fileID: 4382412901670439260}
-  m_RootOrder: 0
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -2727,7 +2727,7 @@ GameObject:
   - component: {fileID: 5818765473805745981}
   - component: {fileID: 5394854731690080346}
   m_Layer: 5
-  m_Name: TvTitleLife
+  m_Name: TvTitleGoldPrice
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2792,7 +2792,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u751F\u547D"
+  m_Text: "\u4EF7\u503C"
 --- !u!1 &6810853313678836968
 GameObject:
   m_ObjectHideFlags: 0
@@ -2805,7 +2805,7 @@ GameObject:
   - component: {fileID: 3042989025849521678}
   - component: {fileID: 8262269746598199581}
   m_Layer: 5
-  m_Name: ItemAttributeLifeAdd
+  m_Name: ItemAttributeGoldPriceAdd
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2826,7 +2826,7 @@ RectTransform:
   - {fileID: 433200451037940529}
   - {fileID: 4319612948033297009}
   m_Father: {fileID: 4382412901670439260}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -2979,7 +2979,7 @@ RectTransform:
   - {fileID: 7153171020587854908}
   - {fileID: 1292073675892675188}
   m_Father: {fileID: 4382412901670439260}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -3161,7 +3161,6 @@ MonoBehaviour:
   ui_IvFire: {fileID: 438157750107558685}
   ui_Progress: {fileID: 7295245908830819187}
   ui_TimeCD: {fileID: 6341303512282692756}
-  isTimeCD: 0
 --- !u!1 &7746832503509370561
 GameObject:
   m_ObjectHideFlags: 0

@@ -3,24 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-public class Test : BaseUIManager {
+public class Test : BaseMonoBehaviour {
 
-    Action testAction = () =>
-    {
-        LogUtil.Log("Init");
-    };
-
+    public ShipManager manager_Ship;
     private void Start()
     {
-        testAction();
-        Action testAction2= () =>
-        {
-            LogUtil.Log("Init2");
-        };
-        testAction += testAction2;
-        testAction();
-        testAction -= testAction2;
-        testAction();
+        AutoLinkManager();
+        manager_Ship.GetShipDataById((data)=> { },1);
     }
 
 }

@@ -675,18 +675,18 @@ PlayerSettings:
   webGLThreadsSupport: 0
   webGLWasmStreaming: 0
   scriptingDefineSymbols:
-    1: RHSD;ASTAR_NO_ZIP
-    4: ASTAR_NO_ZIP
-    7: RHSD;ASTAR_NO_ZIP
-    13: ASTAR_NO_ZIP
-    14: ASTAR_NO_ZIP
-    19: ASTAR_NO_ZIP
-    21: ASTAR_NO_ZIP
-    25: ASTAR_NO_ZIP
-    27: ASTAR_NO_ZIP
-    28: ASTAR_NO_ZIP
-    29: ASTAR_NO_ZIP
-    30: ASTAR_NO_ZIP
+    1: RHSD
+    4: RHSD
+    7: RHSD
+    13: 
+    14: 
+    19: 
+    21: 
+    25: 
+    27: 
+    28: 
+    29: 
+    30: 
   platformArchitecture: {}
   scriptingBackend: {}
   il2cppCompilerConfiguration: {}

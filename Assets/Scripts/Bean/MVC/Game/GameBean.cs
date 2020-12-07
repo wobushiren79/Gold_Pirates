@@ -10,6 +10,8 @@ public class GameBean
     public long playerGold;
     public long enemyGold;
 
+    //金币价值加成
+    public int goldPrice;
     //玩家初始速度
     public float player_speed = 1;
     //玩家初始生命值
@@ -19,6 +21,12 @@ public class GameBean
 
     //初始海盗数量
     public int initPirateNumber = 1;
+
+    public int AddGoldPrice(int addGoldPrice)
+    {
+        goldPrice += addGoldPrice;
+        return goldPrice;
+    }
 
     public float AddPlayerSpeed(float speed)
     {
@@ -46,7 +54,6 @@ public class GameBean
             playerGold = 0;
         }
     }
-
     public void AddEnemyGold(long gold)
     {
         enemyGold += gold;
