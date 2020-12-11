@@ -15,6 +15,7 @@ public class ProgressView : BaseMonoBehaviour
     public ProgressType progressType;
     public Text tvContent;
     public Slider sliderPro;
+    public string completeContent;
 
     protected ICallBack callBack;
 
@@ -52,6 +53,12 @@ public class ProgressView : BaseMonoBehaviour
         SetSlider(pro);
     }
 
+
+    public void SetCompleteContent(string content)
+    {
+        completeContent = content;
+    }
+
     public void SetCallBack(ICallBack callBack)
     {
         this.callBack = callBack;
@@ -64,8 +71,23 @@ public class ProgressView : BaseMonoBehaviour
     public void SetContent(string content)
     {
         if (tvContent != null)
-            tvContent.text = content;
+        {
+            if (sliderPro.value == 1 && !CheckUtil.StringIsNull(completeContent))
+            {
+                tvContent.text = completeContent;
+            }
+            else
+            {
+                tvContent.text = content;
+            }
+        }
     }
+    public void SetContent(string content, Color color)
+    {
+        SetContent(content);
+        SetContentColor(color);
+    }
+
     public void SetContentColor(Color color)
     {
         if (tvContent != null)
@@ -73,11 +95,7 @@ public class ProgressView : BaseMonoBehaviour
             tvContent.color = color;
         }
     }
-    public void SetContent(string content,Color color)
-    {
-        SetContent(content);
-        SetContentColor(color);
-    }
+
 
 
     /// <summary>

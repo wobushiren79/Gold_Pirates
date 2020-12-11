@@ -4,62 +4,149 @@ using UnityEngine;
 
 
 [Serializable]
-public class GameBean 
+public class GameBean
 {
     public GameStatusEnum gameStatus;
-    public long playerGold;
-    public long enemyGold;
+    public long playerGoldNumber;
+    public long enemyGoldNumber;
 
+    //场景等级
+    public int levelForScene = 1;
+    //场景等级经验
+    public float levelExpForScene = 0;
+
+    //金币价值等级
+    public int levelForGoldPrice = 1;
     //金币价值加成
     public int goldPrice;
+
+    //玩家速度等级
+    public int levelForSpeed = 1;
     //玩家初始速度
-    public float player_speed = 1;
-    //玩家初始生命值
-    public int player_life = 1;
-    //玩家初始伤害
-    public int player_damage = 1;
+    public float playForSpeed = 1;
 
+    //海盗数量等级
+    public int levelForPirateNumber = 1;
     //初始海盗数量
-    public int initPirateNumber = 1;
+    public int playForPirateNumber = 1;
 
-    public int AddGoldPrice(int addGoldPrice)
+    //玩家初始生命值
+    public int playerForLife = 1;
+    //玩家初始伤害
+    public int playerForDamage = 1;
+
+    public int GetGoldPrice()
     {
-        goldPrice += addGoldPrice;
         return goldPrice;
     }
-
-    public float AddPlayerSpeed(float speed)
+    public int GetGoldPriceLevel()
     {
-        player_speed += speed;
-        return player_speed;
+        return levelForGoldPrice;
+    }
+    public float GetPlayerSpeed()
+    {
+        return playForSpeed;
+    }
+    public float GetPlayerSpeedLevel()
+    {
+        return levelForSpeed;
+    }
+    public int GetPlayPirateNumber()
+    {
+        return playForPirateNumber;
+    }
+    public int GetPlayPirateNumberLevel()
+    {
+        return levelForPirateNumber;
+    }
+
+    /// <summary>
+    /// 金币价值升级
+    /// </summary>
+    /// <param name="maxLevel"></param>
+    /// <param name="addGoldPrice"></param>
+    /// <returns></returns>
+    public bool LevelUpForGoldPrice(int maxLevel, int addGoldPrice)
+    {
+        if (levelForGoldPrice >= maxLevel)
+        {
+            return false;
+        }
+        else
+        {
+            levelForGoldPrice++;
+            goldPrice += addGoldPrice;
+            return true;
+        }
+    }
+
+    /// <summary>
+    /// 角色速度升级
+    /// </summary>
+    /// <param name="maxLevel"></param>
+    /// <param name="addSpeed"></param>
+    /// <returns></returns>
+    public bool LevelUpForPlayerSpeed(int maxLevel, float addSpeed)
+    {
+        if (levelForSpeed >= maxLevel)
+        {
+            return false;
+        }
+        else
+        {
+            levelForSpeed++;
+            playForSpeed += addSpeed;
+            return true;
+        }
+    }
+
+    /// <summary>
+    /// 海盗数量升级
+    /// </summary>
+    /// <param name="maxLevel"></param>
+    /// <param name="addNumer"></param>
+    /// <returns></returns>
+    public bool LevelUpForPlayerPirateNumber(int maxLevel, int addNumer)
+    {
+        if (levelForPirateNumber >= maxLevel)
+        {
+            return false;
+        }
+        else
+        {
+            levelForPirateNumber++;
+            playForPirateNumber += addNumer;
+            return true;
+        }
     }
 
     public int AddPlayerLife(int life)
     {
-        player_life += life;
-        return player_life;
+        playerForLife += life;
+        return playerForLife;
     }
 
     public int AddPlayerDamage(int damage)
     {
-        player_damage += damage;
-        return player_damage;
+        playerForDamage += damage;
+        return playerForDamage;
     }
 
-    public void AddPlayerGold(long gold)
+    public void AddPlayerGoldNumber(long goldNumber)
     {
-        playerGold += gold;
-        if (playerGold < 0)
+        playerGoldNumber += goldNumber;
+        if (playerGoldNumber < 0)
         {
-            playerGold = 0;
+            playerGoldNumber = 0;
         }
     }
-    public void AddEnemyGold(long gold)
+
+    public void AddEnemyGoldNumber(long goldNumber)
     {
-        enemyGold += gold;
-        if (enemyGold < 0)
+        enemyGoldNumber += goldNumber;
+        if (enemyGoldNumber < 0)
         {
-            enemyGold = 0;
+            enemyGoldNumber = 0;
         }
     }
 }

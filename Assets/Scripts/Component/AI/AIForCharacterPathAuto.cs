@@ -38,7 +38,6 @@ public class AIForCharacterPathAuto : BaseMonoBehaviour
         {
             aiPath.canMove = true;
         };
-        characterAnim.SetCharacterWalk();
     }
     
     /// <summary>

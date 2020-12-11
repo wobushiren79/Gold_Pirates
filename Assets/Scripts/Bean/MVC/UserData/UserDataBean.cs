@@ -16,6 +16,23 @@ public class UserDataBean
     //伤害
     public int damage = 0;
 
+    public bool HasEnoughGold(long gold)
+    {
+        if (this.gold < gold)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+
+    public void PayGold(long payGold)
+    {
+        AddGold(-payGold);
+    }
+
     public void AddGold(long addGold)
     {
         gold += addGold;

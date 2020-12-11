@@ -8,10 +8,13 @@ public class UIChildForAttributeAdd : BaseUIChildComponent<UIGameStart>
     public Button ui_BtGoldPriceAdd;
     public Button ui_BtDamageAdd;
 
-    public Text ui_TvSpeed;
-    public Text ui_TvNumber;
-    public Text ui_TvGoldPrice;
-    public Text ui_TvDamage;
+    public Text ui_TvSpeedLevel;
+    public Text ui_TvSpeedMoney;
+    public Text ui_TvNumberLevel;
+    public Text ui_TvNumberMoney;
+    public Text ui_TvGoldPriceLevel;
+    public Text ui_TvGoldPriceMoney;
+
 
     public override void Awake()
     {
@@ -28,24 +31,125 @@ public class UIChildForAttributeAdd : BaseUIChildComponent<UIGameStart>
             ui_BtGoldPriceAdd.onClick.AddListener(OnClickForAddGoldPrice);
         if (ui_BtDamageAdd)
             ui_BtDamageAdd.onClick.AddListener(OnClickForAddDamage);
+        RefreshUI();
+    }
+
+    public void RefreshUI()
+    {
+        GameBean gameData = uiComponent.handler_Game.GetGameData();
+        GameDataHandler gameDataHandler = uiComponent.handler_GameData;
+        SetTextForAttribute(ui_TvSpeedLevel, ui_TvSpeedMoney, gameData.levelForSpeed, gameDataHandler.GetLevelMaxForSpeed(), gameDataHandler.GetLevelMoneyForSpeed(gameData.levelForSpeed));
+        SetTextForAttribute(ui_TvNumberLevel, ui_TvNumberMoney, gameData.levelForPirateNumber, gameDataHandler.GetLevelMaxForNumber(), gameDataHandler.GetLevelMoneyForNumber(gameData.levelForPirateNumber));
+        SetTextForAttribute(ui_TvGoldPriceLevel, ui_TvGoldPriceMoney, gameData.levelForGoldPrice, gameDataHandler.GetLevelMaxForGoldPrice(), gameDataHandler.GetLevelMoneyForGoldPrice(gameData.levelForGoldPrice));
+    }
+
+    public void SetTextForAttribute(Text tvLevel, Text tvLevelMoney, int level, int maxLevel, long levelUpMoney)
+    {
+        if (tvLevel)
+        {
+            if (level == maxLevel)
+            {
+                tvLevel.text = "Lv.Max";
+            }
+            else
+            {
+                tvLevel.text = "Lv." + level;
+            }
+        }
+        if (tvLevelMoney)
+            tvLevelMoney.text = levelUpMoney + "";
     }
 
     public void OnClickForAddNumber()
     {
+        GameBean gameData = uiComponent.handler_Game.GetGameData();
         UserDataBean userData = uiComponent.handler_GameData.GetUserData();
-        GameBean gameData= uiComponent.handler_Game.GetGameData();
-        CharacterDataBean playerCharacterData = new CharacterDataBean(CharacterTypeEnum.Player)
+
+        int maxLevel = uiComponent.handler_GameData.GetLevelMaxForNumber();
+        int addNumber = uiComponent.handler_GameData.GetLevelAddForNumber();
+        long levelMoney = uiComponent.handler_GameData.GetLevelMoneyForNumber(gameData.levelForPirateNumber);
+
+        if (!userData.HasEnoughGold(levelMoney))
         {
-            life = userData.life+ gameData.player_life,
-            maxLife = userData.life + gameData.player_life,
-            moveSpeed = userData.speed + gameData.player_speed
-        };
-        uiComponent.handler_Character.CreateCharacter(playerCharacterData);
+            //钱不够
+            return;
+        }
+        bool isLevelUp = gameData.LevelUpForPlayerPirateNumber(maxLevel, addNumber);
+        if (!isLevelUp)
+        {
+            //升级失败
+            return;
+        }
+        //支付金币
+        userData.PayGold(levelMoney);
+        //生成海盗
+        for (int i = 0; i < addNumber; i++)
+        {
+            CharacterDataBean playerCharacterData = new CharacterDataBean(CharacterTypeEnum.Player)
+            {
+                life = userData.life + gameData.playerForLife,
+                maxLife = userData.life + gameData.playerForLife,
+                moveSpeed = userData.speed + gameData.GetPlayerSpeed()
+            };
+            uiComponent.handler_Character.CreateCharacter(playerCharacterData);
+        }
+        RefreshUI();
     }
 
     public void OnClickForAddGoldPrice()
     {
-        int goldPrice = uiComponent.handler_Game.GetGameData().AddGoldPrice(1);
+        UserDataBean userData = uiComponent.handler_GameData.GetUserData();
+        GameBean gameData = uiComponent.handler_Game.GetGameData();
+
+        int maxLevel = uiComponent.handler_GameData.GetLevelMaxForGoldPrice();
+        int addGoldPrice = uiComponent.handler_GameData.GetLevelAddForGoldPrice();
+        long levelMoney = uiComponent.handler_GameData.GetLevelMoneyForNumber(gameData.levelForGoldPrice);
+        if (!userData.HasEnoughGold(levelMoney))
+        {
+            //钱不够
+            return;
+        }
+
+        bool isLevelUp = uiComponent.handler_Game.GetGameData().LevelUpForGoldPrice(maxLevel, addGoldPrice);
+        if (!isLevelUp)
+        {
+            //升级失败
+            return;
+        }        
+
+        //支付金币
+        userData.PayGold(levelMoney);
+
+        RefreshUI();
+    }
+
+    public void OnClickForAddSpeed()
+    {
+        UserDataBean userData = uiComponent.handler_GameData.GetUserData();
+        GameBean gameData = uiComponent.handler_Game.GetGameData();
+
+        int maxLevel = uiComponent.handler_GameData.GetLevelMaxForSpeed();
+        float addSpeed = uiComponent.handler_GameData.GetLevelAddForSpeed();
+        long levelMoney = uiComponent.handler_GameData.GetLevelMoneyForNumber(gameData.levelForSpeed);
+        if (!userData.HasEnoughGold(levelMoney))
+        {
+            //钱不够
+            return;
+        }
+
+        bool isLevelUp = gameData.LevelUpForPlayerSpeed(maxLevel, addSpeed);
+        if (!isLevelUp)
+        {
+            //升级失败
+            return;
+        }
+
+        //支付金币
+        userData.PayGold(levelMoney);
+
+        uiComponent.handler_Character.SetCharacterSpeed(CharacterTypeEnum.Player, gameData.GetPlayerSpeed());
+        uiComponent.handler_Character.RefreshCharacter(CharacterTypeEnum.Player);
+        RefreshUI();
     }
 
     public void OnClickForAddLife()
@@ -61,11 +165,6 @@ public class UIChildForAttributeAdd : BaseUIChildComponent<UIGameStart>
         uiComponent.handler_Ship.ChangePlayerShipDamage(damage);
     }
 
-    public void OnClickForAddSpeed()
-    {
-        float speed = uiComponent.handler_Game.GetGameData().AddPlayerSpeed(0.5f);
-        uiComponent.handler_Character.SetCharacterSpeed(CharacterTypeEnum.Player, speed);
-        uiComponent.handler_Character.RefreshCharacter(CharacterTypeEnum.Player);
-    }
+
 
 }

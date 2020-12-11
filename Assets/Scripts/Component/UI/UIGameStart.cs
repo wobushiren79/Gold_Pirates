@@ -9,6 +9,7 @@ public class UIGameStart : BaseUIComponent, IBaseObserver, UIViewForFireButton.I
     public Button ui_BtAdvertisement;
 
     public Text ui_TvGold;
+    public ProgressView ui_PvLevelUp;
 
     public UIChildForAttributeAdd ui_ChildAttributeAdd;
     public UIViewForGoldProgress ui_GoldProgress;
@@ -33,6 +34,8 @@ public class UIGameStart : BaseUIComponent, IBaseObserver, UIViewForFireButton.I
             ui_BtAdvertisement.onClick.AddListener(OnClickForAdvertisement);
         if (ui_FireButton)
             ui_FireButton.SetCallBack(this);
+        if (ui_PvLevelUp)
+            ui_PvLevelUp.SetCompleteContent("LEVEL UP");
     }
 
     private void Update()
@@ -43,6 +46,7 @@ public class UIGameStart : BaseUIComponent, IBaseObserver, UIViewForFireButton.I
         handler_Game.GetScore(out long playerGold, out long enmeyGold);
         SetScore(playerGold, enmeyGold);
         SetGoldProgress(handler_Gold.GetGoldMaxNumber(), handler_Gold.GetGoldNumber());
+        SetLevelUpPro();
     }
 
     public override void OpenUI()
@@ -55,6 +59,11 @@ public class UIGameStart : BaseUIComponent, IBaseObserver, UIViewForFireButton.I
     {
         if (ui_TvGold)
             ui_TvGold.text = gold + "";
+    }
+
+    public void SetLevelUpPro()
+    {
+        ui_PvLevelUp.SetData(1);
     }
 
     public void SetScore(long playerScore, long enemyScore)

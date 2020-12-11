@@ -142,12 +142,18 @@ public class CharacterCpt : BaseMonoBehaviour, IBaseObserver
         aiForCharacterPath.SetMoveSpeed(moveSpeed);
     }
 
-
+    /// <summary>
+    /// 意图-闲置
+    /// </summary>
     public void SetIntentForIdle()
     {
         this.characterIntent = CharacterIntentEnum.Idle;
+        characterAnim.SetCharacterStand();
     }
 
+    /// <summary>
+    /// 意图-前往岛屿
+    /// </summary>
     public void SetIntentForGoToIsland()
     {
         SetBoatStatus(true);
@@ -155,15 +161,24 @@ public class CharacterCpt : BaseMonoBehaviour, IBaseObserver
         Vector3 islandPosition = handler_Scene.GetIslandPosition(characterData.characterType);
         islandPosition += new Vector3(Random.Range(-3f, 3f), 0, 0);
         aiForCharacterPath.SetDestination(islandPosition);
+        characterAnim.SetCharacterRow();
     }
 
+    /// <summary>
+    /// 意图-前往金币
+    /// </summary>
+    /// <param name="goldPosition"></param>
     public void SetIntentForGoToGold(Vector3 goldPosition)
     {
         SetBoatStatus(false);
         this.characterIntent = CharacterIntentEnum.GoToGold;
         aiForCharacterPath.SetDestination(goldPosition);
+        characterAnim.SetCharacterWalk();
     }
 
+    /// <summary>
+    /// 意图-搜索金币
+    /// </summary>
     public void SetIntentForSearch()
     {
         if (targetGold != null)
@@ -185,6 +200,9 @@ public class CharacterCpt : BaseMonoBehaviour, IBaseObserver
         }
     }
 
+    /// <summary>
+    /// 意图-离开岛屿
+    /// </summary>
     public void SetIntentForExitIsland()
     {
         SetBoatStatus(false);
@@ -192,14 +210,19 @@ public class CharacterCpt : BaseMonoBehaviour, IBaseObserver
         Vector3 islandPosition = handler_Scene.GetIslandPosition(characterData.characterType);
         islandPosition += new Vector3(Random.Range(-3f, 3f), 0, 0);
         aiForCharacterPath.SetDestination(islandPosition);
+        characterAnim.SetCharacterWalk();
     }
 
+    /// <summary>
+    /// 意图-返回舰队
+    /// </summary>
     public void SetIntentForBack()
     {
         SetBoatStatus(true);
         this.characterIntent = CharacterIntentEnum.Back;
         Vector3 startPosition = handler_Scene.GetStartPosition(characterData.characterType);
         aiForCharacterPath.SetDestination(startPosition);
+        characterAnim.SetCharacterRow();
     }
 
     /// <summary>
@@ -209,14 +232,6 @@ public class CharacterCpt : BaseMonoBehaviour, IBaseObserver
     public CharacterDataBean GetCharacterData()
     {
         return characterData;
-    }
-
-    public void HandleForGoToIsland()
-    {
-        if (aiForCharacterPath.IsAutoMoveStop())
-        {
-            SetIntentForSearch();
-        }
     }
 
     /// <summary>
@@ -235,6 +250,30 @@ public class CharacterCpt : BaseMonoBehaviour, IBaseObserver
         {
             handGold.SetCarry(characterData.characterType, transform_Hand);
             SetIntentForExitIsland();
+        }
+    }
+
+    /// <summary>
+    /// 设置船的状态
+    /// </summary>
+    /// <param name="isShow"></param>
+    public void SetBoatStatus(bool isShow)
+    {
+        if (isShow)
+        {
+            transform_Boat.gameObject.SetActive(true);
+        }
+        else
+        {
+            transform_Boat.gameObject.SetActive(false);
+        }
+    }
+
+    public void HandleForGoToIsland()
+    {
+        if (aiForCharacterPath.IsAutoMoveStop())
+        {
+            SetIntentForSearch();
         }
     }
 
@@ -269,44 +308,33 @@ public class CharacterCpt : BaseMonoBehaviour, IBaseObserver
         {
             if (handGold != null)
             {
-                //归还金币
-                //增加金币
+                //增加角色金币
                 handler_Game.AddGold(characterData.characterType, handGold.goldData.gold_price, 1);
                 //回收金币
                 ShipCpt shipCpt = handler_Ship.GetShip(characterData.characterType);
                 handGold.SetRecycle(shipCpt.transform.position);
+                //角色扔金币
+                characterAnim.SetCharacterThrow(null, () =>
+                {
+                    //扔完之后处理
+                    if (handler_Gold.GetTargetGold() == null)
+                    {
+                        //如果没有金币。说明已经搬完 回收
+                        SetIntentForIdle();
+                        handler_Character.CleanCharacter(this);
+                        Destroy(gameObject);
+                    }
+                    else
+                    {
+                        SetIntentForGoToIsland();
+                    }
+                });
                 //检测游戏是否结束
                 handler_Game.CheckGameOver();
-            }
-            if (handler_Gold.GetTargetGold() == null)
-            {
-                //如果没有金币。说明已经搬完 回收
-                SetIntentForIdle();
-                handler_Character.CleanCharacter(this);
-                Destroy(gameObject);
-            }
-            else
-            {
-                SetIntentForGoToIsland();
             }
         }
     }
 
-    /// <summary>
-    /// 设置船的状态
-    /// </summary>
-    /// <param name="isShow"></param>
-    public void SetBoatStatus(bool isShow)
-    {
-        if (isShow)
-        {
-            transform_Boat.gameObject.SetActive(true);
-        }
-        else
-        {
-            transform_Boat.gameObject.SetActive(false);
-        }
-    }
 
     #region 通知回调
     public void ObserbableUpdate<T>(T observable, int type, params object[] obj) where T : Object

@@ -77,7 +77,6 @@ public class AIForCharacterPath : BaseMonoBehaviour
         {
             aiPath = path;
             aiPathPosition = 0;
-            characterAnim.SetCharacterWalk();
         }
         else
         {

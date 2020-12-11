@@ -26,7 +26,7 @@ public class ShipHandler : BaseHandler<ShipManager>, ShipManager.ICallBack
             case CharacterTypeEnum.Player:
                 manager.GetShipDataById((shipData) =>
                 {
-                    shipData.ship_damage = gameData.player_damage;
+                    shipData.ship_damage = gameData.playerForDamage;
                     shipData.characterType = CharacterTypeEnum.Player;
                     StartCoroutine(CoroutineForCreateShip(shipData, callBack));
                 }, shipId);

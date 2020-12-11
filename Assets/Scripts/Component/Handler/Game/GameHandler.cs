@@ -34,11 +34,11 @@ public class GameHandler : BaseHandler<GameManager>, GameManager.ICallBack
         switch (characterType)
         {
             case CharacterTypeEnum.Player:
-                gameData.AddPlayerGold(goldNumber);
+                gameData.AddPlayerGoldNumber(goldNumber);
                 handler_GameData.AddUserGold(goldNumber * (goldPrice + gameData.goldPrice));
                 break;
             case CharacterTypeEnum.Enemy:
-                gameData.AddEnemyGold(goldNumber);
+                gameData.AddEnemyGoldNumber(goldNumber);
                 break;
         }
     }
@@ -64,9 +64,9 @@ public class GameHandler : BaseHandler<GameManager>, GameManager.ICallBack
                 UserDataBean userData= handler_GameData.GetUserData();
                 CharacterDataBean playerCharacterData = new CharacterDataBean(CharacterTypeEnum.Player)
                 {
-                    life = userData.life + gameData.player_life,
-                    maxLife = userData.life + gameData.player_life,
-                    moveSpeed = userData.speed + gameData.player_speed
+                    life = userData.life + gameData.playerForLife,
+                    maxLife = userData.life + gameData.playerForLife,
+                    moveSpeed = userData.speed + gameData.GetPlayerSpeed()
                 };
                 CharacterDataBean enemyCharacterData = new CharacterDataBean(CharacterTypeEnum.Enemy)
                 {
@@ -110,14 +110,19 @@ public class GameHandler : BaseHandler<GameManager>, GameManager.ICallBack
         }
     }
 
-    public void GetScore(out long playerGold, out long enemyGold)
+    /// <summary>
+    /// 获取分数
+    /// </summary>
+    /// <param name="playerGoldNumber"></param>
+    /// <param name="enemyGoldNumber"></param>
+    public void GetScore(out long playerGoldNumber, out long enemyGoldNumber)
     {
-        playerGold = 0;
-        enemyGold = 0;
+        playerGoldNumber = 0;
+        enemyGoldNumber = 0;
         if (gameData != null)
         {
-            playerGold = gameData.playerGold;
-            enemyGold = gameData.enemyGold;
+            playerGoldNumber = gameData.playerGoldNumber;
+            enemyGoldNumber = gameData.enemyGoldNumber;
         }
     }
 

@@ -10,6 +10,7 @@ public class GameManager : BaseManager, IGameLevelView
     private void Awake()
     {
         gameLevelController = new GameLevelController(this, this);
+
     }
 
     public void SetCallBack(ICallBack callBack)
