@@ -67,6 +67,18 @@ public class GameDataManager : BaseManager, IUserDataView
         }
     }
 
+    public float GetLevelSceneExp()
+    {
+        BaseDataBean baseData = baseDataController.GetBaseData(BaseDataEnum.Level_Scene_Exp);
+        return float.Parse(baseData.content);
+    }
+
+    public long GetLevelSceneMoney()
+    {
+        BaseDataBean baseData = baseDataController.GetBaseData(BaseDataEnum.Level_Scene_Money);
+        return long.Parse(baseData.content);
+    }
+
     #region 用户数据回调
     public void GetUserDataSuccess(UserDataBean userData)
     {

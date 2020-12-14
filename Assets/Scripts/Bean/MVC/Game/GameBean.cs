@@ -13,7 +13,7 @@ public class GameBean
     //场景等级
     public int levelForScene = 1;
     //场景等级经验
-    public float levelExpForScene = 0;
+    public float levelProgressForScene = 0;
 
     //金币价值等级
     public int levelForGoldPrice = 1;
@@ -23,7 +23,7 @@ public class GameBean
     //玩家速度等级
     public int levelForSpeed = 1;
     //玩家初始速度
-    public float playForSpeed = 1;
+    public float playForSpeed = 2;
 
     //海盗数量等级
     public int levelForPirateNumber = 1;
@@ -120,6 +120,13 @@ public class GameBean
         }
     }
 
+    public void LevelDownForPlayerPirateNumber(int downLevel)
+    {
+        levelForPirateNumber -= downLevel;
+        if (levelForPirateNumber < 1)
+            levelForPirateNumber = 1;
+    }
+
     public int AddPlayerLife(int life)
     {
         playerForLife += life;
@@ -148,5 +155,20 @@ public class GameBean
         {
             enemyGoldNumber = 0;
         }
+    }
+
+    public void AddLevelProgressForScene(float pro)
+    {
+        levelProgressForScene += pro;
+        if (levelProgressForScene > 1)
+        {
+            levelProgressForScene = 1;
+        }
+    }
+
+    public void LevelUpForScene()
+    {
+        levelProgressForScene = 0;
+        levelForScene++;
     }
 }

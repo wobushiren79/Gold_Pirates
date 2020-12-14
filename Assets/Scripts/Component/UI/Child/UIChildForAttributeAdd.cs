@@ -1,6 +1,7 @@
 ﻿using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 public class UIChildForAttributeAdd : BaseUIChildComponent<UIGameStart>
 {
     public Button ui_BtSpeedAdd;
@@ -8,14 +9,20 @@ public class UIChildForAttributeAdd : BaseUIChildComponent<UIGameStart>
     public Button ui_BtGoldPriceAdd;
     public Button ui_BtDamageAdd;
 
+    public TextMeshProUGUI ui_TvTitleSpeed;
     public Text ui_TvSpeedLevel;
-    public Text ui_TvSpeedMoney;
+    public TextMeshProUGUI ui_TvSpeedMoney;
+
+    public TextMeshProUGUI ui_TvTitleNumber;
     public Text ui_TvNumberLevel;
-    public Text ui_TvNumberMoney;
+    public TextMeshProUGUI ui_TvNumberMoney;
+
+    public TextMeshProUGUI ui_TvTitleGoldPrice;
     public Text ui_TvGoldPriceLevel;
-    public Text ui_TvGoldPriceMoney;
+    public TextMeshProUGUI ui_TvGoldPriceMoney;
 
 
+    public Color color_MoneyOutline;
     public override void Awake()
     {
         base.Awake();
@@ -31,6 +38,13 @@ public class UIChildForAttributeAdd : BaseUIChildComponent<UIGameStart>
             ui_BtGoldPriceAdd.onClick.AddListener(OnClickForAddGoldPrice);
         if (ui_BtDamageAdd)
             ui_BtDamageAdd.onClick.AddListener(OnClickForAddDamage);
+
+        if (ui_TvTitleSpeed)
+            ui_TvTitleSpeed.outlineColor = Color.white;
+        if (ui_TvTitleNumber)
+            ui_TvTitleNumber.outlineColor = Color.white;
+        if (ui_TvTitleGoldPrice)
+            ui_TvTitleGoldPrice.outlineColor = Color.white;
         RefreshUI();
     }
 
@@ -43,7 +57,7 @@ public class UIChildForAttributeAdd : BaseUIChildComponent<UIGameStart>
         SetTextForAttribute(ui_TvGoldPriceLevel, ui_TvGoldPriceMoney, gameData.levelForGoldPrice, gameDataHandler.GetLevelMaxForGoldPrice(), gameDataHandler.GetLevelMoneyForGoldPrice(gameData.levelForGoldPrice));
     }
 
-    public void SetTextForAttribute(Text tvLevel, Text tvLevelMoney, int level, int maxLevel, long levelUpMoney)
+    public void SetTextForAttribute(Text tvLevel, TextMeshProUGUI tvLevelMoney, int level, int maxLevel, long levelUpMoney)
     {
         if (tvLevel)
         {
@@ -57,7 +71,11 @@ public class UIChildForAttributeAdd : BaseUIChildComponent<UIGameStart>
             }
         }
         if (tvLevelMoney)
+        {
             tvLevelMoney.text = levelUpMoney + "";
+            tvLevelMoney.outlineColor = color_MoneyOutline;
+        }
+         
     }
 
     public void OnClickForAddNumber()

@@ -1,6 +1,8 @@
 ﻿using Pathfinding;
 using UnityEditor;
 using UnityEngine;
+using System.Collections;
+using DG.Tweening;
 
 public enum CharacterIntentEnum
 {
@@ -82,9 +84,7 @@ public class CharacterCpt : BaseMonoBehaviour, IBaseObserver
     }
     private void OnDestroy()
     {
-        //掉落金币
-        if (handGold)
-            handGold.SetDrop();
+
     }
 
     /// <summary>
@@ -102,11 +102,13 @@ public class CharacterCpt : BaseMonoBehaviour, IBaseObserver
         RefreshCharacter();
         if (currentLife <= 0)
         {
-            //死亡
-            handler_Character.CleanCharacter(this);
-            //删除角色
-            Destroy(gameObject);
+            SetCharacterDead();
         }
+    }
+
+    public void ShowLife(float showTime)
+    {
+        characterLife.ShowLife(showTime);
     }
 
     public void SetLife(int maxLife)
@@ -143,11 +145,50 @@ public class CharacterCpt : BaseMonoBehaviour, IBaseObserver
     }
 
     /// <summary>
+    /// 设置角色死亡
+    /// </summary>
+    public void SetCharacterDead()
+    {
+        //死亡
+        handler_Character.CleanCharacter(this);
+        //如果是友方角色死亡 降低升级所需金币
+        if (characterData.characterType == CharacterTypeEnum.Player)
+        {
+            handler_Game.GetGameData().LevelDownForPlayerPirateNumber(1);
+        }
+        //刷新UI
+        handler_Game.manager_UI.RefreshAllUI();
+        //设置角色闲置
+        SetIntentForIdle();
+        //掉落金币
+        if (handGold)
+            handGold.SetDrop();
+        //协程-删除角色
+        StartCoroutine(CoroutineForCharacterDead(3));
+    }
+
+    /// <summary>
+    /// 炸飞
+    /// </summary>
+    /// <param name="blowPosition"></param>
+    public void BlowUp(Vector3 blowPosition)
+    {
+        Collider collider = transform.GetComponent<Collider>();
+        collider.isTrigger = false;
+        Rigidbody rigidbody = CptUtil.AddCpt<Rigidbody>(gameObject);
+        rigidbody.AddExplosionForce(500f, blowPosition, 10);
+    }
+
+
+    /// <summary>
     /// 意图-闲置
     /// </summary>
     public void SetIntentForIdle()
     {
         this.characterIntent = CharacterIntentEnum.Idle;
+        //停止移动
+        aiForCharacterPath.StopMove();
+        //设置角色动画状态
         characterAnim.SetCharacterStand();
     }
 
@@ -335,6 +376,16 @@ public class CharacterCpt : BaseMonoBehaviour, IBaseObserver
         }
     }
 
+    /// <summary>
+    /// 协程-角色死亡
+    /// </summary>
+    /// <returns></returns>
+    public IEnumerator CoroutineForCharacterDead(float disappearTime)
+    {
+        yield return new WaitForSeconds(disappearTime);
+        //删除角色
+        Destroy(gameObject);
+    }
 
     #region 通知回调
     public void ObserbableUpdate<T>(T observable, int type, params object[] obj) where T : Object

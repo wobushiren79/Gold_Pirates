@@ -126,7 +126,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3581763886376729663
 Transform:
   m_ObjectHideFlags: 0
@@ -245,10 +245,10 @@ GameObject:
   - component: {fileID: 6679162637756182409}
   - component: {fileID: 2601139819944103413}
   - component: {fileID: 3348719540913796372}
-  - component: {fileID: 290637275166959522}
   - component: {fileID: 8338824854308130452}
   - component: {fileID: 337972054750895628}
   - component: {fileID: 7047663423104700920}
+  - component: {fileID: 5926884938490884570}
   m_Layer: 11
   m_Name: Pirate_Base_2
   m_TagString: Untagged
@@ -348,19 +348,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tvLife: {fileID: 3998143404699692970}
---- !u!135 &290637275166959522
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6045758038136197859}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 1
-  m_Center: {x: 0, y: 0.5, z: 0}
 --- !u!114 &8338824854308130452
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -421,10 +408,10 @@ MonoBehaviour:
   canSearch: 0
   canMove: 1
   maxSpeed: 1
-  gravity: {x: 0, y: 0, z: 0}
+  gravity: {x: 0, y: -9.81, z: 0}
   groundMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 512
   centerOffsetCompatibility: NaN
   orientation: 0
   enableRotation: 1
@@ -438,3 +425,16 @@ MonoBehaviour:
   funnelSimplification: 1
   slowWhenNotFacingTarget: 0
   animCompatibility: {fileID: 0}
+--- !u!135 &5926884938490884570
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6045758038136197859}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0.5, z: 0}

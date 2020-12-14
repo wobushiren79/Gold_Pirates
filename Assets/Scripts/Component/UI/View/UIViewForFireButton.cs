@@ -1,4 +1,5 @@
 ﻿using System;
+using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,7 +9,8 @@ public class UIViewForFireButton : BaseUIView
     public Button ui_BtFire;
     public Image ui_IvFire;
     public Image ui_Progress;
-    public Text ui_TimeCD;
+    public RectTransform ui_TimeCD;
+    public TextMeshProUGUI ui_TvTimeCD;
 
     public ICallBack callBack;
 
@@ -28,6 +30,9 @@ public class UIViewForFireButton : BaseUIView
         {
             ui_BtFire.interactable = false;
             ui_TimeCD.gameObject.SetActive(true);
+
+            ColorUtility.TryParseHtmlString("#FF2E2E", out Color colorTimeCDOutline);
+            ui_TvTimeCD.outlineColor = colorTimeCDOutline;
         }
         else
         {
@@ -38,9 +43,11 @@ public class UIViewForFireButton : BaseUIView
 
     public void SetTime(float maxTime, float time)
     {
+        if (maxTime == 0)
+            maxTime = 1;
         float pro = time / maxTime;
         ui_Progress.fillAmount = pro;
-        ui_TimeCD.text = (int)time + "";
+        ui_TvTimeCD.text = (int)time + "";
     }
 
     public void OnClickForFire()

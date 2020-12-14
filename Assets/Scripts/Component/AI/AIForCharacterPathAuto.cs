@@ -10,6 +10,7 @@ public class AIForCharacterPathAuto : BaseMonoBehaviour
 
     public Transform tfTarget;
 
+
     private void Awake()
     {
         aiPath = GetComponent<RichAI>();
@@ -46,6 +47,14 @@ public class AIForCharacterPathAuto : BaseMonoBehaviour
     public void StopMove()
     {
         aiPath.canMove = false;
+    }
+
+    /// <summary>
+    /// 关闭寻路
+    /// </summary>
+    public void ClosePath()
+    {
+        aiPath.enabled = false;
     }
 
     /// <summary>

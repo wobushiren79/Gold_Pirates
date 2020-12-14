@@ -2,6 +2,7 @@
 using UnityEditor;
 using UnityEngine.UI;
 using System;
+using TMPro;
 
 public class ProgressView : BaseMonoBehaviour
 {
@@ -13,7 +14,7 @@ public class ProgressView : BaseMonoBehaviour
     }
 
     public ProgressType progressType;
-    public Text tvContent;
+    public TextMeshProUGUI tvContent;
     public Slider sliderPro;
     public string completeContent;
 

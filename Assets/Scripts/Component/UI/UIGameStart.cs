@@ -9,6 +9,7 @@ public class UIGameStart : BaseUIComponent, IBaseObserver, UIViewForFireButton.I
     public Button ui_BtAdvertisement;
 
     public Text ui_TvGold;
+    public Button ui_BtLevelUp;
     public ProgressView ui_PvLevelUp;
 
     public UIChildForAttributeAdd ui_ChildAttributeAdd;
@@ -36,17 +37,31 @@ public class UIGameStart : BaseUIComponent, IBaseObserver, UIViewForFireButton.I
             ui_FireButton.SetCallBack(this);
         if (ui_PvLevelUp)
             ui_PvLevelUp.SetCompleteContent("LEVEL UP");
+        if (ui_BtLevelUp)
+            ui_BtLevelUp.onClick.AddListener(OnClickForLevelUp);
     }
 
     private void Update()
     {
         UserDataBean userData = handler_GameData.GetUserData();
         if (userData != null)
+        {
             SetGold(userData.gold);
-        handler_Game.GetScore(out long playerGold, out long enmeyGold);
-        SetScore(playerGold, enmeyGold);
-        SetGoldProgress(handler_Gold.GetGoldMaxNumber(), handler_Gold.GetGoldNumber());
-        SetLevelUpPro();
+        }
+        if (handler_Game!=null)
+        {
+            handler_Game.GetScore(out long playerGold, out long enmeyGold);
+            SetScore(playerGold, enmeyGold);
+            SetGoldProgress(handler_Gold.GetGoldMaxNumber(), handler_Gold.GetGoldNumber());
+            float gameLevelSceneProgress= handler_Game.GetGameLevelSceneProgress();
+            SetLevelUpPro(gameLevelSceneProgress);
+        }
+    }
+
+    public override void RefreshUI()
+    {
+        base.RefreshUI();
+        ui_ChildAttributeAdd.RefreshUI();
     }
 
     public override void OpenUI()
@@ -61,9 +76,9 @@ public class UIGameStart : BaseUIComponent, IBaseObserver, UIViewForFireButton.I
             ui_TvGold.text = gold + "";
     }
 
-    public void SetLevelUpPro()
+    public void SetLevelUpPro(float pro)
     {
-        ui_PvLevelUp.SetData(1);
+        ui_PvLevelUp.SetData(pro);
     }
 
     public void SetScore(long playerScore, long enemyScore)
@@ -105,6 +120,17 @@ public class UIGameStart : BaseUIComponent, IBaseObserver, UIViewForFireButton.I
     public void OnClickForAdvertisement()
     {
 
+    }
+
+    public void OnClickForLevelUp()
+    {
+        GameBean gameData =  handler_Game.GetGameData();
+        UserDataBean userData =  handler_GameData.GetUserData();
+        if (gameData.levelProgressForScene < 1)
+            return;
+        gameData.LevelUpForScene();
+        long addMoney = handler_GameData.GetLevelSceneMoney();
+        userData.AddGold(addMoney);
     }
 
     #region 通知回调

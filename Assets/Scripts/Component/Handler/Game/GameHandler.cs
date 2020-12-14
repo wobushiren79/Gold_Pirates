@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using UnityEditor;
 using UnityEngine;
 
@@ -10,14 +11,12 @@ public class GameHandler : BaseHandler<GameManager>, GameManager.ICallBack
     public GameDataHandler handler_GameData;
     public CharacterHandler handler_Character;
 
-    protected GameBean gameData;
-    protected GameLevelBean gameLevelData;
-
     protected override void Awake()
     {
         base.Awake();
         manager.SetCallBack(this);
     }
+
 
     private void Start()
     {
@@ -27,18 +26,20 @@ public class GameHandler : BaseHandler<GameManager>, GameManager.ICallBack
             ChangeGameStatus(GameStatusEnum.GameIng);
         };
         InitGameLevelData(1, callBack);
+        StartCoroutine(CoroutineForLevelProgress());
     }
+
 
     public void AddGold(CharacterTypeEnum characterType, long goldPrice,int goldNumber)
     {
         switch (characterType)
         {
             case CharacterTypeEnum.Player:
-                gameData.AddPlayerGoldNumber(goldNumber);
-                handler_GameData.AddUserGold(goldNumber * (goldPrice + gameData.goldPrice));
+                GetGameData().AddPlayerGoldNumber(goldNumber);
+                handler_GameData.AddUserGold(goldNumber * (goldPrice + GetGameData().goldPrice));
                 break;
             case CharacterTypeEnum.Enemy:
-                gameData.AddEnemyGoldNumber(goldNumber);
+                GetGameData().AddEnemyGoldNumber(goldNumber);
                 break;
         }
     }
@@ -53,28 +54,31 @@ public class GameHandler : BaseHandler<GameManager>, GameManager.ICallBack
         switch (gameStatus)
         {
             case GameStatusEnum.GamePre:
-                gameData = new GameBean();
+                //扫描地形
+                AstarPath.active.ScanAsync();
+                //初始化数据
+                SetGameData(new GameBean());
                 //打开UI
                 manager_UI.OpenUIAndCloseOther(UIEnum.GameStart);  
                 //创建金币
-                handler_Gold.CreateGold(gameLevelData.gold_number, gameLevelData.gold_id);
+                handler_Gold.CreateGold(GetGameLevelData().gold_number, GetGameLevelData().gold_id);
                 break;
             case GameStatusEnum.GameIng:
                 //开启角色创建
                 UserDataBean userData= handler_GameData.GetUserData();
                 CharacterDataBean playerCharacterData = new CharacterDataBean(CharacterTypeEnum.Player)
                 {
-                    life = userData.life + gameData.playerForLife,
-                    maxLife = userData.life + gameData.playerForLife,
-                    moveSpeed = userData.speed + gameData.GetPlayerSpeed()
+                    life = userData.life + GetGameData().playerForLife,
+                    maxLife = userData.life + GetGameData().playerForLife,
+                    moveSpeed = userData.speed + GetGameData().GetPlayerSpeed()
                 };
                 CharacterDataBean enemyCharacterData = new CharacterDataBean(CharacterTypeEnum.Enemy)
                 {
-                    life = gameLevelData.enemy_life,
-                    maxLife = gameLevelData.enemy_life,
-                    moveSpeed = gameLevelData.enemy_speed
+                    life = GetGameLevelData().enemy_life,
+                    maxLife = GetGameLevelData().enemy_life,
+                    moveSpeed = GetGameLevelData().enemy_speed
                 };
-                StartCoroutine(handler_Character.InitCreateCharacter(playerCharacterData, enemyCharacterData, gameLevelData.enemy_number));
+                StartCoroutine(handler_Character.InitCreateCharacter(playerCharacterData, enemyCharacterData, GetGameLevelData().enemy_number));
                 //创建船
                 Action enemyShipCallBack = () =>
                 {
@@ -82,7 +86,7 @@ public class GameHandler : BaseHandler<GameManager>, GameManager.ICallBack
                     handler_Ship.OpenShipFireAutoForEnemy();
                 };
                 handler_Ship.CreateShip(CharacterTypeEnum.Player, 1, null);
-                handler_Ship.CreateShip(CharacterTypeEnum.Enemy, gameLevelData.enemy_ship_id, enemyShipCallBack);
+                handler_Ship.CreateShip(CharacterTypeEnum.Enemy, GetGameLevelData().enemy_ship_id, enemyShipCallBack);
                 break;
             case GameStatusEnum.GameEnd:
                 //打开UI
@@ -90,7 +94,7 @@ public class GameHandler : BaseHandler<GameManager>, GameManager.ICallBack
                 CleanGameData();
                 break;
         }
-        gameData.gameStatus = gameStatus;
+        GetGameData().gameStatus = gameStatus;
     }
 
     /// <summary>
@@ -119,21 +123,36 @@ public class GameHandler : BaseHandler<GameManager>, GameManager.ICallBack
     {
         playerGoldNumber = 0;
         enemyGoldNumber = 0;
-        if (gameData != null)
+        if (GetGameData() != null)
         {
-            playerGoldNumber = gameData.playerGoldNumber;
-            enemyGoldNumber = gameData.enemyGoldNumber;
+            playerGoldNumber = GetGameData().playerGoldNumber;
+            enemyGoldNumber = GetGameData().enemyGoldNumber;
         }
+    }
+
+    /// <summary>
+    /// 获取游戏场景等级进度
+    /// </summary>
+    /// <returns></returns>
+    public float GetGameLevelSceneProgress()
+    {
+        GameBean gameData =  GetGameData();
+        return gameData.levelProgressForScene;
     }
 
     public GameBean GetGameData()
     {
-        return gameData;
+        return manager.GetGameData();
+    }
+
+    public void SetGameData(GameBean gameData)
+    {
+        manager.SetGameData(gameData);
     }
 
     public GameLevelBean GetGameLevelData()
     {
-        return gameLevelData;
+        return manager.GetGameLevelData();
     }
 
     public void CleanGameData()
@@ -143,10 +162,20 @@ public class GameHandler : BaseHandler<GameManager>, GameManager.ICallBack
         handler_Ship.CloseShipFireAutoForEnemy();
     }
 
+    public IEnumerator CoroutineForLevelProgress()
+    {
+        while (GetGameData().gameStatus == GameStatusEnum.GameIng)
+        {
+            yield return new WaitForSeconds(1f);
+            GameBean gameData = GetGameData();
+            float exp = handler_GameData.GetLevelSceneExp();
+            gameData.AddLevelProgressForScene(exp);
+        }
+    }
+
     #region 数据回调
     public void GetGameLevelDataSuccess(GameLevelBean gameLevelData, Action<GameLevelBean> action)
     {
-        this.gameLevelData = gameLevelData;
         action?.Invoke(gameLevelData);
     }
     #endregion

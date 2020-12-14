@@ -1,11 +1,11 @@
 ﻿#if UNITY_EDITOR
 using UnityEditor;
+using UnityEditor.SceneManagement;
 using System.IO;
 #endif
 using UnityEngine;
 using System.Collections.Generic;
-using UnityEditor.SceneManagement;
-using UnityEngine.SceneManagement;
+
 
 [DisallowMultipleComponent, ExecuteInEditMode]
 public class PrefabLightmapData : MonoBehaviour

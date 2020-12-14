@@ -36,6 +36,8 @@ public class ShipBulletCpt : BaseMonoBehaviour
             if (characterCpt.GetCharacterData().characterType != this.characterType)
             {
                 characterCpt.AddLife(-bulletDamage);
+                characterCpt.ShowLife(3);
+                characterCpt.BlowUp(transform.position);
             }
         }
     }

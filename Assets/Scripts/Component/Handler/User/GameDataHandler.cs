@@ -94,6 +94,15 @@ public class GameDataHandler : BaseHandler<GameDataManager>
     {
         return manager.GetLevelMoney(BaseDataEnum.Level_Money_Number, level);
     }
+    public float GetLevelSceneExp()
+    {
+        return manager.GetLevelSceneExp();
+    }
+    public long GetLevelSceneMoney()
+    {
+        return manager.GetLevelSceneMoney();
+    }
+
     public void HandleForGameDataChange()
     {
 

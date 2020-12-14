@@ -6,11 +6,26 @@ public class GameManager : BaseManager, IGameLevelView
 {
     public GameLevelController gameLevelController;
 
+    protected GameBean gameData;
+    protected GameLevelBean gameLevelData;
     protected ICallBack callBack;
     private void Awake()
     {
         gameLevelController = new GameLevelController(this, this);
+    }
+    public GameBean GetGameData()
+    {
+        return gameData;
+    }
 
+    public void SetGameData(GameBean gameData)
+    {
+        this.gameData = gameData;
+    }
+
+    public GameLevelBean GetGameLevelData()
+    {
+        return gameLevelData;
     }
 
     public void SetCallBack(ICallBack callBack)
@@ -26,6 +41,7 @@ public class GameManager : BaseManager, IGameLevelView
     #region 数据回调
     public void GetGameLevelDataSuccess(GameLevelBean gameLevelData, Action<GameLevelBean> action)
     {
+        this.gameLevelData = gameLevelData;
         if (callBack != null)
             callBack.GetGameLevelDataSuccess(gameLevelData, action);
     }
