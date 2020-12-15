@@ -37,7 +37,7 @@ public class UIGameStart : BaseUIComponent, IBaseObserver, UIViewForFireButton.I
         if (ui_FireButton)
             ui_FireButton.SetCallBack(this);
         if (ui_PvLevelUp)
-            ui_PvLevelUp.SetCompleteContent("LEVEL UP");
+            ui_PvLevelUp.SetCompleteContent(GameCommonInfo.GetUITextById(4));
         if (ui_BtLevelUp)
             ui_BtLevelUp.onClick.AddListener(OnClickForLevelUp);
         RefreshUI();
@@ -55,8 +55,8 @@ public class UIGameStart : BaseUIComponent, IBaseObserver, UIViewForFireButton.I
             handler_Game.GetScore(out long playerGold, out long enmeyGold);
             SetScore(playerGold, enmeyGold);
             SetGoldProgress(handler_Gold.GetGoldMaxNumber(), handler_Gold.GetGoldNumber());
-            handler_Game.GetGameLevelScene(out float gameLevelSceneProgress,out int gameLevelScene);
-            SetLevelUpPro(gameLevelScene,gameLevelSceneProgress);
+            handler_Game.GetGameLevelScene(out float gameLevelSceneProgress, out int gameLevelScene);
+            SetLevelUpPro(gameLevelScene, gameLevelSceneProgress);
         }
     }
 

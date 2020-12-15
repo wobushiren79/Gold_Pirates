@@ -39,12 +39,27 @@ public class UIChildForAttributeAdd : BaseUIChildComponent<UIGameStart>
         if (ui_BtDamageAdd)
             ui_BtDamageAdd.onClick.AddListener(OnClickForAddDamage);
 
-        if (ui_TvTitleSpeed)
-            ui_TvTitleSpeed.outlineColor = Color.white;
-        if (ui_TvTitleNumber)
-            ui_TvTitleNumber.outlineColor = Color.white;
+
         if (ui_TvTitleGoldPrice)
+        {
             ui_TvTitleGoldPrice.outlineColor = Color.white;
+            ui_TvTitleGoldPrice.text = GameCommonInfo.GetUITextById(1);
+        }
+        if (ui_TvTitleSpeed)
+        {
+            ui_TvTitleSpeed.outlineColor = Color.white;
+            ui_TvTitleSpeed.text = GameCommonInfo.GetUITextById(2);
+        }
+
+        if (ui_TvTitleNumber)
+        {
+            ui_TvTitleNumber.outlineColor = Color.white;
+            ui_TvTitleNumber.text = GameCommonInfo.GetUITextById(3);
+
+        }
+     
+
+         
         RefreshUI();
     }
 
