@@ -7,8 +7,8 @@ using UnityEngine;
 public class GameBean
 {
     public GameStatusEnum gameStatus;
-    public long playerGoldNumber;
-    public long enemyGoldNumber;
+    public int playerGoldNumber;
+    public int enemyGoldNumber;
 
     //场景等级
     public int levelForScene = 1;
@@ -139,7 +139,7 @@ public class GameBean
         return playerForDamage;
     }
 
-    public void AddPlayerGoldNumber(long goldNumber)
+    public void AddPlayerGoldNumber(int goldNumber)
     {
         playerGoldNumber += goldNumber;
         if (playerGoldNumber < 0)
@@ -148,7 +148,7 @@ public class GameBean
         }
     }
 
-    public void AddEnemyGoldNumber(long goldNumber)
+    public void AddEnemyGoldNumber(int goldNumber)
     {
         enemyGoldNumber += goldNumber;
         if (enemyGoldNumber < 0)

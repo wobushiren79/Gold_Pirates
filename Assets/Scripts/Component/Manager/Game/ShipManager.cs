@@ -43,10 +43,12 @@ public class ShipManager : BaseManager, IShipDataView
         if (shipData.characterType == CharacterTypeEnum.Player)
         {
             shipForPlayer = shipCpt;
+            itemObj.transform.eulerAngles = new Vector3(0,115,0);
         }
         else if (shipData.characterType == CharacterTypeEnum.Enemy)
         {
             shipForEnemy = shipCpt;
+            itemObj.transform.eulerAngles = new Vector3(0, 65, 0);
         }
     }
 

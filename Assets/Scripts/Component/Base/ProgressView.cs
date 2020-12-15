@@ -10,13 +10,14 @@ public class ProgressView : BaseMonoBehaviour
     public enum ProgressType
     {
         Percentage,//百分比
-        Degree,//进度
+        Degree//进度
     }
 
     public ProgressType progressType;
     public TextMeshProUGUI tvContent;
     public Slider sliderPro;
     public string completeContent;
+
 
     protected ICallBack callBack;
 
@@ -25,11 +26,19 @@ public class ProgressView : BaseMonoBehaviour
         sliderPro.onValueChanged.AddListener(OnSliderValueChange);
     }
 
+    public void SetData(string data, float value)
+    {
+        SetContent(data);
+        SetSlider(value);
+    }
+
     public void SetData(float value)
     {
         SetContent((Math.Round(value, 4) * 100) + "%");
         SetSlider(value);
     }
+
+
 
     public void SetData(float maxData, float data)
     {

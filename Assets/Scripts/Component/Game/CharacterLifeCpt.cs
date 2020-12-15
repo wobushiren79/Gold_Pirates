@@ -4,21 +4,24 @@ using UnityEngine;
 
 public class CharacterLifeCpt : BaseMonoBehaviour
 {
-    public TextMesh tvLife;
+    public SpriteRenderer srLife;
 
     private void Update()
     {
-        if (tvLife.gameObject.activeSelf)
+        if (gameObject.activeSelf)
         {
-            tvLife.transform.LookAt(Camera.main.transform.position);
-            tvLife.transform.rotation = Quaternion.Slerp(tvLife.transform.rotation, Quaternion.LookRotation(Camera.main.transform.position - tvLife.transform.position), 10 * Time.deltaTime);
+            transform.LookAt(Camera.main.transform.position);
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(Camera.main.transform.position - transform.position), 10 * Time.deltaTime);
         }
     }
 
 
     public void SetLife(int maxLife, int currentLife)
     {
-        tvLife.text = currentLife+"/"+ maxLife;
+        if (maxLife == 0)
+            maxLife = 1;
+        float lifeRate = (float)currentLife / maxLife;
+        srLife.size = new Vector2(0.73f * lifeRate, srLife.size.y);
     }
 
     public void ShowLife(float showTime)
@@ -35,8 +38,8 @@ public class CharacterLifeCpt : BaseMonoBehaviour
     /// <returns></returns>
     public IEnumerator CoroutineForShowLife(float showTime)
     {
-        tvLife.gameObject.SetActive(true);
+        gameObject.SetActive(true);
         yield return new WaitForSeconds(showTime);
-        tvLife.gameObject.SetActive(false);
+        gameObject.SetActive(false);
     }
 }

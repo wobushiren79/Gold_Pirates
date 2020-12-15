@@ -18,8 +18,8 @@ public class ShipHandler : BaseHandler<ShipManager>, ShipManager.ICallBack
     {
         CptUtil.RemoveChild(transform);
 
-        GameLevelBean gameLevelData= handler_Game.GetGameLevelData();
-        GameBean gameData =  handler_Game.GetGameData();
+        GameLevelBean gameLevelData = handler_Game.GetGameLevelData();
+        GameBean gameData = handler_Game.GetGameData();
 
         switch (characterType)
         {
@@ -100,7 +100,7 @@ public class ShipHandler : BaseHandler<ShipManager>, ShipManager.ICallBack
         GameObject objModel = resourceRequest.asset as GameObject;
         Vector3 startPosition = handler_Scene.GetStartPosition(shipData.characterType);
         GameObject objShipBulletModel = handler_Scene.GetShipBulletModel();
-        manager.CreateShip(objModel, objShipBulletModel, shipData, startPosition + new Vector3(0, 0, -1));
+        manager.CreateShip(objModel, objShipBulletModel, shipData, startPosition + new Vector3(0, 0, -5));
         Resources.UnloadUnusedAssets();
         callBack?.Invoke();
     }

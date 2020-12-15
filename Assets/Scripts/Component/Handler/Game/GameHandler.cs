@@ -131,13 +131,14 @@ public class GameHandler : BaseHandler<GameManager>, GameManager.ICallBack
     }
 
     /// <summary>
-    /// 获取游戏场景等级进度
+    /// 获取游戏场景等级
     /// </summary>
     /// <returns></returns>
-    public float GetGameLevelSceneProgress()
+    public void GetGameLevelScene(out float levelPro ,out int level)
     {
         GameBean gameData =  GetGameData();
-        return gameData.levelProgressForScene;
+        levelPro = gameData.levelProgressForScene;
+        level = gameData.levelForScene;
     }
 
     public GameBean GetGameData()
@@ -166,7 +167,7 @@ public class GameHandler : BaseHandler<GameManager>, GameManager.ICallBack
     {
         while (GetGameData().gameStatus == GameStatusEnum.GameIng)
         {
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(0.05f);
             GameBean gameData = GetGameData();
             float exp = handler_GameData.GetLevelSceneExp();
             gameData.AddLevelProgressForScene(exp);

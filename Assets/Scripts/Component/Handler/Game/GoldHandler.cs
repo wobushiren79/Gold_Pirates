@@ -10,6 +10,7 @@ public class GoldHandler : BaseHandler<GoldManager>, GoldManager.ICallBack
     
 
     public GameStartSceneHandler handler_Scene;
+    public UIManager manager_UI;
 
     protected override void Awake()
     {
@@ -101,7 +102,7 @@ public class GoldHandler : BaseHandler<GoldManager>, GoldManager.ICallBack
 
         //计算每个金币的坐标
         // List<Vector3> listPosition = CalculatePostionForGold(goldNumber);
-        List<Vector3> listPosition = CalculatePostionForGold(10, 10, goldNumber);
+        List<Vector3> listPosition = CalculatePostionForGold(8, 8, goldNumber);
         for (int i = 0; i < listPosition.Count; i++)
         {
             manager.CreateGold(objModel, goldData, listPosition[i]);
@@ -158,7 +159,7 @@ public class GoldHandler : BaseHandler<GoldManager>, GoldManager.ICallBack
         Vector3 goldStartPosition = handler_Scene.GetGoldPosition();
         float offsetX =  goldStartPosition.x + hNumber / 2;
         float offsetY = 0.25f + goldStartPosition.y;
-        float offsetZ =  goldStartPosition.z + vNumber;
+        float offsetZ =  goldStartPosition.z + vNumber/2f;
         int layer = 0;
         int hTempNumber = 0;
         int vTempNumber = 0;

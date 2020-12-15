@@ -15,6 +15,7 @@ public class UIGameStart : BaseUIComponent, IBaseObserver, UIViewForFireButton.I
     public UIChildForAttributeAdd ui_ChildAttributeAdd;
     public UIViewForGoldProgress ui_GoldProgress;
     public UIViewForFireButton ui_FireButton;
+    public UIViewForBattle ui_Battle;
 
     public GameDataHandler handler_GameData;
     public CharacterHandler handler_Character;
@@ -39,6 +40,7 @@ public class UIGameStart : BaseUIComponent, IBaseObserver, UIViewForFireButton.I
             ui_PvLevelUp.SetCompleteContent("LEVEL UP");
         if (ui_BtLevelUp)
             ui_BtLevelUp.onClick.AddListener(OnClickForLevelUp);
+        RefreshUI();
     }
 
     private void Update()
@@ -48,13 +50,13 @@ public class UIGameStart : BaseUIComponent, IBaseObserver, UIViewForFireButton.I
         {
             SetGold(userData.gold);
         }
-        if (handler_Game!=null)
+        if (handler_Game != null)
         {
             handler_Game.GetScore(out long playerGold, out long enmeyGold);
             SetScore(playerGold, enmeyGold);
             SetGoldProgress(handler_Gold.GetGoldMaxNumber(), handler_Gold.GetGoldNumber());
-            float gameLevelSceneProgress= handler_Game.GetGameLevelSceneProgress();
-            SetLevelUpPro(gameLevelSceneProgress);
+            handler_Game.GetGameLevelScene(out float gameLevelSceneProgress,out int gameLevelScene);
+            SetLevelUpPro(gameLevelScene,gameLevelSceneProgress);
         }
     }
 
@@ -62,12 +64,14 @@ public class UIGameStart : BaseUIComponent, IBaseObserver, UIViewForFireButton.I
     {
         base.RefreshUI();
         ui_ChildAttributeAdd.RefreshUI();
+        GameBean gameData = handler_Game.GetGameData();
+        ui_Battle.SetData(gameData.playerGoldNumber, gameData.enemyGoldNumber);
     }
 
     public override void OpenUI()
     {
         base.OpenUI();
-        SetFireCD(0f,0f);
+        SetFireCD(0f, 0f);
     }
 
     public void SetGold(long gold)
@@ -76,17 +80,17 @@ public class UIGameStart : BaseUIComponent, IBaseObserver, UIViewForFireButton.I
             ui_TvGold.text = gold + "";
     }
 
-    public void SetLevelUpPro(float pro)
+    public void SetLevelUpPro(int level, float pro)
     {
-        ui_PvLevelUp.SetData(pro);
+        ui_PvLevelUp.SetData("Lv." + level, pro);
     }
 
     public void SetScore(long playerScore, long enemyScore)
     {
-        
+
     }
 
-    public void SetGoldProgress(int maxGold,int currentGold)
+    public void SetGoldProgress(int maxGold, int currentGold)
     {
         ui_GoldProgress.SetData(maxGold, currentGold);
     }
@@ -109,7 +113,7 @@ public class UIGameStart : BaseUIComponent, IBaseObserver, UIViewForFireButton.I
         handler_Ship.ShipFire(CharacterTypeEnum.Player);
         //屏幕抖动
         RectTransform rtf = (RectTransform)transform;
-        rtf.DOShakeAnchorPos(0.3f,50,30,90,false,true);
+        rtf.DOShakeAnchorPos(0.3f, 50, 30, 90, false, true);
     }
 
     public void OnClickForSetting()
@@ -124,8 +128,8 @@ public class UIGameStart : BaseUIComponent, IBaseObserver, UIViewForFireButton.I
 
     public void OnClickForLevelUp()
     {
-        GameBean gameData =  handler_Game.GetGameData();
-        UserDataBean userData =  handler_GameData.GetUserData();
+        GameBean gameData = handler_Game.GetGameData();
+        UserDataBean userData = handler_GameData.GetUserData();
         if (gameData.levelProgressForScene < 1)
             return;
         gameData.LevelUpForScene();

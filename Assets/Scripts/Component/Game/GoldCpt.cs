@@ -101,7 +101,8 @@ public class GoldCpt : BaseObservable<CharacterCpt>
             Rigidbody rigidbody = GetComponent<Rigidbody>();
             rigidbody.isKinematic = true;
             BoxCollider collider = GetComponent<BoxCollider>();
-            collider.isTrigger = true; 
+            collider.isTrigger = true;
+
         }
     }
 

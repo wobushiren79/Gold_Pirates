@@ -17,9 +17,11 @@ public enum CharacterIntentEnum
 public class CharacterCpt : BaseMonoBehaviour, IBaseObserver
 {
     //手
-    public Transform transform_Hand;
+    public Transform transform_HandTop;
+    public Transform transform_HandFront;
     //船
     public Transform transform_Boat;
+    public Transform transform_BoatPosition;
 
     public GoldHandler handler_Gold;
     public CharacterHandler handler_Character;
@@ -31,7 +33,7 @@ public class CharacterCpt : BaseMonoBehaviour, IBaseObserver
     //protected AIForCharacterPath aiForCharacterPath;
     protected AIForCharacterPathAuto aiForCharacterPath;
     protected CharacterAnimCpt characterAnim;
-    protected CharacterLifeCpt characterLife;
+    public CharacterLifeCpt characterLife;
 
     protected CharacterDataBean characterData;
 
@@ -44,7 +46,6 @@ public class CharacterCpt : BaseMonoBehaviour, IBaseObserver
     {
         aiForCharacterPath = CptUtil.AddCpt<AIForCharacterPathAuto>(gameObject);
         characterAnim = GetComponent<CharacterAnimCpt>();
-        characterLife = GetComponent<CharacterLifeCpt>();
 
         AutoLinkHandler();
         ReflexUtil.AutoLinkDataForChild(this, "transform_");
@@ -96,12 +97,14 @@ public class CharacterCpt : BaseMonoBehaviour, IBaseObserver
         characterLife.SetLife(characterData.maxLife, characterData.life);
     }
 
-    public void AddLife(int life)
+    public void AddLife(int life, out bool isDead)
     {
+        isDead = false;
         int currentLife = characterData.AddLife(life);
         RefreshCharacter();
         if (currentLife <= 0)
         {
+            isDead = true;
             SetCharacterDead();
         }
     }
@@ -214,7 +217,7 @@ public class CharacterCpt : BaseMonoBehaviour, IBaseObserver
         SetBoatStatus(false);
         this.characterIntent = CharacterIntentEnum.GoToGold;
         aiForCharacterPath.SetDestination(goldPosition);
-        characterAnim.SetCharacterWalk();
+        characterAnim.SetCharacterRun();
     }
 
     /// <summary>
@@ -251,7 +254,6 @@ public class CharacterCpt : BaseMonoBehaviour, IBaseObserver
         Vector3 islandPosition = handler_Scene.GetIslandPosition(characterData.characterType);
         islandPosition += new Vector3(Random.Range(-3f, 3f), 0, 0);
         aiForCharacterPath.SetDestination(islandPosition);
-        characterAnim.SetCharacterWalk();
     }
 
     /// <summary>
@@ -263,6 +265,11 @@ public class CharacterCpt : BaseMonoBehaviour, IBaseObserver
         this.characterIntent = CharacterIntentEnum.Back;
         Vector3 startPosition = handler_Scene.GetStartPosition(characterData.characterType);
         aiForCharacterPath.SetDestination(startPosition);
+        //将金币放在船上
+        if (handGold!=null)
+        {
+            handGold.transform.position = transform_BoatPosition.transform.position;
+        }
         characterAnim.SetCharacterRow();
     }
 
@@ -289,7 +296,17 @@ public class CharacterCpt : BaseMonoBehaviour, IBaseObserver
         }
         else
         {
-            handGold.SetCarry(characterData.characterType, transform_Hand);
+            int randomHand = Random.Range(0, 2);
+            if (randomHand == 0)
+            {
+                handGold.SetCarry(characterData.characterType, transform_HandTop);
+                characterAnim.SetCharacterCarryTop();
+            }
+            else
+            {
+                handGold.SetCarry(characterData.characterType, transform_HandFront);
+                characterAnim.SetCharacterCarryFront();
+            }
             SetIntentForExitIsland();
         }
     }
@@ -351,6 +368,8 @@ public class CharacterCpt : BaseMonoBehaviour, IBaseObserver
             {
                 //增加角色金币
                 handler_Game.AddGold(characterData.characterType, handGold.goldData.gold_price, 1);
+                //刷新UI
+                handler_Gold.manager_UI.RefreshAllUI();
                 //回收金币
                 ShipCpt shipCpt = handler_Ship.GetShip(characterData.characterType);
                 handGold.SetRecycle(shipCpt.transform.position);

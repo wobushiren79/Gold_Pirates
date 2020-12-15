@@ -5,15 +5,19 @@ using System.Collections;
 
 public class ShipCpt : BaseObservable<IBaseObserver>
 {
+
     public ShipDataBean shipData;
     public GameObject bulletModel;
     public UIManager manager_UI;
     public bool isAutoFire = false;
     public bool canFire = true;
 
+    protected ShipAnimCpt shipAnim;
     private void Awake()
     {
         AutoLinkManager();
+        shipAnim = gameObject.AddComponent<ShipAnimCpt>();
+        shipAnim.InitAnim();
     }
 
     public void SetData(ShipDataBean shipData, GameObject bulletModel)
@@ -32,6 +36,8 @@ public class ShipCpt : BaseObservable<IBaseObserver>
         ShipBulletCpt shipBullet = objBullet.GetComponent<ShipBulletCpt>();
         shipBullet.SetData(shipData.characterType, shipData.bulletDamage);
         shipBullet.MoveParabola(targetPosition, 10);
+        //打炮动画
+        shipAnim.SetShipFire();
         //玩家打炮倒计时
         if (shipData.characterType == CharacterTypeEnum.Player)
         {
@@ -78,7 +84,7 @@ public class ShipCpt : BaseObservable<IBaseObserver>
         //修改UI
         UIGameStart uiGameStart = (UIGameStart)manager_UI.GetUI(UIEnum.GameStart);
         while (time > 0)
-        {   
+        {
             if (uiGameStart != null)
                 uiGameStart.SetFireCD(maxTime, time);
             yield return new WaitForSeconds(0.02f);

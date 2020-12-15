@@ -8,14 +8,14 @@ public interface IGameDataCallBack : IBaseObserver
     /// </summary>
     /// <param name="level"></param>
     /// <param name="number"></param>
-    void GoodsNumberChange(int level,int number,int totalNumber);
+    void GoodsNumberChange(int level, int number, int totalNumber);
 
     /// <summary>
     /// 场地数量改变
     /// </summary>
     /// <param name="level"></param>
     /// <param name="number"></param>
-    void SpaceNumberChange(int level,int number, int totalNumber);
+    void SpaceNumberChange(int level, int number, int totalNumber);
 
     /// <summary>
     /// 分数改变

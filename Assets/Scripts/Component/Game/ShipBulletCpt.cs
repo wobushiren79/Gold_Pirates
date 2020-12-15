@@ -33,11 +33,23 @@ public class ShipBulletCpt : BaseMonoBehaviour
         if (characterCpt)
         {
             //不可以攻击自己人
-            if (characterCpt.GetCharacterData().characterType != this.characterType)
+            CharacterDataBean characterData = characterCpt.GetCharacterData();
+            if (characterData.characterType == this.characterType)
+                return;
+            //死人不攻击
+            if (characterData.life <= 0)
+                return;
+            characterCpt.AddLife(-bulletDamage, out bool isDead);
+            //如果死亡
+            if (isDead)
             {
-                characterCpt.AddLife(-bulletDamage);
-                characterCpt.ShowLife(3);
+                //炸飞
                 characterCpt.BlowUp(transform.position);
+            }
+            else
+            {
+               //没死的话展示生命值
+               characterCpt.ShowLife(3);
             }
         }
     }
