@@ -364,6 +364,22 @@ public class CharacterCpt : BaseMonoBehaviour, IBaseObserver
     {
         if (aiForCharacterPath.IsAutoMoveStop())
         {
+            System.Action afterAction = () =>
+            {
+                //扔完之后处理
+                if (handler_Gold.GetTargetGold() == null)
+                {
+                    //如果没有金币。说明已经搬完 回收
+                    SetIntentForIdle();
+                    handler_Character.CleanCharacter(this);
+                    Destroy(gameObject);
+                }
+                else
+                {
+                    SetIntentForGoToIsland();
+                }
+            };
+
             if (handGold != null)
             {
                 //增加角色金币
@@ -374,24 +390,14 @@ public class CharacterCpt : BaseMonoBehaviour, IBaseObserver
                 ShipCpt shipCpt = handler_Ship.GetShip(characterData.characterType);
                 handGold.SetRecycle(shipCpt.transform.position);
                 //角色扔金币
-                characterAnim.SetCharacterThrow(null, () =>
-                {
-                    //扔完之后处理
-                    if (handler_Gold.GetTargetGold() == null)
-                    {
-                        //如果没有金币。说明已经搬完 回收
-                        SetIntentForIdle();
-                        handler_Character.CleanCharacter(this);
-                        Destroy(gameObject);
-                    }
-                    else
-                    {
-                        SetIntentForGoToIsland();
-                    }
-                });
-                //检测游戏是否结束
-                handler_Game.CheckGameOver();
+                characterAnim.SetCharacterThrow(null, afterAction); 
             }
+            else
+            {
+                afterAction?.Invoke();
+            }
+            //检测游戏是否结束
+            handler_Game.CheckGameOver();
         }
     }
 
