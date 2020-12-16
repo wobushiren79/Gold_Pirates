@@ -3,18 +3,10 @@ using UnityEditor;
 using System.Collections.Generic;
 using DG.Tweening;
 
-public class ToastManager : BaseMonoBehaviour
+public class ToastManager : BaseManager
 {
     //数据列表
     public GameObject objToastContainer;
-    //Item模板
-    public List<GameObject> listObjToastModel = new List<GameObject>();
-
-    protected AudioHandler audioHandler;
-    public void Awake()
-    {
-        audioHandler = Find<AudioHandler>(ImportantTypeEnum.AudioHandler);
-    }
 
     /// <summary>
     /// Toast提示
@@ -49,27 +41,25 @@ public class ToastManager : BaseMonoBehaviour
     /// <param name="destoryTime"></param>
     public void CreateToast(ToastEnum toastType, Sprite toastIconSp, string toastContentStr, float destoryTime)
     {
-        //audioHandler.PlaySound(AudioSoundEnum.ButtonForShow);
-        if (objToastContainer == null || listObjToastModel == null)
+        if (objToastContainer == null)
             return;
 
         GameObject objCreateToastModel = null;
-        foreach (GameObject itemDialog in listObjToastModel)
+        string toastName = EnumUtil.GetEnumName(toastType);
+        DialogView dialogModel = LoadResourcesUtil.SyncLoadData<DialogView>("UI/Toast/" + toastName);
+        if (dialogModel)
         {
-            if (itemDialog.name.Equals(EnumUtil.GetEnumName(toastType)))
-            {
-                objCreateToastModel = itemDialog;
-                break;
-            }
+
+            GameObject objToast = Instantiate(objToastContainer, objCreateToastModel);
+            objToast.transform.localScale = new Vector3(1, 1, 1);
+            objToast.transform.DOScale(new Vector3(0.2f, 0.2f), 0.3f).From().SetEase(Ease.OutBack);
+
+            ToastView toastView = objToast.GetComponent<ToastView>();
+            toastView.SetData(toastIconSp, toastContentStr, destoryTime);
         }
-        if (objCreateToastModel == null)
-            return;
-
-        GameObject objToast = Instantiate(objToastContainer, objCreateToastModel);
-        objToast.transform.localScale = new Vector3(1, 1, 1);
-        objToast.transform.DOScale(new Vector3(0.2f, 0.2f), 0.3f).From().SetEase(Ease.OutBack);
-
-        ToastView toastView = objToast.GetComponent<ToastView>();
-        toastView.SetData(toastIconSp, toastContentStr, destoryTime);
+        else
+        {
+            LogUtil.LogError("没有找到指定Toast：" + "Resources/UI/Toast/" + toastName);
+        }
     }
 }

@@ -56,9 +56,21 @@ public class ToastView : MonoBehaviour
     private void DestroyToast(float timeDelay)
     {
         if (cgToast != null)
-            cgToast.DOFade(0,0.2f).SetDelay(timeDelay);
-        transform.DOScale(new Vector3(0, 0), 0.2f).SetDelay(timeDelay).OnComplete(delegate () {
-            Destroy(gameObject);
-        });
+            cgToast.DOFade(0, 0.2f).SetDelay(timeDelay);
+        StartCoroutine(CoroutineForDelayDestroy(timeDelay));
     }
+
+    /// <summary>
+    /// 携程 延迟删除
+    /// </summary>
+    /// <param name="timeDelay"></param>
+    /// <returns></returns>
+    public IEnumerator CoroutineForDelayDestroy(float timeDelay)
+    {
+        yield return new WaitForSeconds(timeDelay);
+        Destroy(gameObject);
+    }
+
+
+
 }

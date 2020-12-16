@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class BaseUIManager : BaseMonoBehaviour
 {
+    public GameObject objUIContainer;
+
     //所有的UI控件
     public List<BaseUIComponent> uiList;
 
@@ -117,7 +119,7 @@ public class BaseUIManager : BaseMonoBehaviour
             BaseUIComponent uiModel = LoadResourcesUtil.SyncLoadData<BaseUIComponent>("UI/"+ uiName);
             if (uiModel)
             {
-                GameObject objUIComponent = Instantiate(gameObject, uiModel.gameObject);
+                GameObject objUIComponent = Instantiate(objUIContainer, uiModel.gameObject);
                 uiComponent = objUIComponent.GetComponent<BaseUIComponent>();
                 uiList.Add(uiComponent);
             }

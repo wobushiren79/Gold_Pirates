@@ -42,7 +42,7 @@ public class DialogView : BaseMonoBehaviour
     {
         if (cgDialog != null)
             cgDialog.DOFade(1, 0.5f).SetUpdate(true);
-        if(objDialog!=null)
+        if (objDialog != null)
             objDialog.transform.DOScale(new Vector3(0, 0, 0), 0.5f).SetEase(Ease.OutBack).From().SetUpdate(true);
     }
 
@@ -110,7 +110,7 @@ public class DialogView : BaseMonoBehaviour
         {
             gameObject.SetActive(false);
             Destroy(gameObject);
-        } 
+        }
     }
 
     public void SetCallBack(IDialogCallBack callBack)
