@@ -29,6 +29,7 @@ public class CharacterCpt : BaseMonoBehaviour, IBaseObserver
     public GameStartSceneHandler handler_Scene;
     public GameHandler handler_Game;
     public ShipHandler handler_Ship;
+    public EffectHandler handler_Effect;
 
     //protected AIForCharacterPath aiForCharacterPath;
     protected AIForCharacterPathAuto aiForCharacterPath;
@@ -41,6 +42,9 @@ public class CharacterCpt : BaseMonoBehaviour, IBaseObserver
 
     protected GoldCpt handGold;
     protected GoldCpt targetGold;
+
+    protected float radiusForBoat =  0.6f;
+    protected float radiusForCharacter = 0.3f;
 
     private void Awake()
     {
@@ -168,6 +172,8 @@ public class CharacterCpt : BaseMonoBehaviour, IBaseObserver
             handGold.SetDrop();
         //协程-删除角色
         StartCoroutine(CoroutineForCharacterDead(3));
+        //播放粒子特效
+        handler_Effect.PlayEffect(EffectInfo.PIRATE_DIE, transform.position + new Vector3(0, 0.7f, 0));
     }
 
     /// <summary>
@@ -193,6 +199,7 @@ public class CharacterCpt : BaseMonoBehaviour, IBaseObserver
         aiForCharacterPath.StopMove();
         //设置角色动画状态
         characterAnim.SetCharacterStand();
+        aiForCharacterPath.ChangeRadius(radiusForCharacter);
     }
 
     /// <summary>
@@ -206,6 +213,7 @@ public class CharacterCpt : BaseMonoBehaviour, IBaseObserver
         islandPosition += new Vector3(Random.Range(-3f, 3f), 0, 0);
         aiForCharacterPath.SetDestination(islandPosition);
         characterAnim.SetCharacterRow();
+        aiForCharacterPath.ChangeRadius(radiusForBoat);
     }
 
     /// <summary>
@@ -218,6 +226,7 @@ public class CharacterCpt : BaseMonoBehaviour, IBaseObserver
         this.characterIntent = CharacterIntentEnum.GoToGold;
         aiForCharacterPath.SetDestination(goldPosition);
         characterAnim.SetCharacterRun();
+        aiForCharacterPath.ChangeRadius(radiusForCharacter);
     }
 
     /// <summary>
@@ -242,6 +251,7 @@ public class CharacterCpt : BaseMonoBehaviour, IBaseObserver
             //没有金币就离开
             SetIntentForExitIsland();
         }
+        aiForCharacterPath.ChangeRadius(radiusForCharacter);
     }
 
     /// <summary>
@@ -254,6 +264,7 @@ public class CharacterCpt : BaseMonoBehaviour, IBaseObserver
         Vector3 islandPosition = handler_Scene.GetIslandPosition(characterData.characterType);
         islandPosition += new Vector3(Random.Range(-3f, 3f), 0, 0);
         aiForCharacterPath.SetDestination(islandPosition);
+        aiForCharacterPath.ChangeRadius(radiusForCharacter);
     }
 
     /// <summary>
@@ -266,11 +277,12 @@ public class CharacterCpt : BaseMonoBehaviour, IBaseObserver
         Vector3 startPosition = handler_Scene.GetStartPosition(characterData.characterType);
         aiForCharacterPath.SetDestination(startPosition);
         //将金币放在船上
-        if (handGold!=null)
+        if (handGold != null)
         {
             handGold.transform.position = transform_BoatPosition.transform.position;
         }
         characterAnim.SetCharacterRow();
+        aiForCharacterPath.ChangeRadius(radiusForBoat);
     }
 
     /// <summary>
@@ -390,7 +402,7 @@ public class CharacterCpt : BaseMonoBehaviour, IBaseObserver
                 ShipCpt shipCpt = handler_Ship.GetShip(characterData.characterType);
                 handGold.SetRecycle(shipCpt.transform.position);
                 //角色扔金币
-                characterAnim.SetCharacterThrow(null, afterAction); 
+                characterAnim.SetCharacterThrow(null, afterAction);
             }
             else
             {

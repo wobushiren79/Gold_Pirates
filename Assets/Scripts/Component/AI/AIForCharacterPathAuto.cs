@@ -2,10 +2,12 @@
 using UnityEngine;
 using Pathfinding.Examples;
 using Pathfinding;
+using Pathfinding.RVO;
 
 public class AIForCharacterPathAuto : BaseMonoBehaviour
 {
     public RichAI aiPath;
+    public RVOController rvoController;
     protected CharacterAnimCpt characterAnim;
 
     public Transform tfTarget;
@@ -14,7 +16,20 @@ public class AIForCharacterPathAuto : BaseMonoBehaviour
     private void Awake()
     {
         aiPath = GetComponent<RichAI>();
-        characterAnim = GetComponent<CharacterAnimCpt>(); 
+        characterAnim = GetComponent<CharacterAnimCpt>();
+        rvoController = GetComponent<RVOController>();
+
+        rvoController.priority = Random.Range(0f, 1f);
+    }
+
+
+    /// <summary>
+    /// 修改本地规避半径
+    /// </summary>
+    /// <param name="radius"></param>
+    public void ChangeRadius(float radius)
+    {
+        aiPath.radius = radius;
     }
 
     /// <summary>
@@ -40,7 +55,7 @@ public class AIForCharacterPathAuto : BaseMonoBehaviour
             aiPath.canMove = true;
         };
     }
-    
+
     /// <summary>
     /// 停止寻路
     /// </summary>

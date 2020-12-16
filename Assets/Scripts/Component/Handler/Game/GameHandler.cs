@@ -55,7 +55,7 @@ public class GameHandler : BaseHandler<GameManager>, GameManager.ICallBack
         {
             case GameStatusEnum.GamePre:
                 //扫描地形
-                AstarPath.active.ScanAsync();
+                //AstarPath.active.ScanAsync();
                 //初始化数据
                 SetGameData(new GameBean());
                 //打开UI

@@ -8,14 +8,19 @@ public class ShipCpt : BaseObservable<IBaseObserver>
 
     public ShipDataBean shipData;
     public GameObject bulletModel;
+   
     public UIManager manager_UI;
+    public EffectHandler handler_Effect;
+    public Transform tf_FirePosition;
     public bool isAutoFire = false;
     public bool canFire = true;
 
     protected ShipAnimCpt shipAnim;
     private void Awake()
     {
+        ReflexUtil.AutoLinkDataForChild(this,"tf_");
         AutoLinkManager();
+        AutoLinkHandler();
         shipAnim = gameObject.AddComponent<ShipAnimCpt>();
         shipAnim.InitAnim();
     }
@@ -32,10 +37,10 @@ public class ShipCpt : BaseObservable<IBaseObserver>
         {
             return;
         }
-        GameObject objBullet = Instantiate(gameObject, bulletModel, transform.position);
+        GameObject objBullet = Instantiate(gameObject, bulletModel, tf_FirePosition.position);
         ShipBulletCpt shipBullet = objBullet.GetComponent<ShipBulletCpt>();
         shipBullet.SetData(shipData.characterType, shipData.bulletDamage);
-        shipBullet.MoveParabola(targetPosition, 10);
+        shipBullet.MoveParabola(targetPosition, 12);
         //打炮动画
         shipAnim.SetShipFire();
         //玩家打炮倒计时
@@ -43,6 +48,8 @@ public class ShipCpt : BaseObservable<IBaseObserver>
         {
             StartCoroutine(CoroutineForFireCD(shipData.intervalForFire));
         }
+        //大炮粒子
+        handler_Effect.PlayEffect(EffectInfo.SHIP_FIRE, tf_FirePosition.position);
     }
 
     public void StartAutoOpenFire(Vector3 targetPosition)

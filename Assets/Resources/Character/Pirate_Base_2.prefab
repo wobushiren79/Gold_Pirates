@@ -393,6 +393,7 @@ MonoBehaviour:
   handler_Scene: {fileID: 0}
   handler_Game: {fileID: 0}
   handler_Ship: {fileID: 0}
+  handler_Effect: {fileID: 0}
   characterLife: {fileID: 8879193272162844692}
 --- !u!114 &6679162637756182409
 MonoBehaviour:
@@ -455,7 +456,7 @@ MonoBehaviour:
   centerBackingField: 1
   locked: 0
   lockWhenNotMoving: 0
-  agentTimeHorizon: 2
+  agentTimeHorizon: 1
   obstacleTimeHorizon: 2
   maxNeighbours: 2
   layer: 1
@@ -477,6 +478,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   aiPath: {fileID: 0}
+  rvoController: {fileID: 0}
   tfTarget: {fileID: 0}
 --- !u!114 &7047663423104700920
 MonoBehaviour:
@@ -506,9 +508,9 @@ MonoBehaviour:
   enableRotation: 1
   targetCompatibility: {fileID: 0}
   acceleration: 9999999
-  rotationSpeed: 360
+  rotationSpeed: 180
   slowdownTime: 0
-  endReachedDistance: 1
+  endReachedDistance: 2
   wallForce: 0
   wallDist: 0
   funnelSimplification: 1

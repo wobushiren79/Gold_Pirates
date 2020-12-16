@@ -4,8 +4,15 @@ using UnityEngine;
 
 public class ShipBulletCpt : BaseMonoBehaviour
 {
+    public EffectHandler handler_Effect;
+
     protected int bulletDamage;
     protected CharacterTypeEnum characterType;
+    private void Awake()
+    {
+        AutoLinkHandler();
+    }
+
     public void SetData(CharacterTypeEnum characterType, int damage)
     {
         this.bulletDamage = damage;
@@ -24,6 +31,7 @@ public class ShipBulletCpt : BaseMonoBehaviour
             .OnComplete(() =>
             {
                 Destroy(gameObject);
+                handler_Effect.PlayEffect(EffectInfo.BULLET_BLOW, transform.position);
             });
     }
 
