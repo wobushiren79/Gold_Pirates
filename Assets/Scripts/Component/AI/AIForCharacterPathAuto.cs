@@ -12,7 +12,6 @@ public class AIForCharacterPathAuto : BaseMonoBehaviour
 
     public Transform tfTarget;
 
-
     private void Awake()
     {
         aiPath = GetComponent<RichAI>();
@@ -79,7 +78,21 @@ public class AIForCharacterPathAuto : BaseMonoBehaviour
     public bool IsAutoMoveStop()
     {
         //有路径，到达目的地或者与最终目的地相隔
-        if (aiPath.hasPath && aiPath.reachedDestination)
+        //aiPath.reachedDestination（终点）
+        //aiPath.reachedEndOfPath (路径的末端 可能没有达到终点 用于寻路不可到达的地点)
+        if (aiPath.hasPath &&  aiPath.reachedEndOfPath)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public bool IsAutoMoveStop(float remainingDistance)
+    {
+        if (aiPath.hasPath && aiPath.remainingDistance <= remainingDistance)
         {
             return true;
         }

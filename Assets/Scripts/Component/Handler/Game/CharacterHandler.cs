@@ -16,7 +16,7 @@ public class CharacterHandler : BaseHandler<CharacterManager>
     /// <summary>
     /// 初始化创建角色 用于游戏刚开始
     /// </summary>
-    public IEnumerator InitCreateCharacter(CharacterDataBean playerCharacterData, CharacterDataBean enemyCharacterData,int numberForEnemy)
+    public IEnumerator InitCreateCharacter(CharacterDataBean playerCharacterData, CharacterDataBean enemyCharacterData, int numberForEnemy)
     {
         this.numberForEnemy = numberForEnemy;
         yield return manager.InitCharacterData();
@@ -45,7 +45,7 @@ public class CharacterHandler : BaseHandler<CharacterManager>
         {
             //如果超过上线则不创建
             if (manager.GetPlayerCharacterNumber() >= userData.pirateNumber)
-            {          
+            {
                 return;
             }
         }
@@ -57,7 +57,7 @@ public class CharacterHandler : BaseHandler<CharacterManager>
                 return;
             }
         }
-        
+
         Vector3 startPosition = handler_Scene.GetStartPosition(characterData.characterType);
         manager.CreateCharacter(startPosition, characterData);
     }
@@ -102,7 +102,7 @@ public class CharacterHandler : BaseHandler<CharacterManager>
         }
     }
 
-    public void SetCharacterSpeed(CharacterTypeEnum characterType,float speed)
+    public void SetCharacterSpeed(CharacterTypeEnum characterType, float speed)
     {
         List<CharacterCpt> listCharacter = manager.GetCharacterByType(characterType);
 
@@ -110,6 +110,17 @@ public class CharacterHandler : BaseHandler<CharacterManager>
         {
             CharacterCpt itemCharacter = listCharacter[i];
             itemCharacter.SetCharacterSpeed(speed);
+        }
+    }
+
+    public void SetCharacterSpeedUp(CharacterTypeEnum characterType, float addSpeed, float time)
+    {
+        List<CharacterCpt> listCharacter = manager.GetCharacterByType(characterType);
+
+        for (int i = 0; i < listCharacter.Count; i++)
+        {
+            CharacterCpt itemCharacter = listCharacter[i];
+            itemCharacter.SetCharacterSpeedUp(addSpeed, time);
         }
     }
 

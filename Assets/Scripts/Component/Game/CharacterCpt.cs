@@ -22,6 +22,8 @@ public class CharacterCpt : BaseMonoBehaviour, IBaseObserver
     //船
     public Transform transform_Boat;
     public Transform transform_BoatPosition;
+    //加速特效
+    public Transform transform_EffectSpeed;
 
     public GoldHandler handler_Gold;
     public CharacterHandler handler_Character;
@@ -43,7 +45,7 @@ public class CharacterCpt : BaseMonoBehaviour, IBaseObserver
     protected GoldCpt handGold;
     protected GoldCpt targetGold;
 
-    protected float radiusForBoat =  0.6f;
+    protected float radiusForBoat = 0.6f;
     protected float radiusForCharacter = 0.3f;
 
     private void Awake()
@@ -87,10 +89,6 @@ public class CharacterCpt : BaseMonoBehaviour, IBaseObserver
             SetHandGold(goldCpt);
         }
     }
-    private void OnDestroy()
-    {
-
-    }
 
     /// <summary>
     /// 刷新角色数据
@@ -128,6 +126,18 @@ public class CharacterCpt : BaseMonoBehaviour, IBaseObserver
     {
         characterData.SetLife(characterData.maxLife + addLife);
         RefreshCharacter();
+    }
+
+    /// <summary>
+    ///  设置角色加速
+    /// </summary>
+    /// <param name="addSpeed"></param>
+    /// <param name="time"></param>
+    public void SetCharacterSpeedUp(float addSpeed,float time)
+    {
+        if (transform_EffectSpeed.gameObject.activeSelf)
+            return;
+        StartCoroutine(CoroutineForCharacterSpeedUp(addSpeed,time));
     }
 
     /// <summary>
@@ -329,13 +339,16 @@ public class CharacterCpt : BaseMonoBehaviour, IBaseObserver
     /// <param name="isShow"></param>
     public void SetBoatStatus(bool isShow)
     {
+        transform_Boat.DOKill();
+        transform_Boat.transform.localScale = new Vector3(6, 6, 6);
         if (isShow)
         {
+            transform_Boat.DOScale(new Vector3(0, 0, 0), 0.3f).From().SetEase(Ease.OutBack);
             transform_Boat.gameObject.SetActive(true);
         }
         else
         {
-            transform_Boat.gameObject.SetActive(false);
+            transform_Boat.DOScale(new Vector3(0, 0, 0), 0.3f).OnComplete(()=> { transform_Boat.gameObject.SetActive(false); });
         }
     }
 
@@ -422,6 +435,20 @@ public class CharacterCpt : BaseMonoBehaviour, IBaseObserver
         yield return new WaitForSeconds(disappearTime);
         //删除角色
         Destroy(gameObject);
+    }
+
+    /// <summary>
+    /// 协程-角色加速
+    /// </summary>
+    /// <param name="time"></param>
+    /// <returns></returns>
+    public IEnumerator CoroutineForCharacterSpeedUp(float addSpeed,float time)
+    {
+        aiForCharacterPath.SetMoveSpeed(characterData.moveSpeed + addSpeed);
+        transform_EffectSpeed.gameObject.SetActive(true);
+        yield return new WaitForSeconds(time);
+        aiForCharacterPath.SetMoveSpeed(characterData.moveSpeed);
+        transform_EffectSpeed.gameObject.SetActive(false);
     }
 
     #region 通知回调

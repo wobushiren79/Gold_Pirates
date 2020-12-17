@@ -5,12 +5,14 @@ using UnityEngine;
 public class ShipBulletCpt : BaseMonoBehaviour
 {
     public EffectHandler handler_Effect;
+    public UIManager manager_UI;
 
     protected int bulletDamage;
     protected CharacterTypeEnum characterType;
     private void Awake()
     {
         AutoLinkHandler();
+        AutoLinkManager();
     }
 
     public void SetData(CharacterTypeEnum characterType, int damage)
@@ -32,6 +34,9 @@ public class ShipBulletCpt : BaseMonoBehaviour
             {
                 Destroy(gameObject);
                 handler_Effect.PlayEffect(EffectInfo.BULLET_BLOW, transform.position);
+                //屏幕震动
+                UIGameStart uiGameStart = (UIGameStart)manager_UI.GetUI(UIEnum.GameStart);
+                uiGameStart.ShakeUI();
             });
     }
 

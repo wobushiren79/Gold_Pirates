@@ -60,7 +60,7 @@ public class GameDataHandler : BaseHandler<GameDataManager>
 
     public int GetLevelMaxForGoldPrice()
     {
-        return manager.GetLevelMax( BaseDataEnum.Level_Max_GoldPrice);
+        return manager.GetLevelMax(BaseDataEnum.Level_Max_GoldPrice);
     }
     public int GetLevelMaxForSpeed()
     {
@@ -84,7 +84,7 @@ public class GameDataHandler : BaseHandler<GameDataManager>
     }
     public long GetLevelMoneyForGoldPrice(int level)
     {
-        return manager.GetLevelMoney( BaseDataEnum.Level_Money_GoldPrice, level);
+        return manager.GetLevelMoney(BaseDataEnum.Level_Money_GoldPrice, level);
     }
     public long GetLevelMoneyForSpeed(int level)
     {
@@ -101,6 +101,16 @@ public class GameDataHandler : BaseHandler<GameDataManager>
     public long GetLevelSceneMoney()
     {
         return manager.GetLevelSceneMoney();
+    }
+
+    public float GetSpeedUpAddSpeed()
+    {
+        return manager.GetSpeedUpAddSpeed();
+    }
+
+    public float GetSpeedUpTime()
+    {
+        return manager.GetSpeedUpTime();
     }
 
     public void HandleForGameDataChange()

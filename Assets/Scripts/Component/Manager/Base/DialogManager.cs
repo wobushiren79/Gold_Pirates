@@ -5,9 +5,10 @@ using UnityEngine.EventSystems;
 
 public class DialogManager : BaseManager
 {
-    public GameObject objDialogContainer;
-
     public List<DialogView> listDialog = new List<DialogView>();
+    public GameObject objContainer;
+    public Dictionary<string, GameObject> listObjModel = new Dictionary<string, GameObject>();
+    protected string resUrl = "UI/Toast/";
 
     public DialogView CreateDialog(DialogEnum dialogType, DialogView.IDialogCallBack callBack, DialogBean dialogBean)
     {
@@ -17,11 +18,9 @@ public class DialogManager : BaseManager
     public DialogView CreateDialog(DialogEnum dialogType, DialogView.IDialogCallBack callBack, DialogBean dialogBean, float delayDelete)
     {
         string dialogName = EnumUtil.GetEnumName(dialogType);
-        DialogView dialogModel = LoadResourcesUtil.SyncLoadData<DialogView>("UI/Dialog/" + dialogName);
-
-        if (dialogModel)
+        GameObject objDialog = CreateDialog(dialogName);
+        if (objDialog)
         {
-            GameObject objDialog = Instantiate(objDialogContainer, dialogModel.gameObject);
             DialogView dialogView = objDialog.GetComponent<DialogView>();
             if (dialogView == null)
                 Destroy(objDialog);
@@ -34,14 +33,37 @@ public class DialogManager : BaseManager
             EventSystem.current.SetSelectedGameObject(objDialog);
 
             listDialog.Add(dialogView);
-            Resources.UnloadUnusedAssets();
             return dialogView;
         }
         else
         {
-            LogUtil.LogError("没有找到指定弹窗：" + "Resources/UI/Dialog/" + dialogName);
+            LogUtil.LogError("没有找到指定Toast：" + "Resources/UI/Toast/" + dialogName);
             return null;
         }
+    }
+    public GameObject CreateDialog(string name)
+    {
+        GameObject objModel = null;
+        if (listObjModel.TryGetValue(name, out objModel))
+        {
+
+        }
+        else
+        {
+            objModel = CreatDialogModel(name);
+        }
+        if (objModel == null)
+            return null;
+        GameObject obj = Instantiate(objContainer, objModel);
+        return obj;
+    }
+
+    private GameObject CreatDialogModel(string name)
+    {
+        GameObject objModel = Resources.Load<GameObject>(resUrl + name);
+        objModel.name = name;
+        listObjModel.Add(name, objModel);
+        return objModel;
     }
 
     public void CloseAllDialog()

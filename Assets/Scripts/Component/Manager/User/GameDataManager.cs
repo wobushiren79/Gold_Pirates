@@ -78,6 +78,17 @@ public class GameDataManager : BaseManager, IUserDataView
         BaseDataBean baseData = baseDataController.GetBaseData(BaseDataEnum.Level_Scene_Money);
         return long.Parse(baseData.content);
     }
+    public float GetSpeedUpAddSpeed()
+    {
+        BaseDataBean baseData = baseDataController.GetBaseData(BaseDataEnum.SpeedUp_AddSpeed);
+        return float.Parse(baseData.content);
+    }
+
+    public float GetSpeedUpTime()
+    {
+        BaseDataBean baseData = baseDataController.GetBaseData(BaseDataEnum.SpeedUp_Time);
+        return float.Parse(baseData.content);
+    }
 
     #region 用户数据回调
     public void GetUserDataSuccess(UserDataBean userData)

@@ -105,12 +105,14 @@ public class UIChildForAttributeAdd : BaseUIChildComponent<UIGameStart>
         if (!userData.HasEnoughGold(levelMoney))
         {
             //钱不够
+            uiComponent.manager_Msg.ShowMsg(GameCommonInfo.GetUITextById(1001));
             return;
         }
         bool isLevelUp = gameData.LevelUpForPlayerPirateNumber(maxLevel, addNumber);
         if (!isLevelUp)
         {
             //升级失败
+            uiComponent.manager_Msg.ShowMsg(GameCommonInfo.GetUITextById(1002));
             return;
         }
         //支付金币
@@ -140,6 +142,7 @@ public class UIChildForAttributeAdd : BaseUIChildComponent<UIGameStart>
         if (!userData.HasEnoughGold(levelMoney))
         {
             //钱不够
+            uiComponent.manager_Msg.ShowMsg(GameCommonInfo.GetUITextById(1001));
             return;
         }
 
@@ -147,6 +150,7 @@ public class UIChildForAttributeAdd : BaseUIChildComponent<UIGameStart>
         if (!isLevelUp)
         {
             //升级失败
+            uiComponent.manager_Msg.ShowMsg(GameCommonInfo.GetUITextById(1002));
             return;
         }        
 
@@ -167,6 +171,7 @@ public class UIChildForAttributeAdd : BaseUIChildComponent<UIGameStart>
         if (!userData.HasEnoughGold(levelMoney))
         {
             //钱不够
+            uiComponent.manager_Msg.ShowMsg(GameCommonInfo.GetUITextById(1001));
             return;
         }
 
@@ -174,6 +179,7 @@ public class UIChildForAttributeAdd : BaseUIChildComponent<UIGameStart>
         if (!isLevelUp)
         {
             //升级失败
+            uiComponent.manager_Msg.ShowMsg(GameCommonInfo.GetUITextById(1002));
             return;
         }
 

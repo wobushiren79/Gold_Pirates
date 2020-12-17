@@ -5,8 +5,9 @@ using DG.Tweening;
 
 public class ToastManager : BaseManager
 {
-    //数据列表
-    public GameObject objToastContainer;
+    public GameObject objContainer;
+    public Dictionary<string, GameObject> listObjModel = new Dictionary<string, GameObject>();
+    protected string resUrl = "UI/Toast/";
 
     /// <summary>
     /// Toast提示
@@ -41,25 +42,42 @@ public class ToastManager : BaseManager
     /// <param name="destoryTime"></param>
     public void CreateToast(ToastEnum toastType, Sprite toastIconSp, string toastContentStr, float destoryTime)
     {
-        if (objToastContainer == null)
-            return;
-
-        GameObject objCreateToastModel = null;
         string toastName = EnumUtil.GetEnumName(toastType);
-        DialogView dialogModel = LoadResourcesUtil.SyncLoadData<DialogView>("UI/Toast/" + toastName);
-        if (dialogModel)
+        GameObject objToast = CreateToast(toastName);
+        if (objToast)
         {
-
-            GameObject objToast = Instantiate(objToastContainer, objCreateToastModel);
-            objToast.transform.localScale = new Vector3(1, 1, 1);
-            objToast.transform.DOScale(new Vector3(0.2f, 0.2f), 0.3f).From().SetEase(Ease.OutBack);
-
             ToastView toastView = objToast.GetComponent<ToastView>();
             toastView.SetData(toastIconSp, toastContentStr, destoryTime);
         }
         else
         {
-            LogUtil.LogError("没有找到指定Toast：" + "Resources/UI/Toast/" + toastName);
+            LogUtil.LogError("没有找到指定Msg：" + "Resources/" + resUrl + toastName);
         }
+    }
+
+
+    public GameObject CreateToast(string name)
+    {
+        GameObject objModel = null;
+        if (listObjModel.TryGetValue(name, out objModel))
+        {
+
+        }
+        else
+        {
+            objModel = CreatToastModel(name);
+        }
+        if (objModel == null)
+            return null;
+        GameObject obj = Instantiate(objContainer, objModel);
+        return obj;
+    }
+
+    private GameObject CreatToastModel(string name)
+    {
+        GameObject objModel = Resources.Load<GameObject>(resUrl + name);
+        objModel.name = name;
+        listObjModel.Add(name, objModel);
+        return objModel;
     }
 }

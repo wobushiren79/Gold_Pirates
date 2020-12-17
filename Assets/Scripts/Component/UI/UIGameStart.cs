@@ -7,6 +7,7 @@ public class UIGameStart : BaseUIComponent, IBaseObserver, UIViewForFireButton.I
     public Button ui_BtSetting;
     public Button ui_BtFire;
     public Button ui_BtAdvertisement;
+    public Button ui_BtSpeedUp;
 
     public Text ui_TvGold;
     public Button ui_BtLevelUp;
@@ -22,6 +23,8 @@ public class UIGameStart : BaseUIComponent, IBaseObserver, UIViewForFireButton.I
     public GameHandler handler_Game;
     public ShipHandler handler_Ship;
     public GoldHandler handler_Gold;
+
+    public MsgManger manager_Msg;
 
     protected void Start()
     {
@@ -40,6 +43,8 @@ public class UIGameStart : BaseUIComponent, IBaseObserver, UIViewForFireButton.I
             ui_PvLevelUp.SetCompleteContent(GameCommonInfo.GetUITextById(4));
         if (ui_BtLevelUp)
             ui_BtLevelUp.onClick.AddListener(OnClickForLevelUp);
+        if (ui_BtSpeedUp)
+            ui_BtSpeedUp.onClick.AddListener(OnClickForSpeedUp);
         RefreshUI();
     }
 
@@ -108,13 +113,20 @@ public class UIGameStart : BaseUIComponent, IBaseObserver, UIViewForFireButton.I
         ui_FireButton.SetTime(maxTime, time);
     }
 
+    public void ShakeUI()
+    {
+        //屏幕抖动
+        RectTransform rtf = (RectTransform)transform;
+        rtf.DOKill();
+        rtf.DOShakeAnchorPos(0.3f, 50, 30, 90, false, true);
+    }
+
     public void OnClickForFire()
     {
         handler_Ship.ShipFire(CharacterTypeEnum.Player);
-        //屏幕抖动
-        RectTransform rtf = (RectTransform)transform;
-        rtf.DOShakeAnchorPos(0.3f, 50, 30, 90, false, true);
+        ShakeUI();     
     }
+
 
     public void OnClickForSetting()
     {
@@ -135,6 +147,13 @@ public class UIGameStart : BaseUIComponent, IBaseObserver, UIViewForFireButton.I
         gameData.LevelUpForScene();
         long addMoney = handler_GameData.GetLevelSceneMoney();
         userData.AddGold(addMoney);
+    }
+
+    public void OnClickForSpeedUp()
+    {
+        float addSpeed = handler_GameData.GetSpeedUpAddSpeed();
+        float time = handler_GameData.GetSpeedUpTime();
+        handler_Character.SetCharacterSpeedUp(CharacterTypeEnum.Player, addSpeed, time);
     }
 
     #region 通知回调

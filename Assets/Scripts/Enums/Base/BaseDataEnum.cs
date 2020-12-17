@@ -13,5 +13,8 @@
     Level_Money_Number = 23,
 
     Level_Scene_Exp = 1001,
-    Level_Scene_Money = 1002
+    Level_Scene_Money = 1002,
+
+    SpeedUp_Time= 2001,
+	SpeedUp_AddSpeed = 2002,
 }
