@@ -15,7 +15,7 @@ public class CharacterManager : BaseManager
     {
         CptUtil.RemoveChild(transform);
         //加载模型
-        yield return CoroutineForLoadCharacterModel("Pirate_1", "Pirate_2");
+        yield return CoroutineForLoadCharacterModel("Pirate_2", "Pirate_1");
     }
 
     public void CreateCharacter(Vector3 startPosition, CharacterDataBean characterData)

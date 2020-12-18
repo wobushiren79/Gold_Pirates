@@ -102,7 +102,8 @@ public class GoldHandler : BaseHandler<GoldManager>, GoldManager.ICallBack
 
         //计算每个金币的坐标
         // List<Vector3> listPosition = CalculatePostionForGold(goldNumber);
-        List<Vector3> listPosition = CalculatePostionForGold(8, 8, goldNumber);
+        BoxCollider boxCollider = objModel.GetComponent<BoxCollider>();
+        List<Vector3> listPosition = CalculatePostionForGold(boxCollider.size,8, 8, goldNumber);
         for (int i = 0; i < listPosition.Count; i++)
         {
             manager.CreateGold(objModel, goldData, listPosition[i]);
@@ -153,19 +154,19 @@ public class GoldHandler : BaseHandler<GoldManager>, GoldManager.ICallBack
         return listData;
     }
 
-    public List<Vector3> CalculatePostionForGold(int hNumber,int vNumber, int goldNumber)
+    public List<Vector3> CalculatePostionForGold(Vector3 boxSize, int hNumber,int vNumber, int goldNumber)
     {
         List<Vector3> listData = new List<Vector3>();
         Vector3 goldStartPosition = handler_Scene.GetGoldPosition();
         float offsetX =  goldStartPosition.x + hNumber / 2;
-        float offsetY = 0.25f + goldStartPosition.y;
+        float offsetY = boxSize.y/2f + goldStartPosition.y;
         float offsetZ =  goldStartPosition.z + vNumber/2f;
         int layer = 0;
         int hTempNumber = 0;
         int vTempNumber = 0;
         for (int i = 0; i < goldNumber; i++)
         {
-            listData.Add(new Vector3(offsetX- hTempNumber * 1f, offsetY + layer * 0.5f, offsetZ - vTempNumber * 1f));
+            listData.Add(new Vector3(offsetX- hTempNumber * boxSize.x, offsetY + layer * (boxSize.y / 2f), offsetZ - vTempNumber * boxSize.z));
             hTempNumber ++ ;
             if(hTempNumber>= hNumber)
             {

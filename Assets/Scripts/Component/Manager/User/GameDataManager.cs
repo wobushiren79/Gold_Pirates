@@ -5,6 +5,7 @@ public class GameDataManager : BaseManager, IUserDataView
 {
     protected UserDataController userDataController;
     protected BaseDataController baseDataController;
+    protected LevelUpController levelUpController;
 
     protected UserDataBean userData = new UserDataBean();
 
@@ -12,6 +13,7 @@ public class GameDataManager : BaseManager, IUserDataView
     {
         userDataController = new UserDataController(this, this);
         baseDataController = new BaseDataController(this, null);
+        levelUpController = new LevelUpController(this, null);
     }
 
     /// <summary>
@@ -37,47 +39,34 @@ public class GameDataManager : BaseManager, IUserDataView
         return int.Parse(baseData.content);
     }
 
-    public int GetLevelAddForGoldPrice()
+    public LevelUpBean GetLevelUpDataForGoldPrice(int level)
     {
-        BaseDataBean baseData = baseDataController.GetBaseData(BaseDataEnum.Level_Add_GoldPrice);
-        return int.Parse(baseData.content);
+        LevelUpBean levelUpData = levelUpController.GetLevelUpForPrice(level);
+        return levelUpData;
     }
-    public float GetLevelAddForSpeed()
+    public LevelUpBean GetLevelUpDataForSpeed(int level)
     {
-        BaseDataBean baseData = baseDataController.GetBaseData(BaseDataEnum.Level_Add_Speed);
-        return float.Parse(baseData.content);
+        LevelUpBean levelUpData = levelUpController.GetLevelUpForSpeed(level);
+        return levelUpData;
     }
-    public int GetLevelAddForNumber()
+    public LevelUpBean GetLevelUpDataForNumber(int level)
     {
-        BaseDataBean baseData = baseDataController.GetBaseData(BaseDataEnum.Level_Add_Number);
-        return int.Parse(baseData.content);
-    }
-
-    public long GetLevelMoney(BaseDataEnum baseDataType, int level)
-    {
-        BaseDataBean baseData = baseDataController.GetBaseData(baseDataType);
-        long[] listData = StringUtil.SplitBySubstringForArrayLong(baseData.content,',');
-        if (level > listData.Length)
-        {
-            return listData[listData.Length - 1];
-        }
-        else
-        {
-            return listData[level - 1];
-        }
+        LevelUpBean levelUpData = levelUpController.GetLevelUpForNumber(level);
+        return levelUpData;
     }
 
-    public float GetLevelSceneExp()
+    public float GetLevelSceneExp(int level)
     {
-        BaseDataBean baseData = baseDataController.GetBaseData(BaseDataEnum.Level_Scene_Exp);
-        return float.Parse(baseData.content);
+        LevelUpBean levelUpData= levelUpController.GetLevelUpForScene(level);
+        return levelUpData.add_exp;
     }
 
-    public long GetLevelSceneMoney()
+    public long GetLevelSceneMoney(int level)
     {
-        BaseDataBean baseData = baseDataController.GetBaseData(BaseDataEnum.Level_Scene_Money);
-        return long.Parse(baseData.content);
+        LevelUpBean levelUpData = levelUpController.GetLevelUpForScene(level);
+        return levelUpData.data_int;
     }
+
     public float GetSpeedUpAddSpeed()
     {
         BaseDataBean baseData = baseDataController.GetBaseData(BaseDataEnum.SpeedUp_AddSpeed);

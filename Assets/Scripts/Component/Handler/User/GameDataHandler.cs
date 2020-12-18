@@ -70,37 +70,32 @@ public class GameDataHandler : BaseHandler<GameDataManager>
     {
         return manager.GetLevelMax(BaseDataEnum.Level_Max_Number);
     }
-    public int GetLevelAddForGoldPrice()
+    public void GetLevelUpDataForGoldPrice(int level, out int addPrice,out long preGold)
     {
-        return manager.GetLevelAddForGoldPrice();
+        LevelUpBean levelUpData= manager.GetLevelUpDataForGoldPrice(level);
+        addPrice = levelUpData.data_int;
+        preGold = levelUpData.pre_gold;
     }
-    public float GetLevelAddForSpeed()
+    public void GetLevelLevelUpDataForSpeed(int level, out float addSpeed, out long preGold)
     {
-        return manager.GetLevelAddForSpeed();
+        LevelUpBean levelUpData = manager.GetLevelUpDataForGoldPrice(level);
+        addSpeed = levelUpData.data_float;
+        preGold = levelUpData.pre_gold;
     }
-    public int GetLevelAddForNumber()
+    public void GetLevelLevelUpDataForNumber(int level, out int addNumber, out long preGold)
     {
-        return manager.GetLevelAddForNumber();
+        LevelUpBean levelUpData = manager.GetLevelUpDataForGoldPrice(level);
+        addNumber = levelUpData.data_int;
+        preGold = levelUpData.pre_gold;
     }
-    public long GetLevelMoneyForGoldPrice(int level)
+    
+    public float GetLevelSceneExp(int level)
     {
-        return manager.GetLevelMoney(BaseDataEnum.Level_Money_GoldPrice, level);
+        return manager.GetLevelSceneExp(level);
     }
-    public long GetLevelMoneyForSpeed(int level)
+    public long GetLevelSceneMoney(int level)
     {
-        return manager.GetLevelMoney(BaseDataEnum.Level_Money_Speed, level);
-    }
-    public long GetLevelMoneyForNumber(int level)
-    {
-        return manager.GetLevelMoney(BaseDataEnum.Level_Money_Number, level);
-    }
-    public float GetLevelSceneExp()
-    {
-        return manager.GetLevelSceneExp();
-    }
-    public long GetLevelSceneMoney()
-    {
-        return manager.GetLevelSceneMoney();
+        return manager.GetLevelSceneMoney(level);
     }
 
     public float GetSpeedUpAddSpeed()

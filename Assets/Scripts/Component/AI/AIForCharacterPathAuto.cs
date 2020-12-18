@@ -17,7 +17,6 @@ public class AIForCharacterPathAuto : BaseMonoBehaviour
         aiPath = GetComponent<RichAI>();
         characterAnim = GetComponent<CharacterAnimCpt>();
         rvoController = GetComponent<RVOController>();
-
         rvoController.priority = Random.Range(0f, 1f);
     }
 
@@ -80,7 +79,7 @@ public class AIForCharacterPathAuto : BaseMonoBehaviour
         //有路径，到达目的地或者与最终目的地相隔
         //aiPath.reachedDestination（终点）
         //aiPath.reachedEndOfPath (路径的末端 可能没有达到终点 用于寻路不可到达的地点)
-        if (aiPath.hasPath &&  aiPath.reachedEndOfPath)
+        if (!aiPath.pathPending && aiPath.hasPath &&  aiPath.reachedDestination)
         {
             return true;
         }
@@ -89,10 +88,23 @@ public class AIForCharacterPathAuto : BaseMonoBehaviour
             return false;
         }
     }
-
+    public bool IsAutoMoveStopForEndPath()
+    {
+        //有路径，到达目的地或者与最终目的地相隔
+        //aiPath.reachedDestination（终点）
+        //aiPath.reachedEndOfPath (路径的末端 可能没有达到终点 用于寻路不可到达的地点)
+        if (!aiPath.pathPending && aiPath.hasPath && aiPath.reachedEndOfPath)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
     public bool IsAutoMoveStop(float remainingDistance)
     {
-        if (aiPath.hasPath && aiPath.remainingDistance <= remainingDistance)
+        if (!aiPath.pathPending && aiPath.hasPath && aiPath.remainingDistance <= remainingDistance)
         {
             return true;
         }

@@ -58,8 +58,9 @@ public class GameHandler : BaseHandler<GameManager>, GameManager.ICallBack
                 //AstarPath.active.ScanAsync();
                 //初始化数据
                 SetGameData(new GameBean());
+                manager_UI.RefreshAllUI();
                 //打开UI
-                manager_UI.OpenUIAndCloseOther(UIEnum.GameStart);  
+                manager_UI.OpenUIAndCloseOther(UIEnum.GameStart); 
                 //创建金币
                 handler_Gold.CreateGold(GetGameLevelData().gold_number, GetGameLevelData().gold_id);
                 break;
@@ -165,11 +166,11 @@ public class GameHandler : BaseHandler<GameManager>, GameManager.ICallBack
 
     public IEnumerator CoroutineForLevelProgress()
     {
+        GameBean gameData = GetGameData(); 
         while (GetGameData().gameStatus == GameStatusEnum.GameIng)
         {
-            yield return new WaitForSeconds(0.05f);
-            GameBean gameData = GetGameData();
-            float exp = handler_GameData.GetLevelSceneExp();
+            yield return new WaitForSeconds(0.1f);
+            float exp = handler_GameData.GetLevelSceneExp(gameData.levelForScene);
             gameData.AddLevelProgressForScene(exp);
         }
     }

@@ -72,10 +72,10 @@ public class GoldCpt : BaseObservable<CharacterCpt>
     {
         Vector3[] path = new Vector3[3];
         path[0] = transform.position;
-        path[1] = Vector3.Lerp(targetPosition, transform.position, 0.5f) + Vector3.up * 2;
+        path[1] = Vector3.Lerp(targetPosition, transform.position, 0.5f) + Vector3.up * 6;
         path[2] = targetPosition;
         transform
-            .DOPath(path, 0.3f, PathType.CatmullRom)
+            .DOPath(path, 1f, PathType.CatmullRom)
             .SetEase(Ease.Linear)
             .OnComplete(() =>
             {

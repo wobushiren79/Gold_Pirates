@@ -28,7 +28,7 @@ public class ShipBulletCpt : BaseMonoBehaviour
         path[1] = Vector3.Lerp(targetPosition, transform.position, 0.5f) + Vector3.up * parabolaH;
         path[2] = targetPosition;
         transform
-            .DOPath(path, 1f, PathType.CatmullRom)
+            .DOPath(path, 2f, PathType.CatmullRom)
             .SetEase(Ease.Linear)
             .OnComplete(() =>
             {
@@ -38,6 +38,7 @@ public class ShipBulletCpt : BaseMonoBehaviour
                 UIGameStart uiGameStart = (UIGameStart)manager_UI.GetUI(UIEnum.GameStart);
                 uiGameStart.ShakeUI();
             });
+        handler_Effect.PlayEffect(EffectInfo.FIRE_RANGE, targetPosition,2);
     }
 
     public void OnTriggerEnter(Collider other)

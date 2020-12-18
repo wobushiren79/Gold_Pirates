@@ -40,14 +40,16 @@ public class CharacterCpt : BaseMonoBehaviour, IBaseObserver
 
     protected CharacterDataBean characterData;
 
-    protected CharacterIntentEnum characterIntent = CharacterIntentEnum.Idle;
+    public CharacterIntentEnum characterIntent = CharacterIntentEnum.Idle;
 
     protected GoldCpt handGold;
     protected GoldCpt targetGold;
 
-    protected float radiusForBoat = 0.6f;
+    protected float radiusForBoat = 0.8f;
     protected float radiusForCharacter = 0.3f;
 
+    public Material matBoatRed;
+    public Material matBoatBlue;
     private void Awake()
     {
         aiForCharacterPath = CptUtil.AddCpt<AIForCharacterPathAuto>(gameObject);
@@ -133,11 +135,11 @@ public class CharacterCpt : BaseMonoBehaviour, IBaseObserver
     /// </summary>
     /// <param name="addSpeed"></param>
     /// <param name="time"></param>
-    public void SetCharacterSpeedUp(float addSpeed,float time)
+    public void SetCharacterSpeedUp(float addSpeed, float time)
     {
         if (transform_EffectSpeed.gameObject.activeSelf)
             return;
-        StartCoroutine(CoroutineForCharacterSpeedUp(addSpeed,time));
+        StartCoroutine(CoroutineForCharacterSpeedUp(addSpeed, time));
     }
 
     /// <summary>
@@ -149,6 +151,23 @@ public class CharacterCpt : BaseMonoBehaviour, IBaseObserver
         this.characterData = characterData;
         SetIntentForGoToIsland();
         RefreshCharacter();
+        SetBoat(characterData.characterType);
+    }
+
+    public void SetBoat(CharacterTypeEnum characterType)
+    {
+        Renderer renderer = transform_Boat.GetComponent<Renderer>();
+
+        switch (characterType)
+        {
+            case CharacterTypeEnum.Enemy:
+                renderer.material = matBoatRed;
+                break;
+            case CharacterTypeEnum.Player:
+                renderer.material = matBoatRed;
+                break;
+        }
+
     }
 
     /// <summary>
@@ -172,6 +191,13 @@ public class CharacterCpt : BaseMonoBehaviour, IBaseObserver
         if (characterData.characterType == CharacterTypeEnum.Player)
         {
             handler_Game.GetGameData().LevelDownForPlayerPirateNumber(1);
+            //播放粒子特效
+            handler_Effect.PlayEffect(EffectInfo.PIRATE_DIE_RED, transform.position + new Vector3(0, 0.7f, 0));
+        }
+        else if (characterData.characterType == CharacterTypeEnum.Enemy)
+        {
+            //播放粒子特效
+            handler_Effect.PlayEffect(EffectInfo.PIRATE_DIE_BLUE, transform.position + new Vector3(0, 0.7f, 0));
         }
         //刷新UI
         handler_Game.manager_UI.RefreshAllUI();
@@ -182,8 +208,7 @@ public class CharacterCpt : BaseMonoBehaviour, IBaseObserver
             handGold.SetDrop();
         //协程-删除角色
         StartCoroutine(CoroutineForCharacterDead(3));
-        //播放粒子特效
-        handler_Effect.PlayEffect(EffectInfo.PIRATE_DIE, transform.position + new Vector3(0, 0.7f, 0));
+
     }
 
     /// <summary>
@@ -285,7 +310,7 @@ public class CharacterCpt : BaseMonoBehaviour, IBaseObserver
         SetBoatStatus(true);
         this.characterIntent = CharacterIntentEnum.Back;
         Vector3 startPosition = handler_Scene.GetStartPosition(characterData.characterType);
-        aiForCharacterPath.SetDestination(startPosition);
+        aiForCharacterPath.SetDestination(startPosition + new Vector3(Random.Range(-3, 3), 0, 1));
         //将金币放在船上
         if (handGold != null)
         {
@@ -348,7 +373,7 @@ public class CharacterCpt : BaseMonoBehaviour, IBaseObserver
         }
         else
         {
-            transform_Boat.DOScale(new Vector3(0, 0, 0), 0.3f).OnComplete(()=> { transform_Boat.gameObject.SetActive(false); });
+            transform_Boat.DOScale(new Vector3(0, 0, 0), 0.3f).OnComplete(() => { transform_Boat.gameObject.SetActive(false); });
         }
     }
 
@@ -362,7 +387,7 @@ public class CharacterCpt : BaseMonoBehaviour, IBaseObserver
 
     public void HandleForGoToGold()
     {
-        if (aiForCharacterPath.IsAutoMoveStop())
+        if (aiForCharacterPath.IsAutoMoveStopForEndPath())
         {
             //获取金币
             if (targetGold.GetGoldStatus() != GoldStatusEnum.Idle && targetGold.GetGoldStatus() != GoldStatusEnum.Drop)
@@ -442,7 +467,7 @@ public class CharacterCpt : BaseMonoBehaviour, IBaseObserver
     /// </summary>
     /// <param name="time"></param>
     /// <returns></returns>
-    public IEnumerator CoroutineForCharacterSpeedUp(float addSpeed,float time)
+    public IEnumerator CoroutineForCharacterSpeedUp(float addSpeed, float time)
     {
         aiForCharacterPath.SetMoveSpeed(characterData.moveSpeed + addSpeed);
         transform_EffectSpeed.gameObject.SetActive(true);
@@ -456,7 +481,7 @@ public class CharacterCpt : BaseMonoBehaviour, IBaseObserver
     {
         if (observable as GoldCpt)
         {
-            if (type == (int)GoldCpt.NotifyTypeEnum.HasCarry && handGold == null)
+            if (type == (int)GoldCpt.NotifyTypeEnum.HasCarry && handGold == null && characterIntent == CharacterIntentEnum.GoToGold)
             {
                 SetIntentForSearch();
             }

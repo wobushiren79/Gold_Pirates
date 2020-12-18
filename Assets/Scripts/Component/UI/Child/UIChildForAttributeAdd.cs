@@ -67,9 +67,15 @@ public class UIChildForAttributeAdd : BaseUIChildComponent<UIGameStart>
     {
         GameBean gameData = uiComponent.handler_Game.GetGameData();
         GameDataHandler gameDataHandler = uiComponent.handler_GameData;
-        SetTextForAttribute(ui_TvSpeedLevel, ui_TvSpeedMoney, gameData.levelForSpeed, gameDataHandler.GetLevelMaxForSpeed(), gameDataHandler.GetLevelMoneyForSpeed(gameData.levelForSpeed));
-        SetTextForAttribute(ui_TvNumberLevel, ui_TvNumberMoney, gameData.levelForPirateNumber, gameDataHandler.GetLevelMaxForNumber(), gameDataHandler.GetLevelMoneyForNumber(gameData.levelForPirateNumber));
-        SetTextForAttribute(ui_TvGoldPriceLevel, ui_TvGoldPriceMoney, gameData.levelForGoldPrice, gameDataHandler.GetLevelMaxForGoldPrice(), gameDataHandler.GetLevelMoneyForGoldPrice(gameData.levelForGoldPrice));
+        
+        gameDataHandler.GetLevelLevelUpDataForSpeed(gameData.levelForSpeed, out float addSpeed, out long preSpeedGold);
+        SetTextForAttribute(ui_TvSpeedLevel, ui_TvSpeedMoney, gameData.levelForSpeed, gameDataHandler.GetLevelMaxForSpeed(), preSpeedGold);
+       
+        gameDataHandler.GetLevelLevelUpDataForNumber(gameData.levelForPirateNumber, out int addNumber, out long preNumberGold);
+        SetTextForAttribute(ui_TvNumberLevel, ui_TvNumberMoney, gameData.levelForPirateNumber, gameDataHandler.GetLevelMaxForNumber(), preNumberGold);
+        
+        gameDataHandler.GetLevelUpDataForGoldPrice(gameData.levelForGoldPrice, out int addPrice, out long prePriceGold);
+        SetTextForAttribute(ui_TvGoldPriceLevel, ui_TvGoldPriceMoney, gameData.levelForGoldPrice, gameDataHandler.GetLevelMaxForGoldPrice(), prePriceGold);
     }
 
     public void SetTextForAttribute(Text tvLevel, TextMeshProUGUI tvLevelMoney, int level, int maxLevel, long levelUpMoney)
@@ -96,13 +102,14 @@ public class UIChildForAttributeAdd : BaseUIChildComponent<UIGameStart>
     public void OnClickForAddNumber()
     {
         GameBean gameData = uiComponent.handler_Game.GetGameData();
-        UserDataBean userData = uiComponent.handler_GameData.GetUserData();
+        GameDataHandler gameDataHandler = uiComponent.handler_GameData;
+        UserDataBean userData = gameDataHandler.GetUserData();
+ 
 
         int maxLevel = uiComponent.handler_GameData.GetLevelMaxForNumber();
-        int addNumber = uiComponent.handler_GameData.GetLevelAddForNumber();
-        long levelMoney = uiComponent.handler_GameData.GetLevelMoneyForNumber(gameData.levelForPirateNumber);
+        gameDataHandler.GetLevelLevelUpDataForNumber(gameData.levelForPirateNumber, out int addNumber, out long preNumberGold);
 
-        if (!userData.HasEnoughGold(levelMoney))
+        if (!userData.HasEnoughGold(preNumberGold))
         {
             //钱不够
             uiComponent.manager_Msg.ShowMsg(GameCommonInfo.GetUITextById(1001));
@@ -116,7 +123,7 @@ public class UIChildForAttributeAdd : BaseUIChildComponent<UIGameStart>
             return;
         }
         //支付金币
-        userData.PayGold(levelMoney);
+        userData.PayGold(preNumberGold);
         //生成海盗
         for (int i = 0; i < addNumber; i++)
         {
@@ -134,19 +141,19 @@ public class UIChildForAttributeAdd : BaseUIChildComponent<UIGameStart>
     public void OnClickForAddGoldPrice()
     {
         UserDataBean userData = uiComponent.handler_GameData.GetUserData();
+        GameDataHandler gameDataHandler = uiComponent.handler_GameData;
         GameBean gameData = uiComponent.handler_Game.GetGameData();
 
         int maxLevel = uiComponent.handler_GameData.GetLevelMaxForGoldPrice();
-        int addGoldPrice = uiComponent.handler_GameData.GetLevelAddForGoldPrice();
-        long levelMoney = uiComponent.handler_GameData.GetLevelMoneyForNumber(gameData.levelForGoldPrice);
-        if (!userData.HasEnoughGold(levelMoney))
+        gameDataHandler.GetLevelUpDataForGoldPrice(gameData.levelForGoldPrice, out int addPrice, out long prePriceGold);
+        if (!userData.HasEnoughGold(prePriceGold))
         {
             //钱不够
             uiComponent.manager_Msg.ShowMsg(GameCommonInfo.GetUITextById(1001));
             return;
         }
 
-        bool isLevelUp = uiComponent.handler_Game.GetGameData().LevelUpForGoldPrice(maxLevel, addGoldPrice);
+        bool isLevelUp = gameData.LevelUpForGoldPrice(maxLevel, addPrice);
         if (!isLevelUp)
         {
             //升级失败
@@ -155,7 +162,7 @@ public class UIChildForAttributeAdd : BaseUIChildComponent<UIGameStart>
         }        
 
         //支付金币
-        userData.PayGold(levelMoney);
+        userData.PayGold(prePriceGold);
 
         RefreshUI();
     }
@@ -163,12 +170,12 @@ public class UIChildForAttributeAdd : BaseUIChildComponent<UIGameStart>
     public void OnClickForAddSpeed()
     {
         UserDataBean userData = uiComponent.handler_GameData.GetUserData();
+        GameDataHandler gameDataHandler = uiComponent.handler_GameData;
         GameBean gameData = uiComponent.handler_Game.GetGameData();
 
         int maxLevel = uiComponent.handler_GameData.GetLevelMaxForSpeed();
-        float addSpeed = uiComponent.handler_GameData.GetLevelAddForSpeed();
-        long levelMoney = uiComponent.handler_GameData.GetLevelMoneyForNumber(gameData.levelForSpeed);
-        if (!userData.HasEnoughGold(levelMoney))
+        gameDataHandler.GetLevelLevelUpDataForSpeed(gameData.levelForSpeed, out float addSpeed, out long preSpeedGold);
+        if (!userData.HasEnoughGold(preSpeedGold))
         {
             //钱不够
             uiComponent.manager_Msg.ShowMsg(GameCommonInfo.GetUITextById(1001));
@@ -184,7 +191,7 @@ public class UIChildForAttributeAdd : BaseUIChildComponent<UIGameStart>
         }
 
         //支付金币
-        userData.PayGold(levelMoney);
+        userData.PayGold(preSpeedGold);
 
         uiComponent.handler_Character.SetCharacterSpeed(CharacterTypeEnum.Player, gameData.GetPlayerSpeed());
         uiComponent.handler_Character.RefreshCharacter(CharacterTypeEnum.Player);

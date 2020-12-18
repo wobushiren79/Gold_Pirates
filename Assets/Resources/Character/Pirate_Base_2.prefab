@@ -397,6 +397,9 @@ MonoBehaviour:
   handler_Ship: {fileID: 0}
   handler_Effect: {fileID: 0}
   characterLife: {fileID: 8879193272162844692}
+  characterIntent: 0
+  matBoatRed: {fileID: 2100000, guid: bc85371ed7b5c0d4ca96ba2a08212f53, type: 2}
+  matBoatBlue: {fileID: 2100000, guid: e95bcc87c3e0e864284860a7f3534d41, type: 2}
 --- !u!114 &6679162637756182409
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -459,7 +462,7 @@ MonoBehaviour:
   locked: 0
   lockWhenNotMoving: 0
   agentTimeHorizon: 1
-  obstacleTimeHorizon: 2
+  obstacleTimeHorizon: 1
   maxNeighbours: 2
   layer: 1
   collidesWith: 1
@@ -510,7 +513,7 @@ MonoBehaviour:
   enableRotation: 1
   targetCompatibility: {fileID: 0}
   acceleration: 9999999
-  rotationSpeed: 90
+  rotationSpeed: 360
   slowdownTime: 0
   endReachedDistance: 0.5
   wallForce: 0

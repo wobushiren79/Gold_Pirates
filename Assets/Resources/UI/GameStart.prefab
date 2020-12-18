@@ -310,12 +310,12 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
+  m_fontSize: 32
   m_fontSizeBase: 36
   m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 1
+  m_fontSizeMax: 32
   m_fontStyle: 0
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 512
@@ -518,12 +518,12 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 42
+  m_fontSize: 38.4
   m_fontSizeBase: 42
   m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 1
+  m_fontSizeMax: 42
   m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
@@ -1091,7 +1091,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 48
+  m_fontSize: 43.2
   m_fontSizeBase: 46
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -1217,6 +1217,7 @@ MonoBehaviour:
   handler_Game: {fileID: 0}
   handler_Ship: {fileID: 0}
   handler_Gold: {fileID: 0}
+  manager_Msg: {fileID: 0}
 --- !u!1 &2029408662475452639
 GameObject:
   m_ObjectHideFlags: 0
@@ -2188,12 +2189,12 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
+  m_fontSize: 32
   m_fontSizeBase: 36
   m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 1
+  m_fontSizeMax: 32
   m_fontStyle: 0
   m_HorizontalAlignment: 4
   m_VerticalAlignment: 512
@@ -2920,7 +2921,7 @@ MonoBehaviour:
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 0}
+  m_TargetGraphic: {fileID: 8266986310016397272}
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
@@ -3971,6 +3972,11 @@ PrefabInstance:
       propertyPath: m_text
       value: "\u4EBA\u6570"
       objectReference: {fileID: 0}
+    - target: {fileID: 7073818773838891168, guid: b4f28316fecd39a4085186a5f51a010e,
+        type: 3}
+      propertyPath: m_fontSize
+      value: 46.05
+      objectReference: {fileID: 0}
     - target: {fileID: 7301529764986846650, guid: b4f28316fecd39a4085186a5f51a010e,
         type: 3}
       propertyPath: m_Name
@@ -4105,6 +4111,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: ItemAttributeGoldPriceAdd
+      objectReference: {fileID: 0}
+    - target: {fileID: 7073818773838891168, guid: b4f28316fecd39a4085186a5f51a010e,
+        type: 3}
+      propertyPath: m_enableAutoSizing
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7073818773838891168, guid: b4f28316fecd39a4085186a5f51a010e,
+        type: 3}
+      propertyPath: m_fontSize
+      value: 46.05
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b4f28316fecd39a4085186a5f51a010e, type: 3}
@@ -4245,6 +4261,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_text
       value: "\u901F\u5EA6"
+      objectReference: {fileID: 0}
+    - target: {fileID: 7073818773838891168, guid: b4f28316fecd39a4085186a5f51a010e,
+        type: 3}
+      propertyPath: m_fontSize
+      value: 46.05
       objectReference: {fileID: 0}
     - target: {fileID: 7301529764986846650, guid: b4f28316fecd39a4085186a5f51a010e,
         type: 3}

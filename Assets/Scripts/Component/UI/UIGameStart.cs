@@ -145,7 +145,7 @@ public class UIGameStart : BaseUIComponent, IBaseObserver, UIViewForFireButton.I
         if (gameData.levelProgressForScene < 1)
             return;
         gameData.LevelUpForScene();
-        long addMoney = handler_GameData.GetLevelSceneMoney();
+        long addMoney = handler_GameData.GetLevelSceneMoney(gameData.levelForScene);
         userData.AddGold(addMoney);
     }
 

@@ -41,8 +41,7 @@ public class ShipCpt : BaseObservable<IBaseObserver>
         ShipBulletCpt shipBullet = objBullet.GetComponent<ShipBulletCpt>();
         shipBullet.SetData(shipData.characterType, shipData.bulletDamage);
         shipBullet.MoveParabola(targetPosition, 12);
-        //打炮动画
-        shipAnim.SetShipFire();
+
         //玩家打炮倒计时
         if (shipData.characterType == CharacterTypeEnum.Player)
         {
@@ -50,6 +49,10 @@ public class ShipCpt : BaseObservable<IBaseObserver>
         }
         //大炮粒子
         handler_Effect.PlayEffect(EffectInfo.SHIP_FIRE, tf_FirePosition.position);
+        //打炮动画
+        shipAnim.SetShipFire(() => {
+            shipAnim.SetShipIdle();
+        });
     }
 
     public void StartAutoOpenFire(Vector3 targetPosition)
