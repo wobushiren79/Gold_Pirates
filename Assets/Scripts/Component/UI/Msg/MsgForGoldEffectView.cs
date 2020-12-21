@@ -12,7 +12,7 @@ public class MsgForGoldEffectView : MsgView
     public override void AnimForMove()
     {
         RectTransform rtf = (RectTransform)transform;
-        rtf.DOAnchorPos(targetPostion, 1).SetEase(Ease.Linear);
+        rtf.DOAnchorPos(targetPostion, 1).SetEase(Ease.Linear).SetDelay(Random.Range(0f,0.3f));
         CanvasGroup canvasGroup = transform.GetComponent<CanvasGroup>();
         canvasGroup.DOFade(0, 1).SetDelay(0.8f).OnComplete(() =>
         {

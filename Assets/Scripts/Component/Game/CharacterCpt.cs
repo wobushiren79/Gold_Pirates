@@ -192,12 +192,12 @@ public class CharacterCpt : BaseMonoBehaviour, IBaseObserver
         {
             handler_Game.GetGameData().LevelDownForPlayerPirateNumber(1);
             //播放粒子特效
-            handler_Effect.PlayEffect(EffectInfo.PIRATE_DIE_RED, transform.position + new Vector3(0, 0.7f, 0));
+            handler_Effect.PlayEffect(EffectInfo.PIRATE_DIE_BLUE, transform.position + new Vector3(0, 0.7f, 0));
         }
         else if (characterData.characterType == CharacterTypeEnum.Enemy)
         {
             //播放粒子特效
-            handler_Effect.PlayEffect(EffectInfo.PIRATE_DIE_BLUE, transform.position + new Vector3(0, 0.7f, 0));
+            handler_Effect.PlayEffect(EffectInfo.PIRATE_DIE_RED, transform.position + new Vector3(0, 0.7f, 0));
         }
         //刷新UI
         handler_Game.manager_UI.RefreshAllUI();
