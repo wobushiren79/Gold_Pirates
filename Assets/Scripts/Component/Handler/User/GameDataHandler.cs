@@ -78,13 +78,13 @@ public class GameDataHandler : BaseHandler<GameDataManager>
     }
     public void GetLevelLevelUpDataForSpeed(int level, out float addSpeed, out long preGold)
     {
-        LevelUpBean levelUpData = manager.GetLevelUpDataForGoldPrice(level);
+        LevelUpBean levelUpData = manager.GetLevelUpDataForSpeed(level);
         addSpeed = levelUpData.data_float;
         preGold = levelUpData.pre_gold;
     }
     public void GetLevelLevelUpDataForNumber(int level, out int addNumber, out long preGold)
     {
-        LevelUpBean levelUpData = manager.GetLevelUpDataForGoldPrice(level);
+        LevelUpBean levelUpData = manager.GetLevelUpDataForNumber(level);
         addNumber = levelUpData.data_int;
         preGold = levelUpData.pre_gold;
     }
@@ -106,6 +106,11 @@ public class GameDataHandler : BaseHandler<GameDataManager>
     public float GetSpeedUpTime()
     {
         return manager.GetSpeedUpTime();
+    }
+
+    public float GetFireCD()
+    {
+        return manager.GetFireCD();
     }
 
     public void HandleForGameDataChange()

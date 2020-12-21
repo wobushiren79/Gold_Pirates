@@ -92,7 +92,7 @@ public class ShipCpt : BaseObservable<IBaseObserver>
         canFire = false;
         float maxTime = time;
         //修改UI
-        UIGameStart uiGameStart = (UIGameStart)manager_UI.GetUI(UIEnum.GameStart);
+        UIGameStart uiGameStart = manager_UI.GetUI<UIGameStart>(UIEnum.GameStart);
         while (time > 0)
         {
             if (uiGameStart != null)

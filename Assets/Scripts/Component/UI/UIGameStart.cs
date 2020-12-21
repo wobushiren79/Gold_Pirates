@@ -2,14 +2,15 @@
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
-public class UIGameStart : BaseUIComponent, IBaseObserver, UIViewForFireButton.ICallBack
+using TMPro;
+
+public class UIGameStart : BaseUIComponent, IBaseObserver, UIViewForFireButton.ICallBack, DialogView.IDialogCallBack
 {
     public Button ui_BtSetting;
-    public Button ui_BtFire;
     public Button ui_BtAdvertisement;
     public Button ui_BtSpeedUp;
 
-    public Text ui_TvGold;
+    public TextMeshProUGUI ui_TvGold;
     public Button ui_BtLevelUp;
     public ProgressView ui_PvLevelUp;
 
@@ -23,16 +24,16 @@ public class UIGameStart : BaseUIComponent, IBaseObserver, UIViewForFireButton.I
     public GameHandler handler_Game;
     public ShipHandler handler_Ship;
     public GoldHandler handler_Gold;
+    public CameraHandler handler_Camera;
 
-    public MsgManger manager_Msg;
+    public DialogManager manager_Dialog;
+    public MsgManager manager_Msg;
 
     protected void Start()
     {
         if (handler_GameData)
             handler_GameData.AddObserver(this);
 
-        if (ui_BtFire)
-            ui_BtFire.onClick.AddListener(OnClickForFire);
         if (ui_BtSetting)
             ui_BtSetting.onClick.AddListener(OnClickForSetting);
         if (ui_BtAdvertisement)
@@ -113,18 +114,24 @@ public class UIGameStart : BaseUIComponent, IBaseObserver, UIViewForFireButton.I
         ui_FireButton.SetTime(maxTime, time);
     }
 
+    public Vector3 GetGoldIconUIRootPos()
+    {
+        return transform.InverseTransformPoint(ui_TvGold.transform.position);
+    }
+
     public void ShakeUI()
     {
         //屏幕抖动
-        RectTransform rtf = (RectTransform)transform;
-        rtf.DOKill();
-        rtf.DOShakeAnchorPos(0.3f, 50, 30, 90, false, true);
+        //RectTransform rtf = (RectTransform)transform;
+        //rtf.DOKill();
+        //rtf.DOShakeAnchorPos(0.3f, 50, 30, 90, false, true);
+        handler_Camera.ShakeCamera();
     }
 
     public void OnClickForFire()
     {
         handler_Ship.ShipFire(CharacterTypeEnum.Player);
-        ShakeUI();     
+        ShakeUI();
     }
 
 
@@ -141,12 +148,13 @@ public class UIGameStart : BaseUIComponent, IBaseObserver, UIViewForFireButton.I
     public void OnClickForLevelUp()
     {
         GameBean gameData = handler_Game.GetGameData();
-        UserDataBean userData = handler_GameData.GetUserData();
         if (gameData.levelProgressForScene < 1)
             return;
-        gameData.LevelUpForScene();
         long addMoney = handler_GameData.GetLevelSceneMoney(gameData.levelForScene);
-        userData.AddGold(addMoney);
+
+        DialogBean dialogData = new DialogBean();
+        DialogForLevelUpView dialogForLevelUp =  manager_Dialog.CreateDialog<DialogForLevelUpView>(DialogEnum.LevelUp,this, dialogData);
+        dialogForLevelUp.SetData(addMoney);
     }
 
     public void OnClickForSpeedUp()
@@ -166,4 +174,24 @@ public class UIGameStart : BaseUIComponent, IBaseObserver, UIViewForFireButton.I
     }
     #endregion
 
+    #region 弹窗回调
+    public void Submit(DialogView dialogView, DialogBean dialogBean)
+    {
+        if (dialogView as DialogForLevelUpView)
+        {
+            GameBean gameData = handler_Game.GetGameData();
+            UserDataBean userData = handler_GameData.GetUserData();
+            if (gameData.levelProgressForScene < 1)
+                return;
+            gameData.LevelUpForScene();
+            long addMoney = handler_GameData.GetLevelSceneMoney(gameData.levelForScene);
+            userData.AddGold(addMoney);
+        }
+    }
+
+    public void Cancel(DialogView dialogView, DialogBean dialogBean)
+    {
+
+    }
+    #endregion
 }

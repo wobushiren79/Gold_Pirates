@@ -30,18 +30,21 @@ public class GameHandler : BaseHandler<GameManager>, GameManager.ICallBack
     }
 
 
-    public void AddGold(CharacterTypeEnum characterType, long goldPrice,int goldNumber)
+    public long AddGold(CharacterTypeEnum characterType, long goldPrice,int goldNumber)
     {
+        long addGold = 0;
         switch (characterType)
         {
             case CharacterTypeEnum.Player:
                 GetGameData().AddPlayerGoldNumber(goldNumber);
-                handler_GameData.AddUserGold(goldNumber * (goldPrice + GetGameData().goldPrice));
+                addGold = goldNumber * (goldPrice + GetGameData().goldPrice);
+                handler_GameData.AddUserGold(addGold);
                 break;
             case CharacterTypeEnum.Enemy:
                 GetGameData().AddEnemyGoldNumber(goldNumber);
                 break;
         }
+        return addGold;
     }
 
     public void InitGameLevelData(int level, Action<GameLevelBean> action)
@@ -60,7 +63,7 @@ public class GameHandler : BaseHandler<GameManager>, GameManager.ICallBack
                 SetGameData(new GameBean());
                 manager_UI.RefreshAllUI();
                 //打开UI
-                manager_UI.OpenUIAndCloseOther(UIEnum.GameStart); 
+                manager_UI.OpenUIAndCloseOther<UIGameStart>(UIEnum.GameStart); 
                 //创建金币
                 handler_Gold.CreateGold(GetGameLevelData().gold_number, GetGameLevelData().gold_id);
                 break;
@@ -91,7 +94,7 @@ public class GameHandler : BaseHandler<GameManager>, GameManager.ICallBack
                 break;
             case GameStatusEnum.GameEnd:
                 //打开UI
-                manager_UI.OpenUIAndCloseOther(UIEnum.GameEnd);
+                manager_UI.OpenUIAndCloseOther<UIGameEnd>(UIEnum.GameEnd);
                 CleanGameData();
                 break;
         }

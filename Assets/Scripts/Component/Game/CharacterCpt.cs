@@ -164,7 +164,7 @@ public class CharacterCpt : BaseMonoBehaviour, IBaseObserver
                 renderer.material = matBoatRed;
                 break;
             case CharacterTypeEnum.Player:
-                renderer.material = matBoatRed;
+                renderer.material = matBoatBlue;
                 break;
         }
 
@@ -433,12 +433,12 @@ public class CharacterCpt : BaseMonoBehaviour, IBaseObserver
             if (handGold != null)
             {
                 //增加角色金币
-                handler_Game.AddGold(characterData.characterType, handGold.goldData.gold_price, 1);
+                long addGold =  handler_Game.AddGold(characterData.characterType, handGold.goldData.gold_price, 1);
                 //刷新UI
                 handler_Gold.manager_UI.RefreshAllUI();
                 //回收金币
                 ShipCpt shipCpt = handler_Ship.GetShip(characterData.characterType);
-                handGold.SetRecycle(shipCpt.transform.position);
+                handGold.SetRecycle( addGold, shipCpt.transform.position);
                 //角色扔金币
                 characterAnim.SetCharacterThrow(null, afterAction);
             }

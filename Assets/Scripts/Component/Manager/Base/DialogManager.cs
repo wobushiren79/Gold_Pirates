@@ -8,14 +8,14 @@ public class DialogManager : BaseManager
     public List<DialogView> listDialog = new List<DialogView>();
     public GameObject objContainer;
     public Dictionary<string, GameObject> listObjModel = new Dictionary<string, GameObject>();
-    protected string resUrl = "UI/Toast/";
+    protected string resUrl = "UI/Dialog/";
 
-    public DialogView CreateDialog(DialogEnum dialogType, DialogView.IDialogCallBack callBack, DialogBean dialogBean)
+    public T CreateDialog<T>(DialogEnum dialogType, DialogView.IDialogCallBack callBack, DialogBean dialogBean) where T : DialogView
     {
-        return CreateDialog(dialogType, callBack, dialogBean, 0);
+        return CreateDialog<T>(dialogType, callBack, dialogBean, 0);
     }
 
-    public DialogView CreateDialog(DialogEnum dialogType, DialogView.IDialogCallBack callBack, DialogBean dialogBean, float delayDelete)
+    public T CreateDialog<T>(DialogEnum dialogType, DialogView.IDialogCallBack callBack, DialogBean dialogBean, float delayDelete) where T : DialogView
     {
         string dialogName = EnumUtil.GetEnumName(dialogType);
         GameObject objDialog = CreateDialog(dialogName);
@@ -33,7 +33,7 @@ public class DialogManager : BaseManager
             EventSystem.current.SetSelectedGameObject(objDialog);
 
             listDialog.Add(dialogView);
-            return dialogView;
+            return dialogView as T;
         }
         else
         {
@@ -81,5 +81,10 @@ public class DialogManager : BaseManager
     {
         if (dialogView != null && listDialog.Contains(dialogView))
             listDialog.Remove(dialogView);
+    }
+
+    public RectTransform GetContainer()
+    {
+        return (RectTransform)objContainer.transform;
     }
 }

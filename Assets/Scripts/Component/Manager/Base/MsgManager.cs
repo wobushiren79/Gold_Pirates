@@ -2,7 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 
-public class MsgManger : BaseManager
+public class MsgManager : BaseManager
 {
     public GameObject objContainer;
     public Dictionary<string, GameObject> listObjModel = new Dictionary<string, GameObject>();
@@ -10,20 +10,20 @@ public class MsgManger : BaseManager
 
     public void ShowMsg(Camera camera, string content)
     {
-        ShowMsg(MsgEnum.Normal, content, GameUtil.MousePointToUGUIPoint(camera, (RectTransform)objContainer.transform));
+        ShowMsg<MsgView>(MsgEnum.Normal, content, GameUtil.MousePointToUGUIPoint(camera, (RectTransform)objContainer.transform));
     }
 
     public void ShowMsg(string content)
     {
-        ShowMsg(MsgEnum.Normal, content, GameUtil.MousePointToUGUIPoint(null, (RectTransform)objContainer.transform));
+        ShowMsg<MsgView>(MsgEnum.Normal, content, GameUtil.MousePointToUGUIPoint(null, (RectTransform)objContainer.transform));
     }
 
     public void ShowMsg(string content, Vector3 msgPosition)
     {
-        ShowMsg(MsgEnum.Normal, content, msgPosition);
+        ShowMsg<MsgView>(MsgEnum.Normal, content, msgPosition);
     }
 
-    public MsgView ShowMsg(MsgEnum msgType, string content, Vector3 msgPosition)
+    public T ShowMsg<T>(MsgEnum msgType, string content, Vector3 msgPosition) where T : MsgView
     {
         string msgName = EnumUtil.GetEnumName(msgType);
         GameObject objMsg = CreateMsg(msgName);
@@ -33,7 +33,7 @@ public class MsgManger : BaseManager
             msgView.SetContent(content);
             RectTransform rtfMsg = (RectTransform)msgView.transform;
             rtfMsg.anchoredPosition = msgPosition;
-            return msgView;
+            return msgView as T;
         }
         else
         {
@@ -65,5 +65,10 @@ public class MsgManger : BaseManager
         objModel.name = name;
         listObjModel.Add(name, objModel);
         return objModel;
+    }
+
+    public RectTransform GetContainer()
+    {
+        return (RectTransform)objContainer.transform;
     }
 }

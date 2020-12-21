@@ -7,6 +7,7 @@ public class ShipHandler : BaseHandler<ShipManager>, ShipManager.ICallBack
 {
     public GameStartSceneHandler handler_Scene;
     public GameHandler handler_Game;
+    public GameDataHandler handler_GameData;
 
     protected override void Awake()
     {
@@ -28,6 +29,7 @@ public class ShipHandler : BaseHandler<ShipManager>, ShipManager.ICallBack
                 {
                     shipData.ship_damage = gameData.playerForDamage;
                     shipData.characterType = CharacterTypeEnum.Player;
+                    shipData.intervalForFire = handler_GameData.GetFireCD();
                     StartCoroutine(CoroutineForCreateShip(shipData, callBack));
                 }, shipId);
                 break;

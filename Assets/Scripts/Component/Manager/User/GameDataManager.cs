@@ -79,6 +79,12 @@ public class GameDataManager : BaseManager, IUserDataView
         return float.Parse(baseData.content);
     }
 
+    public float GetFireCD()
+    {
+        BaseDataBean baseData = baseDataController.GetBaseData(BaseDataEnum.Fire_CD);
+        return float.Parse(baseData.content);
+    }
+
     #region 用户数据回调
     public void GetUserDataSuccess(UserDataBean userData)
     {

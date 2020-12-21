@@ -35,7 +35,7 @@ public class ShipBulletCpt : BaseMonoBehaviour
                 Destroy(gameObject);
                 handler_Effect.PlayEffect(EffectInfo.BULLET_BLOW, transform.position);
                 //屏幕震动
-                UIGameStart uiGameStart = (UIGameStart)manager_UI.GetUI(UIEnum.GameStart);
+                UIGameStart uiGameStart = manager_UI.GetUI<UIGameStart>(UIEnum.GameStart);
                 uiGameStart.ShakeUI();
             });
         handler_Effect.PlayEffect(EffectInfo.FIRE_RANGE, targetPosition,2);

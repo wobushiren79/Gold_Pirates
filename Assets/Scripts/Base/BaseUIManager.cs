@@ -49,7 +49,7 @@ public class BaseUIManager : BaseMonoBehaviour
     /// </summary>
     /// <param name="uiName"></param>
     /// <returns></returns>
-    public BaseUIComponent GetUIByName(string uiName)
+    public T GetUIByName<T>(string uiName) where T: BaseUIComponent
     {
         if (uiList == null || CheckUtil.StringIsNull(uiName))
             return null;
@@ -58,7 +58,7 @@ public class BaseUIManager : BaseMonoBehaviour
             BaseUIComponent itemUI = uiList[i];
             if (itemUI.name.Contains(uiName))
             {
-                return itemUI;
+                return itemUI as T;
             }
         }
         return null;
@@ -69,9 +69,9 @@ public class BaseUIManager : BaseMonoBehaviour
     /// </summary>
     /// <param name="uiEnum"></param>
     /// <returns></returns>
-    public BaseUIComponent GetUI(UIEnum uiEnum)
+    public T GetUI<T>(UIEnum uiEnum) where T : BaseUIComponent
     {
-        return GetUIByName(EnumUtil.GetEnumName(uiEnum));
+        return GetUIByName<T>(EnumUtil.GetEnumName(uiEnum));
     }
 
     /// <summary>
@@ -99,9 +99,9 @@ public class BaseUIManager : BaseMonoBehaviour
     /// 通过UI的名字开启UI
     /// </summary>
     /// <param name="uiName"></param>
-    public BaseUIComponent OpenUIByName(string uiName)
+    public T OpenUIByName<T>(string uiName) where T : BaseUIComponent
     {
-        BaseUIComponent uiComponent = null;
+        T uiComponent = null;
         if (uiList == null || CheckUtil.StringIsNull(uiName))
             return uiComponent;
         bool hasData = false;
@@ -120,7 +120,7 @@ public class BaseUIManager : BaseMonoBehaviour
             if (uiModel)
             {
                 GameObject objUIComponent = Instantiate(objUIContainer, uiModel.gameObject);
-                uiComponent = objUIComponent.GetComponent<BaseUIComponent>();
+                uiComponent = objUIComponent.GetComponent<BaseUIComponent>() as T;
                 uiList.Add(uiComponent);
             }
             else
@@ -135,10 +135,10 @@ public class BaseUIManager : BaseMonoBehaviour
     /// 开启UI
     /// </summary>
     /// <param name="uiEnum"></param>
-    public void OpenUI(UIEnum uiEnum)
+    public void OpenUI<T>(UIEnum uiEnum) where T : BaseUIComponent
     {
         string uiName = EnumUtil.GetEnumName(uiEnum);
-        OpenUIByName(uiName);
+        OpenUIByName<T>(uiName);
     }
 
 
@@ -177,7 +177,7 @@ public class BaseUIManager : BaseMonoBehaviour
     /// 通过UI的名字开启UI并关闭其他UI
     /// </summary>
     /// <param name="uiName"></param>
-    public BaseUIComponent OpenUIAndCloseOtherByName(string uiName)
+    public T OpenUIAndCloseOtherByName<T>(string uiName) where T: BaseUIComponent
     {
         if (uiList == null || CheckUtil.StringIsNull(uiName))
             return null;
@@ -191,12 +191,12 @@ public class BaseUIManager : BaseMonoBehaviour
                     itemUI.CloseUI();
             }
         }
-        return OpenUIByName(uiName);
+        return OpenUIByName<T>(uiName);
     }
 
-    public BaseUIComponent OpenUIAndCloseOther(UIEnum ui)
+    public T OpenUIAndCloseOther<T>(UIEnum ui) where T : BaseUIComponent
     {
-       return OpenUIAndCloseOtherByName(EnumUtil.GetEnumName(ui));
+       return OpenUIAndCloseOtherByName<T>(EnumUtil.GetEnumName(ui));
     }
 
     /// <summary>
@@ -275,4 +275,8 @@ public class BaseUIManager : BaseMonoBehaviour
         }
     }
 
+    public RectTransform GetContainer()
+    {
+        return (RectTransform)objUIContainer.transform;
+    }
 }

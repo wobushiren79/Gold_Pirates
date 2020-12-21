@@ -22,15 +22,13 @@ public class DialogView : BaseMonoBehaviour
     public DialogBean dialogData;
 
     protected float timeDelayDelete;
-    protected AudioHandler audioHandler;
-    protected DialogManager dialogManager;
+    public DialogManager manager_Dialog;
 
     protected bool isSubmitDestroy = true;
 
     public virtual void Awake()
     {
-        audioHandler = Find<AudioHandler>(ImportantTypeEnum.AudioHandler);
-        dialogManager = Find<DialogManager>(ImportantTypeEnum.DialogManager);
+        AutoLinkManager();
     }
 
     public virtual void Start()
@@ -48,7 +46,7 @@ public class DialogView : BaseMonoBehaviour
 
     public virtual void OnDestroy()
     {
-        dialogManager.RemoveDialog(this);
+        manager_Dialog.RemoveDialog(this);
     }
 
     public virtual void InitData()
@@ -78,8 +76,6 @@ public class DialogView : BaseMonoBehaviour
 
     public virtual void SubmitOnClick()
     {
-        if (audioHandler != null)
-            audioHandler.PlaySound(AudioSoundEnum.ButtonForNormal);
         if (mCallBack != null)
         {
             mCallBack.Submit(this, dialogData);
@@ -91,8 +87,6 @@ public class DialogView : BaseMonoBehaviour
     }
     public virtual void CancelOnClick()
     {
-        if (audioHandler != null)
-            audioHandler.PlaySound(AudioSoundEnum.ButtonForBack);
         if (mCallBack != null)
         {
             mCallBack.Cancel(this, dialogData);

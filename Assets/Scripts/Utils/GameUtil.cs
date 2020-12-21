@@ -101,18 +101,18 @@ public class GameUtil
     /// 成功转化的前提条件为UI所用摄像头为Camera.main
     /// </summary>
     /// <param name="rtfCanvas"></param>
-    /// <param name="camera"></param>
+    /// <param name="camera">如果画布是screenspace-overlay 则直接设置相机为NULL</param>
     /// <param name="point"></param>
     /// <returns></returns>
-    public static Vector2 WorldPointToUILocalPoint(RectTransform rtfCanvas, Vector3 worldPositon)
+    public static Vector2 WorldPointToUILocalPoint(Camera camera, RectTransform rtfCanvas, Vector3 worldPositon)
     {
         Vector3 screenPoint = Camera.main.WorldToScreenPoint(worldPositon);
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(rtfCanvas, screenPoint, Camera.main, out Vector2 localPoint);
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(rtfCanvas, screenPoint, camera, out Vector2 localPoint);
         return localPoint;
     }
-    public static void WorldPointToUILocalPoint(RectTransform uiParent, Vector3 worldPositon,  RectTransform uiTarget)
+    public static void WorldPointToUILocalPoint(Camera camera, RectTransform uiParent, Vector3 worldPositon,  RectTransform uiTarget)
     {
-        uiTarget.anchoredPosition = WorldPointToUILocalPoint(uiParent, worldPositon);
+        uiTarget.anchoredPosition = WorldPointToUILocalPoint(camera,uiParent, worldPositon);
     }
 
 

@@ -6,14 +6,14 @@ public class MsgView : BaseMonoBehaviour
 {
     public Text ui_TvContent;
 
-    private void Awake()
+    protected virtual void Awake()
     {
         AutoLinkUI();
     }
 
-    private void Start()
+    protected virtual void Start()
     {
-        AnimForMoveY();
+        AnimForMove();
     }
 
     /// <summary>
@@ -26,7 +26,7 @@ public class MsgView : BaseMonoBehaviour
             ui_TvContent.text = content;
     }
 
-    public void AnimForMoveY()
+    public virtual void AnimForMove()
     {
         RectTransform rtf = (RectTransform)transform;
         rtf.DOAnchorPosY(rtf.anchoredPosition.y + 100, 3);

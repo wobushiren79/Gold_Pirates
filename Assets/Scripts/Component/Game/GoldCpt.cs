@@ -13,12 +13,14 @@ public class GoldCpt : BaseObservable<CharacterCpt>
     public GoldDataBean goldData;
     public GoldHandler handler_Gold;
     public ShipHandler handler_Ship;
+    public MsgManager manager_Msg;
 
     public GoldStatusEnum goldStatus = GoldStatusEnum.Idle;
     public CharacterTypeEnum characterType = CharacterTypeEnum.Null;
     private void Awake()
     {
         AutoLinkHandler();
+        AutoLinkManager();
     }
 
     public void SetData(GoldDataBean goldData)
@@ -55,16 +57,24 @@ public class GoldCpt : BaseObservable<CharacterCpt>
     {
         goldStatus = GoldStatusEnum.Drop;
         SetPhysic(true);
-        if(handler_Gold)
+        if (handler_Gold)
             transform.SetParent(handler_Gold.transform);
     }
 
-    public void SetRecycle(Vector3 recyclePosition)
+    public void SetRecycle(long addGold, Vector3 recyclePosition)
     {
         goldStatus = GoldStatusEnum.Recycle;
         handler_Gold.RecycleGold(this);
         //SetPhysic(true);
         transform.SetParent(handler_Gold.transform);
+        //弹出信息框
+        if (addGold > 0)
+        {
+            Vector2 uiPosition = GameUtil.WorldPointToUILocalPoint(null, manager_Msg.GetContainer(), transform.position + new Vector3(1, 0, 0));
+            MsgForGoldView msgView = manager_Msg.ShowMsg<MsgForGoldView>(MsgEnum.Gold, "", uiPosition);
+            msgView.SetGold(addGold);
+        }
+        //抛物线动画
         AnimForRecycle(recyclePosition);
     }
 
@@ -102,8 +112,6 @@ public class GoldCpt : BaseObservable<CharacterCpt>
             rigidbody.isKinematic = true;
             BoxCollider collider = GetComponent<BoxCollider>();
             collider.isTrigger = true;
-
         }
     }
-
 }

@@ -15,22 +15,22 @@ public class ToastManager : BaseManager
     /// <param name="hintContent"></param>
     public void ToastHint(string hintContent)
     {
-        CreateToast(ToastEnum.Normal, null, hintContent, 5);
+        CreateToast<ToastView>(ToastEnum.Normal, null, hintContent, 5);
     }
 
     public void ToastHint(string hintContent, float destoryTime)
     {
-        CreateToast(ToastEnum.Normal, null, hintContent, destoryTime);
+        CreateToast<ToastView>(ToastEnum.Normal, null, hintContent, destoryTime);
     }
 
     public void ToastHint(Sprite toastIconSp, string hintContent)
     {
-        CreateToast(ToastEnum.Normal, toastIconSp, hintContent, 5);
+        CreateToast<ToastView>(ToastEnum.Normal, toastIconSp, hintContent, 5);
     }
 
     public void ToastHint(Sprite toastIconSp, string hintContent,float destoryTime)
     {
-        CreateToast(ToastEnum.Normal, toastIconSp, hintContent, destoryTime);
+        CreateToast<ToastView>(ToastEnum.Normal, toastIconSp, hintContent, destoryTime);
     }
 
     /// <summary>
@@ -40,7 +40,7 @@ public class ToastManager : BaseManager
     /// <param name="toastIconSp"></param>
     /// <param name="toastContentStr"></param>
     /// <param name="destoryTime"></param>
-    public void CreateToast(ToastEnum toastType, Sprite toastIconSp, string toastContentStr, float destoryTime)
+    public void CreateToast<T>(ToastEnum toastType, Sprite toastIconSp, string toastContentStr, float destoryTime) where T : ToastView
     {
         string toastName = EnumUtil.GetEnumName(toastType);
         GameObject objToast = CreateToast(toastName);
@@ -79,5 +79,10 @@ public class ToastManager : BaseManager
         objModel.name = name;
         listObjModel.Add(name, objModel);
         return objModel;
+    }
+
+    public RectTransform GetContainer()
+    {
+        return (RectTransform)objContainer.transform;
     }
 }

@@ -17,6 +17,9 @@ public class UIViewForBattle : BaseUIView
 
     protected float minRate = 0.2f;
     protected float maxRate = 0.8f;
+
+    public Color colorForPlayerOutline;
+    public Color colorForEnemyOutline;
     public void SetData(int playerNumber, int enemyNumber)
     {
         this.playerNumber = playerNumber;
@@ -30,8 +33,8 @@ public class UIViewForBattle : BaseUIView
         float heightContainer = rtfContainer.rect.height;
         if ((playerNumber + enemyNumber) == 0)
         {
-            rtfPlayer.sizeDelta = new Vector2(widthContainer * 0.5f + 15, heightContainer);
-            rtfEnemy.sizeDelta = new Vector2(widthContainer * 0.5f + 15, heightContainer);
+            rtfPlayer.sizeDelta = new Vector2(widthContainer * 0.5f, heightContainer);
+            rtfEnemy.sizeDelta = new Vector2(widthContainer * 0.5f, heightContainer);
         }
         else
         {
@@ -48,9 +51,9 @@ public class UIViewForBattle : BaseUIView
                 playerRate = maxRate;
             }
             rtfPlayer.DOKill();
-            rtfPlayer.DOSizeDelta(new Vector2(widthContainer * playerRate + 15, heightContainer), 0.5f);
+            rtfPlayer.DOSizeDelta(new Vector2(widthContainer * playerRate , heightContainer), 0.5f);
             rtfEnemy.DOKill();
-            rtfEnemy.DOSizeDelta(new Vector2(widthContainer * enemyRate + 15, heightContainer), 0.5f);
+            rtfEnemy.DOSizeDelta(new Vector2(widthContainer * enemyRate , heightContainer), 0.5f);
         }
         SetGoldNumber(CharacterTypeEnum.Enemy);
         SetGoldNumber(CharacterTypeEnum.Player);
@@ -61,10 +64,12 @@ public class UIViewForBattle : BaseUIView
         if (characterType == CharacterTypeEnum.Player)
         {
             ui_TvPlayerGoldNumber.text = playerNumber + "";
+            ui_TvPlayerGoldNumber.outlineColor = colorForPlayerOutline;
         }
         else if (characterType == CharacterTypeEnum.Enemy)
         {
             ui_TvEnemyGoldNumber.text = enemyNumber + "";
+            ui_TvEnemyGoldNumber.outlineColor = colorForEnemyOutline;
         }
     }
 }
