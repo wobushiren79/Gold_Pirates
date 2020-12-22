@@ -10,6 +10,8 @@ public class GameBean
     public int playerGoldNumber;
     public int enemyGoldNumber;
 
+    //金币数量
+    public long gold;
     //场景等级
     public int levelForScene = 1;
     //场景等级经验
@@ -34,6 +36,30 @@ public class GameBean
     public int playerForLife = 1;
     //玩家初始伤害
     public int playerForDamage = 1;
+
+    public bool HasEnoughGold(long gold)
+    {
+        if (this.gold < gold)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+
+    public void PayGold(long payGold)
+    {
+        AddGold(-payGold);
+    }
+
+    public void AddGold(long addGold)
+    {
+        gold += addGold;
+        if (gold < 0)
+            gold = 0;
+    }
 
     public int GetGoldPrice()
     {

@@ -11,6 +11,8 @@ public class GameLevelBean : BaseBean
     public long gold_id;
     //总共生成金币数量
     public int gold_number;
+    //金币堆数据
+    public string gold_pile;
     //敌人上限数量
     public int enemy_number;
     //敌人初始生命值
@@ -19,6 +21,8 @@ public class GameLevelBean : BaseBean
     public long enemy_ship_id;
     //敌人开火间隔时间
     public float enemy_fire_interval;
+    //敌人开火限制人数
+    public int enemy_fire_limit_number;
     //敌人创建间隔
     public float enemy_build_interval;
     //敌人移动速度

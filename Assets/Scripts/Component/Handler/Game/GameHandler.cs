@@ -29,8 +29,27 @@ public class GameHandler : BaseHandler<GameManager>, GameManager.ICallBack
         StartCoroutine(CoroutineForLevelProgress());
     }
 
+    /// <summary>
+    /// 升级
+    /// </summary>
+    public void LevelUpScene(int addMoneyRate,float deleyAddGoldTime)
+    {
+        GameBean gameData = manager.GetGameData();
+        if (gameData.levelProgressForScene < 1)
+            return;
+        int totalLevel = gameData.levelForSpeed + gameData.levelForGoldPrice + gameData.levelForPirateNumber;
+        long addMoney = handler_GameData.GetLevelSceneMoney(totalLevel);
+        gameData.LevelUpForScene();
+        StartCoroutine(CoroutineForDelayAddGold(deleyAddGoldTime, addMoneyRate * addMoney));
+    }
 
-    public long AddGold(CharacterTypeEnum characterType, long goldPrice,int goldNumber)
+    public void AddUserGold(long number)
+    {
+        GameBean gameData=  manager.GetGameData();
+        gameData.AddGold(number);
+    }
+
+    public long AddGoldNumber(CharacterTypeEnum characterType, long goldPrice,int goldNumber)
     {
         long addGold = 0;
         switch (characterType)
@@ -38,7 +57,7 @@ public class GameHandler : BaseHandler<GameManager>, GameManager.ICallBack
             case CharacterTypeEnum.Player:
                 GetGameData().AddPlayerGoldNumber(goldNumber);
                 addGold = goldNumber * (goldPrice + GetGameData().goldPrice);
-                handler_GameData.AddUserGold(addGold);
+                AddUserGold(addGold);
                 break;
             case CharacterTypeEnum.Enemy:
                 GetGameData().AddEnemyGoldNumber(goldNumber);
@@ -63,9 +82,10 @@ public class GameHandler : BaseHandler<GameManager>, GameManager.ICallBack
                 SetGameData(new GameBean());
                 manager_UI.RefreshAllUI();
                 //打开UI
-                manager_UI.OpenUIAndCloseOther<UIGameStart>(UIEnum.GameStart); 
+                manager_UI.OpenUIAndCloseOther<UIGameStart>(UIEnum.GameStart);
                 //创建金币
-                handler_Gold.CreateGold(GetGameLevelData().gold_number, GetGameLevelData().gold_id);
+                GameLevelBean gameLevelData = GetGameLevelData();
+                handler_Gold.CreateGold(gameLevelData.gold_pile,gameLevelData.gold_number, gameLevelData.gold_id);
                 break;
             case GameStatusEnum.GameIng:
                 //开启角色创建
@@ -176,6 +196,17 @@ public class GameHandler : BaseHandler<GameManager>, GameManager.ICallBack
             float exp = handler_GameData.GetLevelSceneExp(gameData.levelForScene);
             gameData.AddLevelProgressForScene(exp);
         }
+    }
+
+    /// <summary>
+    /// 延迟加钱
+    /// </summary>
+    /// <returns></returns>
+    public IEnumerator CoroutineForDelayAddGold(float time,long gold)
+    {
+        yield return new WaitForSeconds(time);
+        AddUserGold(gold);
+        manager_UI.RefreshAllUI();
     }
 
     #region 数据回调

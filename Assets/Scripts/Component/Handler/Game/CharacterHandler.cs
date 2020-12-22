@@ -13,6 +13,17 @@ public class CharacterHandler : BaseHandler<CharacterManager>
     public GameStartSceneHandler handler_Scene;
     public GoldHandler handler_Gold;
 
+
+    /// <summary>
+    /// 获取角色数量
+    /// </summary>
+    /// <param name="characterType"></param>
+    /// <returns></returns>
+    public int GetCharacterNumber(CharacterTypeEnum characterType)
+    {
+        return manager.GetCharacterByType(characterType).Count;
+    }
+
     /// <summary>
     /// 初始化创建角色 用于游戏刚开始
     /// </summary>

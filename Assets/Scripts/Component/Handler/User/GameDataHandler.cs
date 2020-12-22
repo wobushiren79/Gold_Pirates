@@ -19,11 +19,6 @@ public class GameDataHandler : BaseHandler<GameDataManager>
 
     }
 
-    public void AddUserGold(long number)
-    {
-        UserDataBean userData = GetUserData();
-        userData.AddGold(number);
-    }
 
     public void AddPirateNumber(int number)
     {
@@ -111,6 +106,16 @@ public class GameDataHandler : BaseHandler<GameDataManager>
     public float GetFireCD()
     {
         return manager.GetFireCD();
+    }
+
+    public float GetBulletHight()
+    {
+        return manager.GetBulletHight();
+    }
+
+    public float GetBulletSpeed()
+    {
+        return manager.GetBulletSpeed();
     }
 
     public void HandleForGameDataChange()

@@ -106,6 +106,15 @@ public class ProgressView : BaseMonoBehaviour
         }
     }
 
+    public void SetContentOutline(Color color,float width)
+    {
+        if (tvContent != null)
+        {
+            tvContent.outlineColor = color;
+            tvContent.outlineWidth = width;
+        }
+    }
+
 
 
     /// <summary>

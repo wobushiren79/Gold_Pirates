@@ -29,4 +29,15 @@ public class GameLevelService : BaseMVCService
         return base.BaseQueryData<GameLevelBean>("level", level + "");
     }
 
+    /// <summary>
+    /// 根据等级插入数据
+    /// </summary>
+    /// <param name="gameLevelData"></param>
+    public void InsertDataByLevel(GameLevelBean gameLevelData)
+    {
+        if (base.BaseDeleteData("level", gameLevelData.level + "")) 
+        {
+            base.BaseInsertData(tableNameForMain, gameLevelData);
+        } 
+    }
 }

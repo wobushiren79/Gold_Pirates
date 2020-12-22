@@ -38,6 +38,7 @@ public class ShipHandler : BaseHandler<ShipManager>, ShipManager.ICallBack
                 {
                     shipData.intervalForFire = gameLevelData.enemy_fire_interval;
                     shipData.characterType = CharacterTypeEnum.Enemy;
+                    shipData.limitForFireNumber = gameLevelData.enemy_fire_limit_number;
                     StartCoroutine(CoroutineForCreateShip(shipData, callBack));
                 }, shipId);
                 break;

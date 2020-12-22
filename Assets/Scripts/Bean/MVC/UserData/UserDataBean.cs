@@ -5,8 +5,6 @@ using UnityEngine;
 [Serializable]
 public class UserDataBean
 {
-    //金币数量
-    public long gold;
     //海盗数量上限
     public int pirateNumber = 1000;
     //速度加成
@@ -15,30 +13,6 @@ public class UserDataBean
     public int life = 0;
     //伤害
     public int damage = 0;
-
-    public bool HasEnoughGold(long gold)
-    {
-        if (this.gold < gold)
-        {
-            return false;
-        }
-        else
-        {
-            return true;
-        }
-    }
-
-    public void PayGold(long payGold)
-    {
-        AddGold(-payGold);
-    }
-
-    public void AddGold(long addGold)
-    {
-        gold += addGold;
-        if (gold < 0)
-            gold = 0;
-    }
 
     public void AddPirateNumber(int number)
     {

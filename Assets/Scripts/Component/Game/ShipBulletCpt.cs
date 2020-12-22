@@ -21,14 +21,14 @@ public class ShipBulletCpt : BaseMonoBehaviour
         this.characterType = characterType;
     }
 
-    public void MoveParabola(Vector3 targetPosition, float parabolaH)
+    public void MoveParabola(Vector3 targetPosition, float parabolaH ,float bulletSpeed)
     {
         Vector3[] path = new Vector3[3];
         path[0] = transform.position;
         path[1] = Vector3.Lerp(targetPosition, transform.position, 0.5f) + Vector3.up * parabolaH;
         path[2] = targetPosition;
         transform
-            .DOPath(path, 2f, PathType.CatmullRom)
+            .DOPath(path, bulletSpeed, PathType.CatmullRom)
             .SetEase(Ease.Linear)
             .OnComplete(() =>
             {
@@ -36,9 +36,9 @@ public class ShipBulletCpt : BaseMonoBehaviour
                 handler_Effect.PlayEffect(EffectInfo.BULLET_BLOW, transform.position);
                 //屏幕震动
                 UIGameStart uiGameStart = manager_UI.GetUI<UIGameStart>(UIEnum.GameStart);
-                uiGameStart.ShakeUI();
+                uiGameStart.AnimForShakeUI();
             });
-        handler_Effect.PlayEffect(EffectInfo.FIRE_RANGE, targetPosition,2);
+        handler_Effect.PlayEffect(EffectInfo.FIRE_RANGE, targetPosition, bulletSpeed);
     }
 
     public void OnTriggerEnter(Collider other)

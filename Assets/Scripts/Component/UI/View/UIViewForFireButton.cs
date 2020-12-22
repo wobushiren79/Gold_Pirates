@@ -47,7 +47,7 @@ public class UIViewForFireButton : BaseUIView
             maxTime = 1;
         float pro = time / maxTime;
         ui_Progress.fillAmount = pro;
-        ui_TvTimeCD.text = (int)time + "";
+        ui_TvTimeCD.text = (int)(time + 1) + "";
     }
 
     public void OnClickForFire()

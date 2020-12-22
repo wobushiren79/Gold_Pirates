@@ -44,6 +44,26 @@ public class GoldManager : BaseManager, IGoldDataView
     }
 
     /// <summary>
+    /// 创建金币堆
+    /// </summary>
+    /// <param name="objModel"></param>
+    /// <param name="position"></param>
+    public void CreateGoldPile(GameObject objModel, Vector3 position)
+    {
+        GameObject itemObj = Instantiate(gameObject, objModel, position);
+        GoldCpt[] listData = itemObj.GetComponentsInChildren<GoldCpt>();
+        if (listGold == null)
+            listGold = new List<GoldCpt>();
+        for (int i = 0; i < listData.Length; i++)
+        {
+            GoldCpt itemGold = listData[i];
+            itemGold.transform.SetParent(gameObject.transform);
+            listGold.Add(itemGold);
+        }
+        Destroy(itemObj);
+    }
+
+    /// <summary>
     /// 移除金币
     /// </summary>
     /// <param name="goldCpt"></param>
@@ -57,7 +77,7 @@ public class GoldManager : BaseManager, IGoldDataView
     /// 获取闲置的金币
     /// </summary>
     /// <returns></returns>
-    public GoldCpt GetGoldByStatus( GoldStatusEnum goldStatus)
+    public GoldCpt GetGoldByStatus(GoldStatusEnum goldStatus)
     {
         if (CheckUtil.ListIsNull(listGold))
         {

@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class GoldHandler : BaseHandler<GoldManager>, GoldManager.ICallBack
 {
     protected int goldNumber = 0;
-    
+
 
     public GameStartSceneHandler handler_Scene;
     public UIManager manager_UI;
@@ -23,10 +23,17 @@ public class GoldHandler : BaseHandler<GoldManager>, GoldManager.ICallBack
     /// </summary>
     /// <param name="number"></param>
     /// <param name="goldId"></param>
-    public void CreateGold(int number, long goldId)
+    public void CreateGold(string goldPileData, int number, long goldId)
     {
-        goldNumber = number;
-        manager.GetGoldDataById(goldId);
+        if (CheckUtil.StringIsNull(goldPileData))
+        {
+            goldNumber = number;
+            manager.GetGoldDataById(goldId);
+        }
+        else
+        {
+            StartCoroutine(CoroutineForCreateGoldPile(goldPileData));
+        }
     }
 
     /// <summary>
@@ -103,11 +110,34 @@ public class GoldHandler : BaseHandler<GoldManager>, GoldManager.ICallBack
         //计算每个金币的坐标
         // List<Vector3> listPosition = CalculatePostionForGold(goldNumber);
         BoxCollider boxCollider = objModel.GetComponent<BoxCollider>();
-        List<Vector3> listPosition = CalculatePostionForGold(boxCollider.size,8, 8, goldNumber);
+        Vector3 boxSize = new Vector3(boxCollider.size.x * objModel.transform.localScale.x, boxCollider.size.y * objModel.transform.localScale.y, boxCollider.size.z * objModel.transform.localScale.z);
+        List<Vector3> listPosition = CalculatePostionForGold(boxSize, 8, 8, goldNumber);
         for (int i = 0; i < listPosition.Count; i++)
         {
             manager.CreateGold(objModel, goldData, listPosition[i]);
             yield return new WaitForEndOfFrame();
+        }
+        Resources.UnloadUnusedAssets();
+    }
+
+    /// <summary>
+    /// 协程-创建金币堆
+    /// </summary>
+    /// <param name="goldPileData"></param>
+    /// <returns></returns>
+    public IEnumerator CoroutineForCreateGoldPile(string goldPileData)
+    {
+        List<string> listData = StringUtil.SplitBySubstringForListStr(goldPileData, '|');
+        for (int i = 0; i < listData.Count; i++)
+        {
+            string itemData = listData[i];
+            string[] itemDataArray = StringUtil.SplitBySubstringForArrayStr(itemData, ':');
+
+            float[] itemPositionArray = StringUtil.SplitBySubstringForArrayFloat(itemDataArray[1], ',');
+            ResourceRequest resourceRequest = Resources.LoadAsync("GoldPile/" + itemDataArray[0]);
+            yield return resourceRequest;
+            GameObject objModel = resourceRequest.asset as GameObject;
+            manager.CreateGoldPile(objModel, new Vector3(itemPositionArray[0], itemPositionArray[1], itemPositionArray[2]));
         }
         Resources.UnloadUnusedAssets();
     }
@@ -154,25 +184,25 @@ public class GoldHandler : BaseHandler<GoldManager>, GoldManager.ICallBack
         return listData;
     }
 
-    public List<Vector3> CalculatePostionForGold(Vector3 boxSize, int hNumber,int vNumber, int goldNumber)
+    public List<Vector3> CalculatePostionForGold(Vector3 boxSize, int hNumber, int vNumber, int goldNumber)
     {
         List<Vector3> listData = new List<Vector3>();
         Vector3 goldStartPosition = handler_Scene.GetGoldPosition();
-        float offsetX =  goldStartPosition.x + hNumber / 2;
-        float offsetY = boxSize.y/2f + goldStartPosition.y;
-        float offsetZ =  goldStartPosition.z + vNumber/2f;
+        float offsetX = goldStartPosition.x + hNumber / 2f  * boxSize.x;
+        float offsetY = boxSize.y / 2f + goldStartPosition.y;
+        float offsetZ = goldStartPosition.z + vNumber / 2f * boxSize.z;
         int layer = 0;
         int hTempNumber = 0;
         int vTempNumber = 0;
         for (int i = 0; i < goldNumber; i++)
         {
-            listData.Add(new Vector3(offsetX- hTempNumber * boxSize.x, offsetY + layer * (boxSize.y / 2f), offsetZ - vTempNumber * boxSize.z));
-            hTempNumber ++ ;
-            if(hTempNumber>= hNumber)
+            listData.Add(new Vector3(offsetX - hTempNumber * boxSize.x , offsetY + layer * boxSize.y , offsetZ - vTempNumber * boxSize.z));
+            hTempNumber++;
+            if (hTempNumber >= hNumber)
             {
                 hTempNumber = 0;
-                vTempNumber ++;
-                if(vTempNumber>= vNumber)
+                vTempNumber++;
+                if (vTempNumber >= vNumber)
                 {
                     hTempNumber = 0;
                     vTempNumber = 0;

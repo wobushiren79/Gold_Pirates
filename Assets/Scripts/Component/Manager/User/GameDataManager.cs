@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using System;
+using UnityEditor;
 using UnityEngine;
 
 public class GameDataManager : BaseManager, IUserDataView
@@ -85,6 +86,17 @@ public class GameDataManager : BaseManager, IUserDataView
         return float.Parse(baseData.content);
     }
 
+    public float GetBulletHight()
+    {
+        BaseDataBean baseData = baseDataController.GetBaseData(BaseDataEnum.Bullet_Hight);
+        return float.Parse(baseData.content);
+    }
+    public float GetBulletSpeed()
+    {
+        BaseDataBean baseData = baseDataController.GetBaseData(BaseDataEnum.Bullet_Speed);
+        return float.Parse(baseData.content);
+    }
+
     #region 用户数据回调
     public void GetUserDataSuccess(UserDataBean userData)
     {
@@ -96,5 +108,6 @@ public class GameDataManager : BaseManager, IUserDataView
     {
 
     }
+
     #endregion
 }

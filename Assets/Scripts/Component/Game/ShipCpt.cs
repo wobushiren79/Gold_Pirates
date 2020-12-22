@@ -10,7 +10,9 @@ public class ShipCpt : BaseObservable<IBaseObserver>
     public GameObject bulletModel;
    
     public UIManager manager_UI;
+    public GameDataHandler handler_GameData;
     public EffectHandler handler_Effect;
+    public CharacterHandler handler_Character;
     public Transform tf_FirePosition;
     public bool isAutoFire = false;
     public bool canFire = true;
@@ -40,7 +42,10 @@ public class ShipCpt : BaseObservable<IBaseObserver>
         GameObject objBullet = Instantiate(gameObject, bulletModel, tf_FirePosition.position);
         ShipBulletCpt shipBullet = objBullet.GetComponent<ShipBulletCpt>();
         shipBullet.SetData(shipData.characterType, shipData.bulletDamage);
-        shipBullet.MoveParabola(targetPosition, 12);
+        //子弹高度
+        float bulletHight= handler_GameData.GetBulletHight();
+        float bulletSpeed= handler_GameData.GetBulletSpeed();
+        shipBullet.MoveParabola(targetPosition, bulletHight, bulletSpeed);
 
         //玩家打炮倒计时
         if (shipData.characterType == CharacterTypeEnum.Player)
@@ -83,7 +88,15 @@ public class ShipCpt : BaseObservable<IBaseObserver>
                 shipData.intervalForFire = 1;
             }
             yield return new WaitForSeconds(shipData.intervalForFire);
-            OpenFire(targetPosition);
+            //限制处理 少于多少人不开火
+            if (shipData.limitForFireNumber > handler_Character.GetCharacterNumber(CharacterTypeEnum.Player))
+            {
+
+            }
+            else
+            {
+                OpenFire(targetPosition);
+            }
         }
     }
 
