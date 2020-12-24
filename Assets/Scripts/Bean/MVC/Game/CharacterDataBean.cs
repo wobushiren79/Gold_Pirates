@@ -15,7 +15,10 @@ public class CharacterDataBean
     {
         this.characterType = characterType;
     }
-
+    public CharacterDataBean Clone()
+    {
+        return this.MemberwiseClone() as CharacterDataBean;
+    }
     public void SetLife(int maxLife)
     {
         this.maxLife = maxLife;

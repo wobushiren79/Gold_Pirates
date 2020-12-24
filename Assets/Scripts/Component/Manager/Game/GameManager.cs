@@ -6,7 +6,7 @@ public class GameManager : BaseManager, IGameLevelView
 {
     public GameLevelController gameLevelController;
 
-    protected GameBean gameData;
+    protected GameBean gameData  = new GameBean();
     protected GameLevelBean gameLevelData;
     protected ICallBack callBack;
     private void Awake()

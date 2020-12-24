@@ -33,16 +33,29 @@ public class ShipBulletCpt : BaseMonoBehaviour
             .OnComplete(() =>
             {
                 Destroy(gameObject);
-                handler_Effect.PlayEffect(EffectInfo.BULLET_BLOW, transform.position);
+                handler_Effect.PlayEffect(EffectInfo.BULLET_BLOW, transform.position, bulletSpeed);
                 //屏幕震动
                 UIGameStart uiGameStart = manager_UI.GetUI<UIGameStart>(UIEnum.GameStart);
                 uiGameStart.AnimForShakeUI();
             });
-        handler_Effect.PlayEffect(EffectInfo.FIRE_RANGE, targetPosition, bulletSpeed);
+        SphereCollider bulletCollider = GetComponent<SphereCollider>();
+
+        //友方敌方攻击范围颜色
+        string effectData = "";
+        if(characterType == CharacterTypeEnum.Player)
+        {
+            effectData = EffectInfo.FIRE_RANGE_BLUE;
+        }
+        else if (characterType == CharacterTypeEnum.Enemy)
+        {
+            effectData = EffectInfo.FIRE_RANGE_RED;
+        }
+        handler_Effect.PlayEffect(effectData, targetPosition, bulletSpeed, Vector3.one * bulletCollider.radius * 0.3f);
     }
 
     public void OnTriggerEnter(Collider other)
     {
+        
         CharacterCpt characterCpt = other.GetComponent<CharacterCpt>();
         if (characterCpt)
         {

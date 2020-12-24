@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -7,26 +8,21 @@ public class GoldManager : BaseManager, IGoldDataView
     protected GoldDataController goldDataController;
 
     public List<GoldCpt> listGold = new List<GoldCpt>();
+    public int goldMaxNumber = 0;
 
-    protected ICallBack callBack;
 
     private void Awake()
     {
         goldDataController = new GoldDataController(this, this);
     }
 
-    public void SetCallBack(ICallBack callBack)
-    {
-        this.callBack = callBack;
-    }
-
     /// <summary>
     /// 通过ID获取金币数据
     /// </summary>
     /// <param name="id"></param>
-    public void GetGoldDataById(long id)
+    public void GetGoldDataById(long id, Action<GoldDataBean> action)
     {
-        goldDataController.GetGoldDataById(id);
+        goldDataController.GetGoldDataById(id,action);
     }
 
     /// <summary>
@@ -48,7 +44,7 @@ public class GoldManager : BaseManager, IGoldDataView
     /// </summary>
     /// <param name="objModel"></param>
     /// <param name="position"></param>
-    public void CreateGoldPile(GameObject objModel, Vector3 position)
+    public void CreateGoldPile(GoldDataBean goldData, GameObject objModel, Vector3 position)
     {
         GameObject itemObj = Instantiate(gameObject, objModel, position);
         GoldCpt[] listData = itemObj.GetComponentsInChildren<GoldCpt>();
@@ -57,9 +53,11 @@ public class GoldManager : BaseManager, IGoldDataView
         for (int i = 0; i < listData.Length; i++)
         {
             GoldCpt itemGold = listData[i];
+            itemGold.goldData.gold_price = goldData.gold_price;
             itemGold.transform.SetParent(gameObject.transform);
             listGold.Add(itemGold);
         }
+        goldMaxNumber += listData.Length;
         Destroy(itemObj);
     }
 
@@ -94,7 +92,29 @@ public class GoldManager : BaseManager, IGoldDataView
         }
         return RandomUtil.GetRandomDataByList(listTemp);
     }
-
+    public GoldCpt GetCloseGoldByStatus(Vector3 position, GoldStatusEnum goldStatus)
+    {
+        if (CheckUtil.ListIsNull(listGold))
+        {
+            return null;
+        }
+        float minDistance = float.MaxValue;
+        GoldCpt minGold = null;
+        for (int i = 0; i < listGold.Count; i++)
+        {
+            GoldCpt itemGold = listGold[i];
+            if (itemGold.GetGoldStatus() == goldStatus)
+            {
+                float tempDistance = Vector3.Distance(position, itemGold.transform.position);
+                if(tempDistance < minDistance)
+                {
+                    minDistance = tempDistance;
+                    minGold = itemGold;
+                }
+            }
+        }
+        return minGold;
+    }
     /// <summary>
     /// 获取场景中的金币数量
     /// </summary>
@@ -106,10 +126,10 @@ public class GoldManager : BaseManager, IGoldDataView
 
 
     #region 金币数据回掉
-    public void GetGoldDataSuccess(GoldDataBean goldData)
+    public void GetGoldDataSuccess(GoldDataBean goldData, Action<GoldDataBean> action)
     {
-        if (callBack != null)
-            callBack.GetGoldDataByIdSuccess(goldData);
+        if(action!=null)
+            action?.Invoke(goldData);
     }
 
     public void GetGoldDataFail(string failMsg)
@@ -118,11 +138,4 @@ public class GoldManager : BaseManager, IGoldDataView
     }
 
     #endregion
-
-    public interface ICallBack
-    {
-        void GetGoldDataByIdSuccess(GoldDataBean goldData);
-
-        void CreateGoldSuccess();
-    }
 }

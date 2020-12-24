@@ -85,7 +85,7 @@ public class UIGameStart : BaseUIComponent, IBaseObserver,
     public void SetGold(long gold)
     {
         if (ui_TvGold)
-            ui_TvGold.text = gold + "";
+            ui_TvGold.text = gold.FormatKM() + "";
     }
 
     public void SetScore(long playerScore, long enemyScore)
@@ -139,7 +139,15 @@ public class UIGameStart : BaseUIComponent, IBaseObserver,
 
     public void OnClickForSetting()
     {
-
+        switch (ProjectConfigInfo.VERSION_TYPE)
+        {
+            case VersionTypeEnum.AndroidDebug:
+                DialogBean dialogData = new DialogBean();
+                manager_Dialog.CreateDialog<DialogForGodView>(DialogEnum.God, null, dialogData);
+                break;
+            case VersionTypeEnum.AndroidRelease:
+                break;
+        }
     }
 
     public void OnClickForAdvertisement()

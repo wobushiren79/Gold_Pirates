@@ -71,32 +71,103 @@ public class GameDataManager : BaseManager, IUserDataView
     public float GetSpeedUpAddSpeed()
     {
         BaseDataBean baseData = baseDataController.GetBaseData(BaseDataEnum.SpeedUp_AddSpeed);
+        if (baseData == null)
+            return 1;
         return float.Parse(baseData.content);
     }
 
     public float GetSpeedUpTime()
     {
         BaseDataBean baseData = baseDataController.GetBaseData(BaseDataEnum.SpeedUp_Time);
+        if (baseData == null)
+            return 1;
         return float.Parse(baseData.content);
     }
 
     public float GetFireCD()
     {
         BaseDataBean baseData = baseDataController.GetBaseData(BaseDataEnum.Fire_CD);
+        if (baseData == null)
+            return 1;
         return float.Parse(baseData.content);
     }
 
     public float GetBulletHight()
     {
         BaseDataBean baseData = baseDataController.GetBaseData(BaseDataEnum.Bullet_Hight);
+        if (baseData == null)
+            return 1;
         return float.Parse(baseData.content);
     }
     public float GetBulletSpeed()
     {
         BaseDataBean baseData = baseDataController.GetBaseData(BaseDataEnum.Bullet_Speed);
+        if (baseData == null)
+            return 1;
         return float.Parse(baseData.content);
     }
 
+    public float GetCameraFovMax()
+    {
+        BaseDataBean baseData = baseDataController.GetBaseData(BaseDataEnum.Camera_FovMax);
+        if (baseData == null)
+            return 1;
+        return float.Parse(baseData.content);
+    }
+
+    public float GetCameraFovMin()
+    {
+        BaseDataBean baseData = baseDataController.GetBaseData(BaseDataEnum.Camera_FovMin);
+        if (baseData == null)
+            return 1;
+        return float.Parse(baseData.content);
+    }
+
+    public float GetCameraScaleSpeed()
+    {
+        BaseDataBean baseData = baseDataController.GetBaseData(BaseDataEnum.Camera_ScaleSpeed);
+        if (baseData == null)
+            return 1;
+        return float.Parse(baseData.content);
+    }
+    public int GetPlayerInitLife()
+    {
+        BaseDataBean baseData = baseDataController.GetBaseData(BaseDataEnum.Player_Init_Life);
+        if (baseData == null)
+            return 1;
+        return int.Parse(baseData.content);
+    }
+    public float GetPlayerInitSpeed()
+    {
+        BaseDataBean baseData = baseDataController.GetBaseData(BaseDataEnum.Player_Init_Speed);
+        if (baseData == null)
+            return 1;
+        return float.Parse(baseData.content);
+    }
+    public float GetCharacterCorpseDestoryTime()
+    {
+        BaseDataBean baseData = baseDataController.GetBaseData(BaseDataEnum.Character_Corpse_Destory_Time);
+        if (baseData == null)
+            return 1;
+        return float.Parse(baseData.content);
+    }
+    public Vector3 GetAnglesPlayerShip()
+    {
+        BaseDataBean baseData = baseDataController.GetBaseData(BaseDataEnum.Angles_Player_Ship);
+        if (baseData == null)
+            return Vector3.zero;
+        float[] listData= StringUtil.SplitBySubstringForArrayFloat(baseData.content,',');
+        return new Vector3(listData[0], listData[1], listData[2]);
+    }
+
+    public Vector3 GetAnglesEnemyShip()
+    {
+        BaseDataBean baseData = baseDataController.GetBaseData(BaseDataEnum.Angles_Enemy_Ship);
+        if (baseData == null)
+            return Vector3.zero;
+        float[] listData = StringUtil.SplitBySubstringForArrayFloat(baseData.content, ',');
+        return new Vector3(listData[0], listData[1], listData[2]);
+    }
     #region 用户数据回调
     public void GetUserDataSuccess(UserDataBean userData)
     {
@@ -108,6 +179,5 @@ public class GameDataManager : BaseManager, IUserDataView
     {
 
     }
-
     #endregion
 }

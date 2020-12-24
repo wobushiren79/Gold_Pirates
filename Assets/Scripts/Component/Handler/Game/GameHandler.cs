@@ -26,7 +26,6 @@ public class GameHandler : BaseHandler<GameManager>, GameManager.ICallBack
             ChangeGameStatus(GameStatusEnum.GameIng);
         };
         InitGameLevelData(1, callBack);
-        StartCoroutine(CoroutineForLevelProgress());
     }
 
     /// <summary>
@@ -73,13 +72,16 @@ public class GameHandler : BaseHandler<GameManager>, GameManager.ICallBack
 
     public void ChangeGameStatus(GameStatusEnum gameStatus)
     {
+        GetGameData().gameStatus = gameStatus;
         switch (gameStatus)
         {
             case GameStatusEnum.GamePre:
                 //扫描地形
                 //AstarPath.active.ScanAsync();
                 //初始化数据
-                SetGameData(new GameBean());
+                handler_GameData.GetPlayerInitData(out float playerSpeed, out int playerLife);
+                GameBean gameData = new GameBean(playerSpeed, playerLife);
+                SetGameData(gameData);
                 manager_UI.RefreshAllUI();
                 //打开UI
                 manager_UI.OpenUIAndCloseOther<UIGameStart>(UIEnum.GameStart);
@@ -111,6 +113,8 @@ public class GameHandler : BaseHandler<GameManager>, GameManager.ICallBack
                 };
                 handler_Ship.CreateShip(CharacterTypeEnum.Player, 1, null);
                 handler_Ship.CreateShip(CharacterTypeEnum.Enemy, GetGameLevelData().enemy_ship_id, enemyShipCallBack);
+                //开启经验计算
+                StartCoroutine(CoroutineForLevelProgress());
                 break;
             case GameStatusEnum.GameEnd:
                 //打开UI
@@ -118,7 +122,6 @@ public class GameHandler : BaseHandler<GameManager>, GameManager.ICallBack
                 CleanGameData();
                 break;
         }
-        GetGameData().gameStatus = gameStatus;
     }
 
     /// <summary>

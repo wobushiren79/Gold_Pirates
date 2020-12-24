@@ -35,7 +35,7 @@ public class ShipManager : BaseManager, IShipDataView
     /// 创建舰队
     /// </summary>
     /// <param name="goldData"></param>
-    public void CreateShip(GameObject objModel,GameObject objBullet, ShipDataBean shipData, Vector3 position)
+    public void CreateShip(GameObject objModel,GameObject objBullet, ShipDataBean shipData, Vector3 position,Vector3 startPlayerAngles,Vector3 startEnemyAngles)
     {
         GameObject itemObj = Instantiate(gameObject, objModel, position);
         ShipCpt shipCpt = itemObj.AddComponent<ShipCpt>();
@@ -43,12 +43,12 @@ public class ShipManager : BaseManager, IShipDataView
         if (shipData.characterType == CharacterTypeEnum.Player)
         {
             shipForPlayer = shipCpt;
-            itemObj.transform.eulerAngles = new Vector3(0,115,0);
+            itemObj.transform.eulerAngles = startPlayerAngles;
         }
         else if (shipData.characterType == CharacterTypeEnum.Enemy)
         {
             shipForEnemy = shipCpt;
-            itemObj.transform.eulerAngles = new Vector3(0, 65, 0);
+            itemObj.transform.eulerAngles = startEnemyAngles;
         }
     }
 

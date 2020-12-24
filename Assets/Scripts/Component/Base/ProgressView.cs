@@ -116,7 +116,6 @@ public class ProgressView : BaseMonoBehaviour
     }
 
 
-
     /// <summary>
     /// 设置进度条
     /// </summary>

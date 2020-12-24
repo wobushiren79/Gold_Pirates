@@ -53,7 +53,7 @@ public class ShipCpt : BaseObservable<IBaseObserver>
             StartCoroutine(CoroutineForFireCD(shipData.intervalForFire));
         }
         //大炮粒子
-        handler_Effect.PlayEffect(EffectInfo.SHIP_FIRE, tf_FirePosition.position);
+        handler_Effect.PlayEffect(EffectInfo.SHIP_FIRE, tf_FirePosition.position,1.4f);
         //打炮动画
         shipAnim.SetShipFire(() => {
             shipAnim.SetShipIdle();

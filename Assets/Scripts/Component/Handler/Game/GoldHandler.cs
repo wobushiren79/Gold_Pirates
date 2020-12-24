@@ -4,18 +4,14 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
-public class GoldHandler : BaseHandler<GoldManager>, GoldManager.ICallBack
+public class GoldHandler : BaseHandler<GoldManager>
 {
-    protected int goldNumber = 0;
-
-
     public GameStartSceneHandler handler_Scene;
     public UIManager manager_UI;
 
     protected override void Awake()
     {
         base.Awake();
-        manager.SetCallBack(this);
     }
 
     /// <summary>
@@ -25,14 +21,18 @@ public class GoldHandler : BaseHandler<GoldManager>, GoldManager.ICallBack
     /// <param name="goldId"></param>
     public void CreateGold(string goldPileData, int number, long goldId)
     {
+        manager.goldMaxNumber = 0;
         if (CheckUtil.StringIsNull(goldPileData))
         {
-            goldNumber = number;
-            manager.GetGoldDataById(goldId);
+            Action<GoldDataBean> callBack = (goldData) => { StartCoroutine(CoroutineForCreateGold(goldData)); };
+            manager.goldMaxNumber = number;
+            manager.GetGoldDataById(goldId, callBack);
+
         }
         else
         {
-            StartCoroutine(CoroutineForCreateGoldPile(goldPileData));
+            Action<GoldDataBean> callBack = (goldData) => { StartCoroutine(CoroutineForCreateGoldPile(goldData, goldPileData)); };
+            manager.GetGoldDataById(goldId, callBack);
         }
     }
 
@@ -42,6 +42,16 @@ public class GoldHandler : BaseHandler<GoldManager>, GoldManager.ICallBack
     public GoldCpt GetIdleGold()
     {
         return manager.GetGoldByStatus(GoldStatusEnum.Idle);
+    }
+
+    /// <summary>
+    /// 获取靠近的没有分配的金币
+    /// </summary>
+    /// <param name="position"></param>
+    /// <returns></returns>
+    public GoldCpt GetCloseIdleGold(Vector3 position)
+    {
+        return manager.GetCloseGoldByStatus(position, GoldStatusEnum.Idle);
     }
 
     /// <summary>
@@ -56,12 +66,13 @@ public class GoldHandler : BaseHandler<GoldManager>, GoldManager.ICallBack
     /// 获取目标金币
     /// </summary>
     /// <returns></returns>
-    public GoldCpt GetTargetGold()
+    public GoldCpt GetTargetGold(Vector3 position)
     {
+        //首先获取掉落金币 如果没有则获取最近的金币
         GoldCpt dropGold = GetDropGold();
         if (dropGold == null)
         {
-            return GetIdleGold();
+            return GetCloseIdleGold(position);
         }
         else
         {
@@ -84,7 +95,7 @@ public class GoldHandler : BaseHandler<GoldManager>, GoldManager.ICallBack
     /// <returns></returns>
     public int GetGoldMaxNumber()
     {
-        return goldNumber;
+        return manager.goldMaxNumber;
     }
 
     /// <summary>
@@ -111,7 +122,7 @@ public class GoldHandler : BaseHandler<GoldManager>, GoldManager.ICallBack
         // List<Vector3> listPosition = CalculatePostionForGold(goldNumber);
         BoxCollider boxCollider = objModel.GetComponent<BoxCollider>();
         Vector3 boxSize = new Vector3(boxCollider.size.x * objModel.transform.localScale.x, boxCollider.size.y * objModel.transform.localScale.y, boxCollider.size.z * objModel.transform.localScale.z);
-        List<Vector3> listPosition = CalculatePostionForGold(boxSize, 8, 8, goldNumber);
+        List<Vector3> listPosition = CalculatePostionForGold(boxSize, 8, 8, GetGoldMaxNumber());
         for (int i = 0; i < listPosition.Count; i++)
         {
             manager.CreateGold(objModel, goldData, listPosition[i]);
@@ -125,7 +136,7 @@ public class GoldHandler : BaseHandler<GoldManager>, GoldManager.ICallBack
     /// </summary>
     /// <param name="goldPileData"></param>
     /// <returns></returns>
-    public IEnumerator CoroutineForCreateGoldPile(string goldPileData)
+    public IEnumerator CoroutineForCreateGoldPile(GoldDataBean goldData, string goldPileData)
     {
         List<string> listData = StringUtil.SplitBySubstringForListStr(goldPileData, '|');
         for (int i = 0; i < listData.Count; i++)
@@ -137,7 +148,7 @@ public class GoldHandler : BaseHandler<GoldManager>, GoldManager.ICallBack
             ResourceRequest resourceRequest = Resources.LoadAsync("GoldPile/" + itemDataArray[0]);
             yield return resourceRequest;
             GameObject objModel = resourceRequest.asset as GameObject;
-            manager.CreateGoldPile(objModel, new Vector3(itemPositionArray[0], itemPositionArray[1], itemPositionArray[2]));
+            manager.CreateGoldPile( goldData, objModel, new Vector3(itemPositionArray[0], itemPositionArray[1], itemPositionArray[2]));
         }
         Resources.UnloadUnusedAssets();
     }
@@ -188,7 +199,7 @@ public class GoldHandler : BaseHandler<GoldManager>, GoldManager.ICallBack
     {
         List<Vector3> listData = new List<Vector3>();
         Vector3 goldStartPosition = handler_Scene.GetGoldPosition();
-        float offsetX = goldStartPosition.x + hNumber / 2f  * boxSize.x;
+        float offsetX = goldStartPosition.x + hNumber / 2f * boxSize.x;
         float offsetY = boxSize.y / 2f + goldStartPosition.y;
         float offsetZ = goldStartPosition.z + vNumber / 2f * boxSize.z;
         int layer = 0;
@@ -196,7 +207,7 @@ public class GoldHandler : BaseHandler<GoldManager>, GoldManager.ICallBack
         int vTempNumber = 0;
         for (int i = 0; i < goldNumber; i++)
         {
-            listData.Add(new Vector3(offsetX - hTempNumber * boxSize.x , offsetY + layer * boxSize.y , offsetZ - vTempNumber * boxSize.z));
+            listData.Add(new Vector3(offsetX - hTempNumber * boxSize.x, offsetY + layer * boxSize.y, offsetZ - vTempNumber * boxSize.z));
             hTempNumber++;
             if (hTempNumber >= hNumber)
             {
@@ -212,16 +223,4 @@ public class GoldHandler : BaseHandler<GoldManager>, GoldManager.ICallBack
         }
         return listData;
     }
-
-    #region 数据回掉
-    public void GetGoldDataByIdSuccess(GoldDataBean goldData)
-    {
-        StartCoroutine(CoroutineForCreateGold(goldData));
-    }
-
-    public void CreateGoldSuccess()
-    {
-
-    }
-    #endregion
 }

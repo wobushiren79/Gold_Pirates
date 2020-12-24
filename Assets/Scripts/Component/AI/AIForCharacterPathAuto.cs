@@ -68,6 +68,7 @@ public class AIForCharacterPathAuto : BaseMonoBehaviour
     public void ClosePath()
     {
         aiPath.enabled = false;
+        rvoController.enabled = false;
     }
 
     /// <summary>

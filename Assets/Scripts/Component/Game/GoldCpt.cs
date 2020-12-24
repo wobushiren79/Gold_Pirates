@@ -45,6 +45,7 @@ public class GoldCpt : BaseObservable<CharacterCpt>
         this.characterType = characterType;
         transform.SetParent(tfHand);
         transform.DOLocalMove(Vector3.zero, 0.5f);
+        transform.DOLocalRotate(Vector3.zero,0.5f);
         //transform.localPosition = Vector3.zero;
 
         //通知所有搬运者 已经有人搬运

@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using System;
+using UnityEditor;
 using UnityEngine;
 
 public class GoldDataController : BaseMVCController<GoldDataModel, IGoldDataView>
@@ -13,7 +14,7 @@ public class GoldDataController : BaseMVCController<GoldDataModel, IGoldDataView
 
     }
 
-    public void GetGoldDataById(long id)
+    public void GetGoldDataById(long id, Action<GoldDataBean> action)
     {
         GoldDataBean goldData =  GetModel().GetGoldDataById(id);
         if (goldData == null)
@@ -22,7 +23,7 @@ public class GoldDataController : BaseMVCController<GoldDataModel, IGoldDataView
         }
         else
         {
-            GetView().GetGoldDataSuccess(goldData);
+            GetView().GetGoldDataSuccess(goldData,action);
         } 
     }
 }

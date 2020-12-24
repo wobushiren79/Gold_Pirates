@@ -316,7 +316,7 @@ MonoBehaviour:
   m_enableAutoSizing: 1
   m_fontSizeMin: 1
   m_fontSizeMax: 32
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -524,7 +524,7 @@ MonoBehaviour:
   m_enableAutoSizing: 1
   m_fontSizeMin: 1
   m_fontSizeMax: 42
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -823,7 +823,7 @@ MonoBehaviour:
   m_enableAutoSizing: 1
   m_fontSizeMin: 1
   m_fontSizeMax: 48
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -957,7 +957,7 @@ MonoBehaviour:
   m_enableAutoSizing: 1
   m_fontSizeMin: 1
   m_fontSizeMax: 48
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -1209,7 +1209,7 @@ MonoBehaviour:
   m_enableAutoSizing: 1
   m_fontSizeMin: 1
   m_fontSizeMax: 48
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -2234,7 +2234,7 @@ MonoBehaviour:
   m_enableAutoSizing: 1
   m_fontSizeMin: 1
   m_fontSizeMax: 32
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 4
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -2767,7 +2767,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -4075,7 +4075,7 @@ PrefabInstance:
     - target: {fileID: 7073818773838891168, guid: b4f28316fecd39a4085186a5f51a010e,
         type: 3}
       propertyPath: m_fontSize
-      value: 50
+      value: 55
       objectReference: {fileID: 0}
     - target: {fileID: 7301529764986846650, guid: b4f28316fecd39a4085186a5f51a010e,
         type: 3}
@@ -4215,7 +4215,7 @@ PrefabInstance:
     - target: {fileID: 7073818773838891168, guid: b4f28316fecd39a4085186a5f51a010e,
         type: 3}
       propertyPath: m_fontSize
-      value: 50
+      value: 55
       objectReference: {fileID: 0}
     - target: {fileID: 7073818773838891168, guid: b4f28316fecd39a4085186a5f51a010e,
         type: 3}
@@ -4365,7 +4365,7 @@ PrefabInstance:
     - target: {fileID: 7073818773838891168, guid: b4f28316fecd39a4085186a5f51a010e,
         type: 3}
       propertyPath: m_fontSize
-      value: 50
+      value: 55
       objectReference: {fileID: 0}
     - target: {fileID: 7301529764986846650, guid: b4f28316fecd39a4085186a5f51a010e,
         type: 3}

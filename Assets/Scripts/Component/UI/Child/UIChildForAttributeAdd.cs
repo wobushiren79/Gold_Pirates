@@ -44,20 +44,29 @@ public class UIChildForAttributeAdd : BaseUIChildComponent<UIGameStart>
         {
             ui_TvTitleGoldPrice.outlineColor = Color.white;
             ui_TvTitleGoldPrice.text = GameCommonInfo.GetUITextById(1);
+            SetUnderlayOffsetY(ui_TvTitleGoldPrice);
         }
         if (ui_TvTitleSpeed)
         {
             ui_TvTitleSpeed.outlineColor = Color.white;
             ui_TvTitleSpeed.text = GameCommonInfo.GetUITextById(2);
+            SetUnderlayOffsetY(ui_TvTitleSpeed);
         }
 
         if (ui_TvTitleNumber)
         {
             ui_TvTitleNumber.outlineColor = Color.white;
             ui_TvTitleNumber.text = GameCommonInfo.GetUITextById(3);
+            SetUnderlayOffsetY(ui_TvTitleNumber);
 
         }     
         RefreshUI();
+    }
+
+    protected void SetUnderlayOffsetY(TextMeshProUGUI textMeshPro)
+    {
+        Material fontMaterial= textMeshPro.fontMaterial;
+        fontMaterial.SetFloat("_UnderlayOffsetY", -0.8f);
     }
 
     public void RefreshUI()
@@ -93,7 +102,7 @@ public class UIChildForAttributeAdd : BaseUIChildComponent<UIGameStart>
         }
         if (tvLevelMoney)
         {
-            tvLevelMoney.text = levelUpMoney + "";
+            tvLevelMoney.text = levelUpMoney.FormatKM() + "";
             tvLevelMoney.outlineColor = color_MoneyOutline;
         }
          
@@ -118,7 +127,6 @@ public class UIChildForAttributeAdd : BaseUIChildComponent<UIGameStart>
         GameDataHandler gameDataHandler = uiComponent.handler_GameData;
         UserDataBean userData = gameDataHandler.GetUserData();
  
-
         int maxLevel = uiComponent.handler_GameData.GetLevelMaxForNumber();
         gameDataHandler.GetLevelLevelUpDataForNumber(gameData.levelForPirateNumber, out int addNumber, out long preNumberGold);
 
@@ -184,7 +192,7 @@ public class UIChildForAttributeAdd : BaseUIChildComponent<UIGameStart>
     {
         GameDataHandler gameDataHandler = uiComponent.handler_GameData;
         GameBean gameData = uiComponent.handler_Game.GetGameData();
-
+        UserDataBean userData= gameDataHandler.GetUserData();
         int maxLevel = uiComponent.handler_GameData.GetLevelMaxForSpeed();
         gameDataHandler.GetLevelLevelUpDataForSpeed(gameData.levelForSpeed, out float addSpeed, out long preSpeedGold);
         if (!gameData.HasEnoughGold(preSpeedGold))
@@ -205,7 +213,7 @@ public class UIChildForAttributeAdd : BaseUIChildComponent<UIGameStart>
         //支付金币
         gameData.PayGold(preSpeedGold);
 
-        uiComponent.handler_Character.SetCharacterSpeed(CharacterTypeEnum.Player, gameData.GetPlayerSpeed());
+        uiComponent.handler_Character.SetCharacterSpeed(CharacterTypeEnum.Player, gameData.GetPlayerSpeed() + userData.speed);
         uiComponent.handler_Character.RefreshCharacter(CharacterTypeEnum.Player);
         RefreshUI();
     }

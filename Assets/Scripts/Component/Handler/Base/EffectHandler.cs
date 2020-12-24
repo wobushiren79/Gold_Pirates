@@ -11,9 +11,10 @@ public class EffectHandler : BaseHandler<EffectManager>
     /// </summary>
     /// <param name="name"></param>
     /// <param name="effectPosition"></param>
-    public void PlayEffect(string name, Vector3 effectPosition,float delayTime)
+    public void PlayEffect(string name, Vector3 effectPosition,float delayTime,Vector3 scaleSize)
     {
         GameObject objEffect = manager.CreateEffect(name);
+
         if (objEffect == null)
             return;
         objEffect.transform.position = effectPosition;
@@ -25,15 +26,27 @@ public class EffectHandler : BaseHandler<EffectManager>
             psMain.loop = false;
             //psMain.stopAction = ParticleSystemStopAction.Callback;
             particleSystem.Play();
+            if(scaleSize != Vector3.one)
+            {
+                particleSystem.transform.localScale = scaleSize;
+            }
         }
         StartCoroutine(CoroutineForDelayDestroy(objEffect,delayTime));
     }
 
     public void PlayEffect(string name, Vector3 effectPosition)
     {
-        PlayEffect(name, effectPosition, 5);
+        PlayEffect(name, effectPosition, 5, Vector3.one);
     }
 
+    public void PlayEffect(string name, Vector3 effectPosition,float delayTime)
+    {
+        PlayEffect(name, effectPosition, delayTime, Vector3.one);
+    }
+    public void PlayEffect(string name, Vector3 effectPosition, Vector3 scaleSize)
+    {
+        PlayEffect(name, effectPosition, 5, scaleSize);
+    }
     public IEnumerator CoroutineForDelayDestroy(GameObject objEffect, float delayTime)
     {
         yield return new WaitForSeconds(delayTime);

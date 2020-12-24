@@ -24,6 +24,11 @@ public class CharacterHandler : BaseHandler<CharacterManager>
         return manager.GetCharacterByType(characterType).Count;
     }
 
+    public List<CharacterCpt> GetCharacter(CharacterTypeEnum characterType)
+    {
+        return manager.GetCharacterByType(characterType);
+    }
+
     /// <summary>
     /// 初始化创建角色 用于游戏刚开始
     /// </summary>
@@ -36,7 +41,7 @@ public class CharacterHandler : BaseHandler<CharacterManager>
 
         //延迟创建敌方海盗
         StartCoroutine(CoroutineForCreateEnmeyCharacter(enemyCharacterData));
-        StartCoroutine(CoroutineForEnemySpeedChange(enemyCharacterData));
+        StartCoroutine(CoroutineForEnemySpeedChange());
         StartCoroutine(CoroutineForEnemyLifeChange(enemyCharacterData));
     }
 
@@ -46,7 +51,7 @@ public class CharacterHandler : BaseHandler<CharacterManager>
     /// <param name="characterData"></param>
     public void CreateCharacter(CharacterDataBean characterData)
     {
-        if (!handler_Gold.GetTargetGold())
+        if (!handler_Gold.GetTargetGold(transform.position))
         {
             //没有金币了也不创建角色
             return;
@@ -123,6 +128,16 @@ public class CharacterHandler : BaseHandler<CharacterManager>
             itemCharacter.SetCharacterSpeed(speed);
         }
     }
+    public void AddCharacterSpeed(CharacterTypeEnum characterType, float addSpeed)
+    {
+        List<CharacterCpt> listCharacter = manager.GetCharacterByType(characterType);
+
+        for (int i = 0; i < listCharacter.Count; i++)
+        {
+            CharacterCpt itemCharacter = listCharacter[i];
+            itemCharacter.AddCharacterSpeed(addSpeed);
+        }
+    }
 
     public void SetCharacterSpeedUp(CharacterTypeEnum characterType, float addSpeed, float time)
     {
@@ -135,6 +150,8 @@ public class CharacterHandler : BaseHandler<CharacterManager>
         }
     }
 
+
+
     public void CleanCharacter(CharacterCpt characterCpt)
     {
         manager.CleanCharacter(characterCpt);
@@ -145,12 +162,13 @@ public class CharacterHandler : BaseHandler<CharacterManager>
         manager.CleanAllCharacter();
     }
 
-    public IEnumerator CoroutineForCreateEnmeyCharacter(CharacterDataBean enemyCharacterData)
+    public IEnumerator CoroutineForCreateEnmeyCharacter(CharacterDataBean baseCharacterData)
     {
         isBuildEnemy = true;
         GameLevelBean gameLevelData = handler_Game.GetGameLevelData();
         while (isBuildEnemy)
         {
+            CharacterDataBean enemyCharacterData = baseCharacterData.Clone();
             CreateCharacter(enemyCharacterData);
             if (gameLevelData.enemy_build_interval <= 0)
             {
@@ -160,15 +178,14 @@ public class CharacterHandler : BaseHandler<CharacterManager>
         }
     }
 
-    public IEnumerator CoroutineForEnemySpeedChange(CharacterDataBean enemyCharacterData)
+    public IEnumerator CoroutineForEnemySpeedChange()
     {
         isBuildEnemy = true;
         GameLevelBean gameLevelData = handler_Game.GetGameLevelData();
         while (isBuildEnemy)
         {
             yield return new WaitForSeconds(gameLevelData.enemy_speed_interval);
-            float speed = enemyCharacterData.AddSpeed(gameLevelData.enemy_speed_incremental);
-            SetCharacterSpeed(CharacterTypeEnum.Enemy, speed);
+            AddCharacterSpeed(CharacterTypeEnum.Enemy, gameLevelData.enemy_speed_incremental);
         }
     }
 

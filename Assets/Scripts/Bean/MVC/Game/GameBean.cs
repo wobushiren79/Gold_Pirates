@@ -6,7 +6,7 @@ using UnityEngine;
 [Serializable]
 public class GameBean
 {
-    public GameStatusEnum gameStatus;
+    public GameStatusEnum gameStatus = GameStatusEnum.GamePre;
     public int playerGoldNumber;
     public int enemyGoldNumber;
 
@@ -24,18 +24,32 @@ public class GameBean
 
     //玩家速度等级
     public int levelForSpeed = 1;
-    //玩家初始速度
-    public float playForSpeed = 2;
+    //玩家速度
+    public float playForSpeed = 0;
 
     //海盗数量等级
     public int levelForPirateNumber = 1;
     //初始海盗数量
     public int playForPirateNumber = 1;
 
-    //玩家初始生命值
-    public int playerForLife = 1;
+    //玩家生命值
+    public int playerForLife = 0;
     //玩家初始伤害
     public int playerForDamage = 1;
+
+    public GameBean()
+    {
+
+    }
+
+    public GameBean(float playerSpeed,int playerLife)
+    {
+        playForSpeed = playerSpeed;
+        playerForLife = playerLife;
+    }
+
+  
+
 
     public bool HasEnoughGold(long gold)
     {

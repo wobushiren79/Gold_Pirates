@@ -65,18 +65,21 @@ public class GameDataHandler : BaseHandler<GameDataManager>
     {
         return manager.GetLevelMax(BaseDataEnum.Level_Max_Number);
     }
+
     public void GetLevelUpDataForGoldPrice(int level, out int addPrice,out long preGold)
     {
         LevelUpBean levelUpData= manager.GetLevelUpDataForGoldPrice(level);
         addPrice = levelUpData.data_int;
         preGold = levelUpData.pre_gold;
     }
+
     public void GetLevelLevelUpDataForSpeed(int level, out float addSpeed, out long preGold)
     {
         LevelUpBean levelUpData = manager.GetLevelUpDataForSpeed(level);
         addSpeed = levelUpData.data_float;
         preGold = levelUpData.pre_gold;
     }
+
     public void GetLevelLevelUpDataForNumber(int level, out int addNumber, out long preGold)
     {
         LevelUpBean levelUpData = manager.GetLevelUpDataForNumber(level);
@@ -88,6 +91,7 @@ public class GameDataHandler : BaseHandler<GameDataManager>
     {
         return manager.GetLevelSceneExp(level);
     }
+
     public long GetLevelSceneMoney(int level)
     {
         return manager.GetLevelSceneMoney(level);
@@ -116,6 +120,31 @@ public class GameDataHandler : BaseHandler<GameDataManager>
     public float GetBulletSpeed()
     {
         return manager.GetBulletSpeed();
+    }
+
+    public void GetPlayerInitData(out float playerSpeed,out int playerLife)
+    {
+        playerLife = manager.GetPlayerInitLife();
+        playerSpeed = manager.GetPlayerInitSpeed();
+    }
+
+
+    public void GetCameraData(out float minFov,out float maxFov,out float scaleSpeed)
+    {
+        maxFov = manager.GetCameraFovMax();
+        minFov = manager.GetCameraFovMin();
+        scaleSpeed = manager.GetCameraScaleSpeed();
+    }
+
+    public void GetAnglesForShip(out Vector3 anglesPlayer,out Vector3 anglesEnemy)
+    {
+        anglesPlayer = manager.GetAnglesPlayerShip();
+        anglesEnemy = manager.GetAnglesEnemyShip();
+    }
+
+    public float GetCharacterCorpseDestoryTime()
+    {
+       return manager.GetCharacterCorpseDestoryTime();
     }
 
     public void HandleForGameDataChange()

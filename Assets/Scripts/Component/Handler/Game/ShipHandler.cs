@@ -103,12 +103,11 @@ public class ShipHandler : BaseHandler<ShipManager>, ShipManager.ICallBack
         GameObject objModel = resourceRequest.asset as GameObject;
         Vector3 startPosition = handler_Scene.GetStartPosition(shipData.characterType);
         GameObject objShipBulletModel = handler_Scene.GetShipBulletModel();
-        manager.CreateShip(objModel, objShipBulletModel, shipData, startPosition + new Vector3(0, 0, -5));
+        handler_GameData.GetAnglesForShip(out Vector3 anglesPlayer, out Vector3 anglesEnemy);
+        manager.CreateShip(objModel, objShipBulletModel, shipData, startPosition + new Vector3(0, 0, -5), anglesPlayer, anglesEnemy);
         Resources.UnloadUnusedAssets();
         callBack?.Invoke();
     }
-
-
 
     #region 数据回调
     public void CreateShipSuccess()

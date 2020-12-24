@@ -18,6 +18,16 @@ public class GameStartSceneHandler : BaseHandler<GameStartSceneManager>
     }
 
     /// <summary>
+    /// 获取离岛位置
+    /// </summary>
+    /// <param name="characterType"></param>
+    /// <returns></returns>
+    public Vector3 GetExitIslandPosition(CharacterTypeEnum characterType)
+    {
+        return manager.GetExitIslandPosition(characterType);
+    }
+
+    /// <summary>
     /// 获取开始位置
     /// </summary>
     /// <param name="characterType"></param>

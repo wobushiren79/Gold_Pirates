@@ -36,6 +36,10 @@ public class GoldPileEditor : EditorWindow
         {
             SetGoldPileData();
         }
+        if (EditorUI.GUIButton("获取数据", 100, 50))
+        {
+            GetGoldPileData();
+        }
         EditorGUILayout.EndHorizontal();
 
         EditorUI.GUIText("金币堆数量");
@@ -52,15 +56,58 @@ public class GoldPileEditor : EditorWindow
         }
     }
 
-    protected void SetGoldPileData()
+    protected void GetGoldPileData()
     {
-;       goldPileData = "";
+        //清空数据
         for (int i = 0; i < listGoldPile.Length; i++)
         {
             GameObject itemObj = listGoldPile[i];
-            goldPileData += (itemObj.name + ":" + itemObj.transform.position.x + "," + itemObj.transform.position.y + "," + itemObj.transform.position.z + "|");
+            DestroyImmediate(itemObj);
         }
-        List<GameLevelBean> listData= gameLevelService.QueryDataByLevel(levelForGame);
+
+        List<GameLevelBean> listData = gameLevelService.QueryDataByLevel(levelForGame);
+        if (!CheckUtil.ListIsNull(listData))
+        {
+            GameLevelBean gameLevelData = listData[0];
+            string goldPileData = gameLevelData.gold_pile;
+            if (CheckUtil.StringIsNull(goldPileData))
+                return;
+            string[] listGoldPileArray = StringUtil.SplitBySubstringForArrayStr(goldPileData, '|');
+
+            sizeForGoldPile = listGoldPileArray.Length;
+            listGoldPile = new GameObject[sizeForGoldPile];
+
+            for (int i = 0; i < listGoldPileArray.Length; i++)
+            {
+                string itemGoldPileData = listGoldPileArray[i];
+                string[] pileTempData = StringUtil.SplitBySubstringForArrayStr(itemGoldPileData, ':');
+                pileTempData[0] = pileTempData[0].Replace("(Clone)", "");
+                GameObject objModel = Resources.Load("GoldPile/" + pileTempData[0]) as GameObject;
+                GameObject objItem = Instantiate(objModel);
+                objItem.name = objItem.name.Replace("(Clone)", "");
+                objItem.SetActive(true);
+                float[] pileDataPosition = StringUtil.SplitBySubstringForArrayFloat(pileTempData[1], ',');
+                objItem.transform.position = new Vector3(pileDataPosition[0], pileDataPosition[1], pileDataPosition[2]);
+                listGoldPile[i] = objItem;
+            }
+            Resources.UnloadUnusedAssets();
+        }
+    }
+
+    protected void SetGoldPileData()
+    {
+        goldPileData = "";
+        for (int i = 0; i < listGoldPile.Length; i++)
+        {
+            GameObject itemObj = listGoldPile[i];
+            if (itemObj == null)
+                continue;
+            goldPileData += (itemObj.name + ":" + itemObj.transform.position.x + "," + itemObj.transform.position.y + "," + itemObj.transform.position.z + "|");
+            DestroyImmediate(itemObj);
+        }
+        if (CheckUtil.StringIsNull(goldPileData))
+            return;
+        List<GameLevelBean> listData = gameLevelService.QueryDataByLevel(levelForGame);
         if (!CheckUtil.ListIsNull(listData))
         {
             GameLevelBean gameLevelData = listData[0];

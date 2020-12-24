@@ -11,9 +11,12 @@ public class GameStartSceneManager : BaseManager
     public Transform transform_EnemyStartPosition;
     public Transform transform_PlayerIslandPosition;
     public Transform transform_EnemyIslandPosition;
+    public Transform transform_PlayerExitIslandPosition;
+    public Transform transform_EnemyExitIslandPosition;
 
     public Transform transform_PlayerFirePosition;
     public Transform transform_EnemyFirePosition;
+
 
     private void Awake()
     {
@@ -43,6 +46,27 @@ public class GameStartSceneManager : BaseManager
         else if (characterType == CharacterTypeEnum.Enemy)
         {
             return transform_EnemyIslandPosition.position;
+        }
+        else
+        {
+            return Vector3.zero;
+        }
+    }
+
+    /// <summary>
+    /// 获取离岛位置
+    /// </summary>
+    /// <param name="characterType"></param>
+    /// <returns></returns>
+    public Vector3 GetExitIslandPosition(CharacterTypeEnum characterType)
+    {
+        if (characterType == CharacterTypeEnum.Player)
+        {
+            return transform_PlayerExitIslandPosition.position;
+        }
+        else if (characterType == CharacterTypeEnum.Enemy)
+        {
+            return transform_EnemyExitIslandPosition.position;
         }
         else
         {

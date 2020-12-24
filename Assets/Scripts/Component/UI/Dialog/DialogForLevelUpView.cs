@@ -5,6 +5,9 @@ using DG.Tweening;
 public class DialogForLevelUpView : DialogView
 {
     public TextMeshProUGUI ui_TvGold;
+    public TextMeshProUGUI ui_TvAdvertisingGold;
+    public TextMeshProUGUI ui_TvAdvertisingHint;
+
     public MsgManager manager_Msg;
     public UIManager manager_UI;
     protected float timeForDelayGold = 1;
@@ -15,6 +18,14 @@ public class DialogForLevelUpView : DialogView
         AutoLinkUI();
     }
 
+    public override void Start()
+    {
+        base.Start();
+        ui_TvAdvertisingHint.text = GameCommonInfo.GetUITextById(101);
+        ColorUtility.TryParseHtmlString("#0b752b", out Color outline);
+        ui_TvAdvertisingHint.outlineColor = outline;
+    }
+
     public void SetData(long addGold)
     {
         SetAddGold(addGold);
@@ -23,7 +34,13 @@ public class DialogForLevelUpView : DialogView
     public void SetAddGold(long addGold)
     {
         if (ui_TvGold)
-            ui_TvGold.text = "" + addGold;
+            ui_TvGold.text = "" + addGold.FormatKM();
+        if (ui_TvAdvertisingGold)
+        {
+            ui_TvAdvertisingGold.text = "" + (addGold * 3).FormatKM();
+            ColorUtility.TryParseHtmlString("#0b752b", out Color outline);
+            ui_TvAdvertisingGold.outlineColor = outline;
+        }
     }
 
     public float GetTimeForDelayGold()
