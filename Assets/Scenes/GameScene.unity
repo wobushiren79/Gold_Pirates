@@ -660,7 +660,7 @@ PrefabInstance:
     - target: {fileID: 3110214493197685605, guid: 2d510f1c028a28b4c9cca9ce01873a1c,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 5.9
+      value: -10.9
       objectReference: {fileID: 0}
     - target: {fileID: 3110214493197685605, guid: 2d510f1c028a28b4c9cca9ce01873a1c,
         type: 3}
@@ -711,6 +711,26 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: yunduo
+      objectReference: {fileID: 0}
+    - target: {fileID: 3159846017365729681, guid: 2d510f1c028a28b4c9cca9ce01873a1c,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -122
+      objectReference: {fileID: 0}
+    - target: {fileID: 6569722490198843561, guid: 2d510f1c028a28b4c9cca9ce01873a1c,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 5.1500015
+      objectReference: {fileID: 0}
+    - target: {fileID: 8463534136862426096, guid: 2d510f1c028a28b4c9cca9ce01873a1c,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 17.150002
+      objectReference: {fileID: 0}
+    - target: {fileID: 8948445333197082320, guid: 2d510f1c028a28b4c9cca9ce01873a1c,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 50.4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2d510f1c028a28b4c9cca9ce01873a1c, type: 3}
@@ -1269,6 +1289,31 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1088948241 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3110214493197685609, guid: 2d510f1c028a28b4c9cca9ce01873a1c,
+    type: 3}
+  m_PrefabInstance: {fileID: 414532009}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &1088948242
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1088948241}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 9a0a95a6d3c7ec84c98610c81fa5fc7d, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &1108830841
 GameObject:
   m_ObjectHideFlags: 0
