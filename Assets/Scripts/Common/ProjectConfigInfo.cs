@@ -21,6 +21,6 @@ public class ProjectConfigInfo
     /// <summary>
     /// 版本类型
     /// </summary>
-    public readonly static VersionTypeEnum VERSION_TYPE = VersionTypeEnum.AndroidRelease;
+    public readonly static VersionTypeEnum VERSION_TYPE = VersionTypeEnum.AndroidDebug;
 
 }
